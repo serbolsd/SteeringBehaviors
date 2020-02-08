@@ -1,4 +1,6 @@
 #include "Boid.h"
+#include <iostream>
+#include <cstdlib>
 
 Boid::Boid()
 {
@@ -183,5 +185,38 @@ CD::CDVector2 Boid::evade(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 
 		Dir.normalize();
 		F = Dir * Impetu;
 	}
+	return F;
+}
+
+CD::CDVector2 Boid::wanderRandom(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu)
+{
+	float x = LimitsX.x + std::rand() % (int)LimitsX.y +1;
+	float y = LimitsY.x + std::rand() % (int)LimitsY.y +1;
+	CD::CDVector2 point = { x,y };
+	
+	CD::CDVector2 F = seek(PosA,point,impetu);
+
+	return F;
+}
+
+CD::CDVector2 Boid::wanderTime(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu, float &timeElapsed, float TimeToNextPoint)
+{
+	CD::CDVector2 F;
+	if (DirA == CD::CDVector2(0,0))
+	{
+		float x = LimitsX.x + std::rand() % (int)LimitsX.y + 1;
+		float y = LimitsY.x + std::rand() % (int)LimitsY.y + 1;
+		CD::CDVector2 point = { x,y };
+		F = seek(PosA,point,impetu);
+	}
+	if (timeElapsed>=TimeToNextPoint)
+	{
+		float x = LimitsX.x + std::rand() % (int)LimitsX.y + 1;
+		float y = LimitsY.x + std::rand() % (int)LimitsY.y + 1;
+		CD::CDVector2 point = { x,y };
+		F = seek(PosA, point, impetu);
+		timeElapsed = 0;
+	}
+	
 	return F;
 }
