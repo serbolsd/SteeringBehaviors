@@ -80,6 +80,11 @@ void Boid::Update()
 			break;
 		}
 	}
+	if (myDesc.followPath.impetu > 0)
+	{
+		newDirection +=
+			FollowPath(m_Position, *myDesc.followPath.Points, myDesc.followPath.impetu, myDesc.followPath.IndexPoint, myDesc.followPath.ratio);
+	}
 	m_Direction = newDirection;
 	m_Direction.normalize();
 	m_Direction *= m_Speed;
@@ -283,23 +288,35 @@ CD::CDVector2 Boid::wander(CD::CDVector2 PosA, CD::CDVector2 DirA, float impetu,
 	return F;
 }
 
-CD::CDVector2 Boid::FllowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ration)
+CD::CDVector2 Boid::FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio)
 {
 	CD::CDVector2 v1 = PosA-Points[indexPath];
 	CD::CDVector2 v2;
 	CD::CDVector2 nextPoint;
 	if (indexPath ==Points.size()-1)
 	{
-		nextPoint = v2 = Points[indexPath] - Points[0];
+		nextPoint = Points[0];
+		v2 =  Points[0]- Points[indexPath];
 	}
 	else
 	{
-		nextPoint = v2 = Points[indexPath] - Points[indexPath + 1];
+		nextPoint = Points[indexPath + 1];
+		v2 = Points[indexPath + 1] - Points[indexPath];
+	}
+	CD::CDVector2 dist = PosA - nextPoint;
+	float distance = dist.length();
+	if (distance <=Ratio)
+	{
+		indexPath++;
+		if (indexPath== Points.size())
+		{
+			indexPath = 0;
+		}
 	}
 	float proyection = CD::CDVector2::dot(v1,v2);
 	proyection /= v2.length();
 	CD::CDVector2 pathPoint=(v2*proyection)+Points[indexPath];
 	CD::CDVector2 F = seek(PosA,pathPoint,impetu);
 	F += seek(PosA, nextPoint,impetu);
-	return CD::CDVector2();
+	return F;
 }

@@ -52,10 +52,10 @@ struct WanderDescriptor
 };
 struct FollowPathDescriptor
 {
-	std::vector <CD::CDVector2> Points;
+	std::vector <CD::CDVector2> *Points;
 	int IndexPoint=0;
 	float ratio=0;
-	float inpetu;
+	float impetu;
 
 };
 struct BoidDescriptor
@@ -70,6 +70,7 @@ struct BoidDescriptor
 	PersuDescriptor persu;
 	EvadeDescriptor evade;
 	WanderDescriptor wander;
+	FollowPathDescriptor followPath;
 	sf::Color shapeColor = {130,0,255,255};
 	float *globalTime=nullptr;
 };
@@ -96,7 +97,7 @@ public:
 	static CD::CDVector2 wanderRandom(CD::CDVector2 PosA,CD::CDVector2 DirA,CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu);
 	static CD::CDVector2 wanderTime(CD::CDVector2 PosA,CD::CDVector2 DirA,CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu,float &timeElapsed,float TimeToNextPoint);
 	static CD::CDVector2 wander(CD::CDVector2 PosA,CD::CDVector2 DirA,float impetu,float distToProyection,float ratio,float angle);
-	static CD::CDVector2 FllowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPAath, float Ration);
+	static CD::CDVector2 FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPAath, float Ratio);
 private:
 	CD::CDVector2 m_Position;
 	CD::CDVector2 m_Direction;

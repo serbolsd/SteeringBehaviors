@@ -11,8 +11,10 @@ Boid boid;
 Boid wanderRan;
 Boid wanderTime;
 Boid wader;
+Boid pathFollower;
 CD::CDVector2 *MousePosition;
 std::vector<Boid> boids;
+std::vector<CD::CDVector2> *path;
 float *dtime;
 int main()
 {
@@ -54,6 +56,10 @@ void Init()
 {
 	dtime = new float(0);
 	MousePosition = new CD::CDVector2;
+	path = new std::vector<CD::CDVector2>;
+	path->push_back(CD::CDVector2(400,400));
+	path->push_back(CD::CDVector2(800, 400));
+	path->push_back(CD::CDVector2(600, 800));
 	/*BoidDescriptor desc;
 	desc.m_Direction = { 0 ,0};
 	desc.m_Position = { 300,300 };
@@ -117,8 +123,20 @@ void Init()
 	//boids.push_back(wanderRan);
 	//wanderTime.Init(wanderTimeDesc);
 	//boids.push_back(wanderTime);
-	wader.Init(wanderDesc);
-	boids.push_back(wader);
+	//wader.Init(wanderDesc);
+	//boids.push_back(wader);
+	BoidDescriptor folloPathDes;
+	folloPathDes.followPath.IndexPoint = 0;
+	folloPathDes.followPath.impetu = 10;
+	folloPathDes.followPath.Points = path;
+	folloPathDes.followPath.ratio = 15;
+	folloPathDes.globalTime = dtime;
+	folloPathDes.ratio = 4;
+	folloPathDes.m_Speed = 1;
+	folloPathDes.m_Position = CD::CDVector2(500, 500);
+	folloPathDes.shapeColor = { 0, 0, 255, 255 };
+	pathFollower.Init(folloPathDes);
+	boids.push_back(pathFollower);
 }
 
 void Update()
