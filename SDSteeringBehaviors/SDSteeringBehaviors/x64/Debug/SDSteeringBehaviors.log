@@ -1,4 +1,20 @@
-﻿  Boid.cpp
+﻿  Main.cpp
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(16,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(20,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(24,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(28,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(32,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(17,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(21,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(25,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(29,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(33,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(18,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(22,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(26,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(30,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(34,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+  Boid.cpp
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(16,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(20,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(24,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
@@ -26,4 +42,19 @@ D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehavi
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(296,13): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(300,53): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(300,85): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(454,8): warning C4244: 'argumento': conversión de 'int' a 'const float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(438,92): warning C4100: 'impetu': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(459,91): warning C4100: 'impetu': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(459,72): warning C4100: 'ratioVision': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(459,59): warning C4100: 'Boids': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(459,36): warning C4100: 'A': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(465,93): warning C4100: 'impetu': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(465,74): warning C4100: 'ratioVision': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(465,61): warning C4100: 'Boids': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(465,38): warning C4100: 'A': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(470,91): warning C4100: 'impetu': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(470,72): warning C4100: 'ratioVision': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(470,59): warning C4100: 'Boids': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(470,36): warning C4100: 'A': parámetro formal sin referencia
+  Generando código...
   SDSteeringBehaviors.vcxproj -> D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\x64\Debug\SDSteeringBehaviors.exe

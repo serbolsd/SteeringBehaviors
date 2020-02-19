@@ -74,6 +74,10 @@ struct PatrolDescriptor
 	float timeToStay=0;
 	bool bReturn=false;
 };
+struct flockingDescriptor
+{
+
+};
 struct BoidDescriptor
 {
 	CD::CDVector2 m_Position;
@@ -104,6 +108,7 @@ public:
 	CD::CDVector2 getPosition() { return m_Position; };
 	CD::CDVector2 getDirection() { return m_Direction; };
 	float getSpeed() { return m_Speed; };
+	float getRatio() { return myDesc.ratio; };
 
 	static CD::CDVector2 seek(CD::CDVector2 PosA, CD::CDVector2 PosB,float Impetu);
 	static CD::CDVector2 flee(CD::CDVector2 PosA, CD::CDVector2 PosB,float Impetu);
@@ -117,6 +122,10 @@ public:
 	static CD::CDVector2 FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio);
 	static CD::CDVector2 PatrolCircuit(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed,float timeToStay);
 	static CD::CDVector2 PatrolInverted(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed,float timeToStay,bool &bReturn);
+	static CD::CDVector2 Direction(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu);
+	static CD::CDVector2 Cohesion(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu);
+	static CD::CDVector2 Separation(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu);
+	static CD::CDVector2 flocking(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu);
 private:
 	CD::CDVector2 m_Position;
 	CD::CDVector2 m_Direction;

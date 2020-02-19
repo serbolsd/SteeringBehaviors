@@ -14,7 +14,7 @@ Boid wader;
 Boid pathFollower;
 Boid patroler;
 CD::CDVector2 *MousePosition;
-std::vector<Boid> boids;
+std::vector<Boid*> *boids;
 std::vector<CD::CDVector2> *path;
 float *dtime;
 int main()
@@ -61,6 +61,7 @@ void Init()
 	path->push_back(CD::CDVector2(400,400));
 	path->push_back(CD::CDVector2(800, 400));
 	path->push_back(CD::CDVector2(600, 800));
+	boids = new std::vector<Boid*>;
 	/*BoidDescriptor desc;
 	desc.m_Direction = { 0 ,0};
 	desc.m_Position = { 300,300 };
@@ -151,7 +152,7 @@ void Init()
 	patrolDesc.patrol.type = PatrolTypeInverted;
 	patrolDesc.patrol.timeToStay = 3;
 	patroler.Init(patrolDesc);
-	boids.push_back(patroler);
+	boids->push_back(&patroler);
 }
 
 void Update()
@@ -162,9 +163,9 @@ void Update()
 	MousePosition->y = cordPos.y;
 	//boid.Update();
 	//PersuOrEvadeboid.Update();
-	for(int i=0; i< boids.size();i++)
+	for(int i=0; i< boids->size();i++)
 	{
-		boids[i].Update();
+		boids[0][i]->Update();
 	}
 }
 
@@ -172,9 +173,9 @@ void Render()
 {
 	//boid.Render(*wind);
 	//PersuOrEvadeboid.Render(*wind);
-	for (int i = 0; i < boids.size(); i++)
+	for (int i = 0; i < boids->size(); i++)
 	{
-		boids[i].Render(*wind);
+		boids[0][i]->Render(*wind);
 	}
 }
 
@@ -186,9 +187,12 @@ void Delete()
 {
 	//boid.Delete();
 	delete dtime;
-	for (int i = 0; i < boids.size(); i++)
+	for (int i = 0; i < boids->size(); i++)
 	{
-		boids[i].Delete();
+		boids[0][i]->Delete();
+		//delete boids[0][i];
 	}
+	delete boids;
+	delete path;
 	//PersuOrEvadeboid.Delete();
 }

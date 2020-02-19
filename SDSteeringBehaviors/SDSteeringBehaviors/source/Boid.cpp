@@ -434,3 +434,67 @@ CD::CDVector2 Boid::PatrolInverted(CD::CDVector2 PosA, std::vector<CD::CDVector2
 	F += seek(PosA, nextPoint, impetu);
 	return F;
 }
+
+CD::CDVector2 Boid::Direction(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu)
+{
+	CD::CDVector2 F;
+	int nearBoids = 0;
+	for (int i = 0; i < Boids->size(); i++)
+	{
+		CD::CDVector2 vector = A->getPosition() - Boids[0][i]->getPosition();
+		float dist = vector.length();
+		if (dist<=ratioVision)
+		{
+			F += Boids[0][i]->getDirection();
+			nearBoids++;
+		}
+	}
+	if (nearBoids>0)
+	{
+		F /= nearBoids;
+		F.normalize();
+		F *= impetu;
+	}
+	return F;
+}
+
+CD::CDVector2 Boid::Cohesion(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu)
+{
+	CD::CDVector2 F;
+	CD::CDVector2 CentroMasa;
+	int nearBoids = 0;
+	for (int i = 0; i < Boids->size(); i++)
+	{
+		CD::CDVector2 vector = A->getPosition() - Boids[0][i]->getPosition();
+		float dist = vector.length();
+		if (dist <= ratioVision)
+		{
+			CentroMasa += Boids[0][i]->getPosition();
+			nearBoids++;
+		}
+	}
+	if (nearBoids > 0)
+	{
+		CentroMasa /= nearBoids;
+
+		F = seek(A->getPosition, CentroMasa, impetu);
+	}
+	return F;
+}
+
+CD::CDVector2 Boid::Separation(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu)
+{
+	CD::CDVector2 F;
+	for (int i = 0; i < Boids->size(); i++)
+	{
+
+	}
+	return F;
+}
+
+CD::CDVector2 Boid::flocking(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu)
+{
+	CD::CDVector2 F;
+
+	return F;
+}
