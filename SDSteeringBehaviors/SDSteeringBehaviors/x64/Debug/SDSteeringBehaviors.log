@@ -14,16 +14,16 @@ D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehavi
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(26,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(30,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(34,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(188,8): warning C4189: 'distToB': la variable local se ha inicializado pero no se hace referencia a ella
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(189,8): warning C4189: 'distToPP': la variable local se ha inicializado pero no se hace referencia a ella
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(223,68): warning C4100: 'DirA': parámetro formal sin referencia
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(239,13): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(249,13): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(270,13): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(271,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(272,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(278,12): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(280,13): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(284,53): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(284,85): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(204,8): warning C4189: 'distToB': la variable local se ha inicializado pero no se hace referencia a ella
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(205,8): warning C4189: 'distToPP': la variable local se ha inicializado pero no se hace referencia a ella
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(239,68): warning C4100: 'DirA': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(255,13): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(265,13): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(286,13): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(287,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(288,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(294,12): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(296,13): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(300,53): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(300,85): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
   SDSteeringBehaviors.vcxproj -> D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\x64\Debug\SDSteeringBehaviors.exe

@@ -58,6 +58,22 @@ struct FollowPathDescriptor
 	float impetu;
 
 };
+enum TypePatrol
+{
+	unknowPatrolType = 0,
+	PatrolTypeCircuit,
+	PatrolTypeInverted
+};
+struct PatrolDescriptor
+{
+	TypePatrol type = unknowPatrolType;
+	std::vector <CD::CDVector2>* Points=nullptr;
+	float impetu=0;
+	int indexPath=0; 
+	float Ratio=4; 
+	float timeToStay=0;
+	bool bReturn=false;
+};
 struct BoidDescriptor
 {
 	CD::CDVector2 m_Position;
@@ -71,6 +87,7 @@ struct BoidDescriptor
 	EvadeDescriptor evade;
 	WanderDescriptor wander;
 	FollowPathDescriptor followPath;
+	PatrolDescriptor patrol;
 	sf::Color shapeColor = {130,0,255,255};
 	float *globalTime=nullptr;
 };
@@ -97,7 +114,9 @@ public:
 	static CD::CDVector2 wanderRandom(CD::CDVector2 PosA,CD::CDVector2 DirA,CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu);
 	static CD::CDVector2 wanderTime(CD::CDVector2 PosA,CD::CDVector2 DirA,CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu,float &timeElapsed,float TimeToNextPoint);
 	static CD::CDVector2 wander(CD::CDVector2 PosA,CD::CDVector2 DirA,float impetu,float distToProyection,float ratio,float angle);
-	static CD::CDVector2 FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPAath, float Ratio);
+	static CD::CDVector2 FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio);
+	static CD::CDVector2 PatrolCircuit(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed,float timeToStay);
+	static CD::CDVector2 PatrolInverted(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed,float timeToStay,bool &bReturn);
 private:
 	CD::CDVector2 m_Position;
 	CD::CDVector2 m_Direction;

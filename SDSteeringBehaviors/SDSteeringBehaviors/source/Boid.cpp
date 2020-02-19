@@ -85,6 +85,22 @@ void Boid::Update()
 		newDirection +=
 			FollowPath(m_Position, *myDesc.followPath.Points, myDesc.followPath.impetu, myDesc.followPath.IndexPoint, myDesc.followPath.ratio);
 	}
+	if (myDesc.patrol.impetu > 0)
+	{
+		switch (myDesc.patrol.type)
+		{			
+		case PatrolTypeCircuit:
+			newDirection +=
+				PatrolCircuit(m_Position,*myDesc.patrol.Points,myDesc.patrol.impetu,myDesc.patrol.indexPath, myDesc.patrol.Ratio,ElapsedTime ,myDesc.patrol.timeToStay);
+			break;
+		case PatrolTypeInverted:
+			newDirection +=
+				PatrolInverted(m_Position, *myDesc.patrol.Points, myDesc.patrol.impetu, myDesc.patrol.indexPath, myDesc.patrol.Ratio, ElapsedTime, myDesc.patrol.timeToStay,myDesc.patrol.bReturn);
+			break;
+		default:
+			break;
+		}
+	}
 	m_Direction = newDirection;
 	m_Direction.normalize();
 	m_Direction *= m_Speed;
@@ -318,5 +334,103 @@ CD::CDVector2 Boid::FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> P
 	CD::CDVector2 pathPoint=(v2*proyection)+Points[indexPath];
 	CD::CDVector2 F = seek(PosA,pathPoint,impetu);
 	F += seek(PosA, nextPoint,impetu);
+	return F;
+}
+
+CD::CDVector2 Boid::PatrolCircuit(CD::CDVector2 PosA, std::vector<CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed, float timeToStay)
+{
+	CD::CDVector2 v1 = PosA - Points[indexPath];
+	CD::CDVector2 v2;
+	CD::CDVector2 nextPoint;
+	if (indexPath == Points.size() - 1)
+	{
+		nextPoint = Points[0];
+		v2 = Points[0] - Points[indexPath];
+	}
+	else
+	{
+		nextPoint = Points[indexPath + 1];
+		v2 = Points[indexPath + 1] - Points[indexPath];
+	}
+	CD::CDVector2 dist = PosA - nextPoint;
+	float distance = dist.length();
+	if (distance <= Ratio)
+	{
+		if (timeElapsed<= timeToStay)
+		{
+			//Action;
+			return	CD::CDVector2();
+		}
+		indexPath++;
+		if (indexPath == Points.size())
+		{
+			indexPath = 0;
+		}
+	}
+	else
+	{
+		timeElapsed = 0;
+	}
+	float proyection = CD::CDVector2::dot(v1, v2);
+	proyection /= v2.length();
+	CD::CDVector2 pathPoint = (v2 * proyection) + Points[indexPath];
+	CD::CDVector2 F = seek(PosA, pathPoint, impetu);
+	F += seek(PosA, nextPoint, impetu);
+	return F;
+}
+
+CD::CDVector2 Boid::PatrolInverted(CD::CDVector2 PosA, std::vector<CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed, float timeToStay, bool& bReturn)
+{
+	CD::CDVector2 v1 = PosA - Points[indexPath];
+	CD::CDVector2 v2;
+	CD::CDVector2 nextPoint;
+	if (bReturn)
+	{
+		nextPoint = Points[indexPath - 1];
+		v2 = Points[indexPath]-Points[indexPath - 1];
+	}
+	else
+	{
+		nextPoint = Points[indexPath + 1];
+		v2 = Points[indexPath + 1] - Points[indexPath];
+	}
+	
+	CD::CDVector2 dist = PosA - nextPoint;
+	float distance = dist.length();
+	if (distance <= Ratio)
+	{
+		if (timeElapsed <= timeToStay)
+		{
+			//Action;
+			return	CD::CDVector2();
+		}
+		if (bReturn)
+		{
+			indexPath--;
+			if (indexPath == 0)
+			{
+				//indexPath++;
+				bReturn = false;
+			}
+		}
+		else
+		{
+			indexPath++;
+			if (indexPath == Points.size()-1)
+			{
+				//indexPath--;
+				bReturn=true;
+			}
+		}
+	}
+	else
+	{
+		timeElapsed = 0;
+	}
+	float proyection = CD::CDVector2::dot(v1, v2);
+	proyection /= v2.length();
+	CD::CDVector2 pathPoint = (v2 * proyection) + Points[indexPath];
+	CD::CDVector2 F = seek(PosA, pathPoint, impetu);
+	F += seek(PosA, nextPoint, impetu);
 	return F;
 }

@@ -12,6 +12,7 @@ Boid wanderRan;
 Boid wanderTime;
 Boid wader;
 Boid pathFollower;
+Boid patroler;
 CD::CDVector2 *MousePosition;
 std::vector<Boid> boids;
 std::vector<CD::CDVector2> *path;
@@ -135,8 +136,22 @@ void Init()
 	folloPathDes.m_Speed = 1;
 	folloPathDes.m_Position = CD::CDVector2(500, 500);
 	folloPathDes.shapeColor = { 0, 0, 255, 255 };
-	pathFollower.Init(folloPathDes);
-	boids.push_back(pathFollower);
+	//pathFollower.Init(folloPathDes);
+	//boids.push_back(pathFollower);
+	BoidDescriptor patrolDesc;
+	patrolDesc.globalTime = dtime;
+	patrolDesc.ratio = 4;
+	patrolDesc.m_Speed = 2;
+	patrolDesc.m_Position = CD::CDVector2(500, 500);
+	patrolDesc.shapeColor = { 0, 0, 255, 255 };
+	patrolDesc.patrol.indexPath = 0;
+	patrolDesc.patrol.Points = path;
+	patrolDesc.patrol.impetu = 10;
+	patrolDesc.patrol.Ratio = 15;
+	patrolDesc.patrol.type = PatrolTypeInverted;
+	patrolDesc.patrol.timeToStay = 3;
+	patroler.Init(patrolDesc);
+	boids.push_back(patroler);
 }
 
 void Update()
