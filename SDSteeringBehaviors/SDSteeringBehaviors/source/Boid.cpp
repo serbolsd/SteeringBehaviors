@@ -1,6 +1,9 @@
 #include "Boid.h"
 #include <iostream>
 #include <cstdlib>
+#include <stdio.h>      /* printf, scanf, puts, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 Boid::Boid()
 {
@@ -26,6 +29,7 @@ void Boid::Init(BoidDescriptor _Desc)
 
 void Boid::Update()
 {
+	ElapsedTime += *myDesc.globalTime;
 	CD::CDVector2 newDirection = { 0,0 };
 	if (myDesc.seek.impetu>0)
 	{
@@ -42,7 +46,6 @@ void Boid::Update()
 			newDirection += flee(m_Position, *myDesc.flee.objetive, myDesc.flee.impetu);
 		}
 	}
-	
 	if (myDesc.evade.impetu > 0)
 	{
 		newDirection +=
@@ -52,6 +55,30 @@ void Boid::Update()
 	{
 		newDirection +=
 			persu(m_Position, myDesc.persu.objetive->getPosition(), myDesc.persu.objetive->getDirection(), myDesc.persu.objetive->getSpeed(), myDesc.persu.timeProyection, myDesc.persu.impetu);
+	}
+	if (myDesc.wander.impetu > 0)
+	{
+		switch (myDesc.wander.type)
+		{
+		case unknowWanderType:
+			break;
+		case WanderTypeRandom:
+			newDirection +=
+			wanderRandom(m_Position,m_Direction, myDesc.wander.limitsX, myDesc.wander.limitsY, myDesc.wander.impetu);
+			break;
+		case wanderTypeTime:
+			newDirection +=
+				wanderTime(m_Position,m_Direction, myDesc.wander.limitsX, myDesc.wander.limitsY, 
+					myDesc.wander.impetu, ElapsedTime, myDesc.wander.timeToNextPoint);
+			break;
+		case WanderTypeVision:
+			newDirection +=
+				wander(m_Position,m_Direction, myDesc.wander.impetu,myDesc.wander.DistoToPointProyection, 
+					myDesc.wander.ratio, myDesc.wander.openingAngleInDegrees);
+			break;
+		default:
+			break;
+		}
 	}
 	m_Direction = newDirection;
 	m_Direction.normalize();
@@ -204,19 +231,75 @@ CD::CDVector2 Boid::wanderTime(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVec
 	CD::CDVector2 F;
 	if (DirA == CD::CDVector2(0,0))
 	{
+		srand(time(NULL));
 		float x = LimitsX.x + std::rand() % (int)LimitsX.y + 1;
 		float y = LimitsY.x + std::rand() % (int)LimitsY.y + 1;
+		
 		CD::CDVector2 point = { x,y };
 		F = seek(PosA,point,impetu);
+		return F;
 	}
 	if (timeElapsed>=TimeToNextPoint)
 	{
+		srand(time(NULL));
 		float x = LimitsX.x + std::rand() % (int)LimitsX.y + 1;
 		float y = LimitsY.x + std::rand() % (int)LimitsY.y + 1;
 		CD::CDVector2 point = { x,y };
 		F = seek(PosA, point, impetu);
 		timeElapsed = 0;
 	}
+	else
+	{
+		F = DirA.getnormalize() * impetu;
+	}
 	
 	return F;
+}
+
+CD::CDVector2 Boid::wander(CD::CDVector2 PosA, CD::CDVector2 DirA, float impetu, float distToProyection, float ratio, float angle)
+{
+
+	CD::CDVector2 F;
+	if (DirA == CD::CDVector2(0, 0))
+	{
+		srand(time(NULL));
+		float x = std::rand() % (int)1 -0.5;
+		float y =  std::rand() % (int)1 -0.5;
+
+		CD::CDVector2 point = { x,y };
+		F = seek(PosA, point, impetu);
+		return F;
+	}
+	srand(time(NULL));
+	CD::CDVector2 C = PosA + (DirA * distToProyection);
+	float Adir = std::atan(DirA.y/DirA.x)*(180/3.1415);
+	float Fdir = Adir + (std::rand() % (int)(angle + Adir + 1));
+	Fdir -= angle / 2;
+	std::cout << Adir <<std::endl;
+	CD::CDVector2 posF =  { ratio * cosf(Fdir * 3.1415 / 180),ratio*sinf(Fdir * 3.1415 / 180) };
+	posF += C;
+	F = seek(PosA, posF,impetu);
+
+	return F;
+}
+
+CD::CDVector2 Boid::FllowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ration)
+{
+	CD::CDVector2 v1 = PosA-Points[indexPath];
+	CD::CDVector2 v2;
+	CD::CDVector2 nextPoint;
+	if (indexPath ==Points.size()-1)
+	{
+		nextPoint = v2 = Points[indexPath] - Points[0];
+	}
+	else
+	{
+		nextPoint = v2 = Points[indexPath] - Points[indexPath + 1];
+	}
+	float proyection = CD::CDVector2::dot(v1,v2);
+	proyection /= v2.length();
+	CD::CDVector2 pathPoint=(v2*proyection)+Points[indexPath];
+	CD::CDVector2 F = seek(PosA,pathPoint,impetu);
+	F += seek(PosA, nextPoint,impetu);
+	return CD::CDVector2();
 }

@@ -256,7 +256,7 @@ namespace CD
 		float mod = squareLength();
 		float invLength = 1.0f / sqrtf(mod);
 		result.x = x *invLength;
-		result.y = x *invLength;
+		result.y = y *invLength;
 		return result;
 	}
 

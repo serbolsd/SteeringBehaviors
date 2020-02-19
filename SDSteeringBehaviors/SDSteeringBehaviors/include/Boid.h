@@ -1,6 +1,7 @@
 #pragma once
 #include "CDVectors.h"
 #include "SFML/Graphics.hpp"
+#include <vector>
 class Boid;
 struct SeekDescriptor
 {
@@ -33,14 +34,14 @@ struct EvadeDescriptor
 };
 enum TypeWander
 {
-	unknowWander = 0,
-	WanderRandom,
-	wanderTime,
-	WanderVision
+	unknowWanderType = 0,
+	WanderTypeRandom,
+	wanderTypeTime,
+	WanderTypeVision
 };
 struct WanderDescriptor
 {
-	TypeWander type= unknowWander;
+	TypeWander type= unknowWanderType;
 	CD::CDVector2 limitsX = { 0,0 };// .x is the minimun .y de maximun
 	CD::CDVector2 limitsY = { 0,0 };// .x is the minimun .y de maximun
 	float impetu=0;
@@ -48,6 +49,13 @@ struct WanderDescriptor
 	float ratio=0;
 	float openingAngleInDegrees = 0;
 	float DistoToPointProyection = 0;
+};
+struct FollowPathDescriptor
+{
+	std::vector <CD::CDVector2> Points;
+	int IndexPoint=0;
+	float ratio=0;
+	float inpetu;
 
 };
 struct BoidDescriptor
@@ -61,6 +69,7 @@ struct BoidDescriptor
 	ArriveDescriptor arrive;
 	PersuDescriptor persu;
 	EvadeDescriptor evade;
+	WanderDescriptor wander;
 	sf::Color shapeColor = {130,0,255,255};
 	float *globalTime=nullptr;
 };
@@ -86,12 +95,13 @@ public:
 	static CD::CDVector2 evade(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB,float TimeProyection,float Impetu);
 	static CD::CDVector2 wanderRandom(CD::CDVector2 PosA,CD::CDVector2 DirA,CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu);
 	static CD::CDVector2 wanderTime(CD::CDVector2 PosA,CD::CDVector2 DirA,CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu,float &timeElapsed,float TimeToNextPoint);
-	static CD::CDVector2 wanderTime(CD::CDVector2 PosA,CD::CDVector2 DirA,CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu,float distToPoint,float ratio,float angle);
+	static CD::CDVector2 wander(CD::CDVector2 PosA,CD::CDVector2 DirA,float impetu,float distToProyection,float ratio,float angle);
+	static CD::CDVector2 FllowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPAath, float Ration);
 private:
 	CD::CDVector2 m_Position;
 	CD::CDVector2 m_Direction;
 	float m_Speed=0;
 	sf::CircleShape shape;
 	BoidDescriptor myDesc;
-
+	float ElapsedTime=0;
 };

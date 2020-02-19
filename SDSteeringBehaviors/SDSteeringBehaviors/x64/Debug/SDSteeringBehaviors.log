@@ -1,17 +1,17 @@
 ﻿  Main.cpp
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(16,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(20,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(24,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(28,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(32,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(17,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(21,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(25,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(29,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(33,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(18,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(22,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(26,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(30,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-C:\Users\sergi\source\repos\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(34,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
-  SDSteeringBehaviors.vcxproj -> C:\Users\sergi\source\repos\SDSteeringBehaviors\x64\Debug\SDSteeringBehaviors.exe
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(16,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(20,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(24,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(28,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector2.h(32,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(17,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(21,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(25,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(29,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector3.h(33,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(18,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(22,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(26,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(30,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\CDVectors\CDVector4.h(34,5): warning C4201: se ha utilizado una extensión no estándar: struct/union sin especificar
+  SDSteeringBehaviors.vcxproj -> D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\x64\Debug\SDSteeringBehaviors.exe
