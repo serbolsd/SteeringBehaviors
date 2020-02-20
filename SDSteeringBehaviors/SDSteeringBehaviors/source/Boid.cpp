@@ -101,6 +101,11 @@ void Boid::Update()
 			break;
 		}
 	}
+	if (myDesc.flocking.impetu > 0)
+	{
+		newDirection +=
+			flocking(this,myDesc.flocking.Boids, myDesc.flocking.ratioVision, myDesc.flocking.impetu);
+	}
 	m_Direction = newDirection;
 	m_Direction.normalize();
 	m_Direction *= m_Speed;
@@ -441,6 +446,10 @@ CD::CDVector2 Boid::Direction(Boid* A, std::vector<Boid*>* Boids, float ratioVis
 	int nearBoids = 0;
 	for (int i = 0; i < Boids->size(); i++)
 	{
+		if (A == Boids[0][i])
+		{
+			continue;
+		}
 		CD::CDVector2 vector = A->getPosition() - Boids[0][i]->getPosition();
 		float dist = vector.length();
 		if (dist<=ratioVision)
@@ -465,6 +474,10 @@ CD::CDVector2 Boid::Cohesion(Boid* A, std::vector<Boid*>* Boids, float ratioVisi
 	int nearBoids = 0;
 	for (int i = 0; i < Boids->size(); i++)
 	{
+		if (A== Boids[0][i])
+		{
+			continue;
+		}
 		CD::CDVector2 vector = A->getPosition() - Boids[0][i]->getPosition();
 		float dist = vector.length();
 		if (dist <= ratioVision)
@@ -476,8 +489,8 @@ CD::CDVector2 Boid::Cohesion(Boid* A, std::vector<Boid*>* Boids, float ratioVisi
 	if (nearBoids > 0)
 	{
 		CentroMasa /= nearBoids;
-
-		F = seek(A->getPosition, CentroMasa, impetu);
+		CD::CDVector2 vec=A->getPosition()-CentroMasa;
+		F = seek(A->getPosition(), CentroMasa, impetu*(vec.length()/ratioVision));
 	}
 	return F;
 }
@@ -487,7 +500,16 @@ CD::CDVector2 Boid::Separation(Boid* A, std::vector<Boid*>* Boids, float ratioVi
 	CD::CDVector2 F;
 	for (int i = 0; i < Boids->size(); i++)
 	{
-
+		if (A == Boids[0][i])
+		{
+			continue;
+		}
+		CD::CDVector2 vector = A->getPosition() - Boids[0][i]->getPosition();
+		float dist = vector.length();
+		if (dist <= A->getRatio())
+		{
+			F = flee(A->getPosition(), Boids[0][i]->getPosition(),impetu*(A->getRatio()/dist));
+		}
 	}
 	return F;
 }
@@ -495,6 +517,18 @@ CD::CDVector2 Boid::Separation(Boid* A, std::vector<Boid*>* Boids, float ratioVi
 CD::CDVector2 Boid::flocking(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu)
 {
 	CD::CDVector2 F;
-
+	//F += Direction(A,Boids,ratioVision,impetu);
+	F += Cohesion(A,Boids,ratioVision,impetu);
+	F += Separation(A,Boids,ratioVision,impetu);
+	F.normalize();
+	F *= impetu;
 	return F;
+}
+
+CD::CDVector2 Boid::FollowTheLeader(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu, Boid* leader)
+{
+	CD::CDVector2 F;
+	F += flocking(A,Boids,ratioVision,impetu);
+	F += ;
+	return CD::CDVector2();
 }
