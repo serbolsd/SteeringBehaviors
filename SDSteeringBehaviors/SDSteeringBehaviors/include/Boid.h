@@ -80,7 +80,7 @@ struct flockingDescriptor
 	float ratioVision = 0;
 	float impetu = 0;
 };
-struct followTheLeader
+struct followTheLeaderDescriptor
 {
 	Boid* Leader=nullptr;
 	float distToLeader=0;
@@ -103,6 +103,7 @@ struct BoidDescriptor
 	FollowPathDescriptor followPath;
 	PatrolDescriptor patrol;
 	flockingDescriptor flocking;
+	followTheLeaderDescriptor followLeader;
 	sf::Color shapeColor = {130,0,255,255};
 	float *globalTime=nullptr;
 };
@@ -137,7 +138,7 @@ public:
 	static CD::CDVector2 Cohesion(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu);
 	static CD::CDVector2 Separation(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu);
 	static CD::CDVector2 flocking(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu);
-	static CD::CDVector2 FollowTheLeader(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu, Boid* leader);
+	static CD::CDVector2 FollowTheLeader(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu, Boid* leader, float distToLeader);
 private:
 	CD::CDVector2 m_Position;
 	CD::CDVector2 m_Direction;

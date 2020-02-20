@@ -62,15 +62,17 @@ void Init()
 	path->push_back(CD::CDVector2(800, 400));
 	path->push_back(CD::CDVector2(600, 800));
 	boids = new std::vector<Boid*>;
-	/*BoidDescriptor desc;
+	BoidDescriptor desc;
+	desc.globalTime = dtime;
 	desc.m_Direction = { 0 ,0};
-	desc.m_Position = { 300,300 };
-	desc.m_Speed = 3;
+	desc.m_Position = { 500,500 };
+	desc.m_Speed = 2;
+	desc.ratio = 15;
 	desc.arrive.impetu = 10;
 	desc.arrive.objetive = MousePosition;
 	desc.arrive.ratio = 10;
-	boid.Init(desc);
-	BoidDescriptor descForEvade;
+	//boid.Init(desc);
+	/*BoidDescriptor descForEvade;
 	descForEvade.m_Direction = { 0,0 };
 	descForEvade.m_Position = { 600,600 };
 	descForEvade.m_Speed = 1;
@@ -162,32 +164,72 @@ void Init()
 	flockingDesc.flocking.Boids = boids;
 	flockingDesc.flocking.impetu = 10;
 	flockingDesc.flocking.ratioVision = 30;
-	boid.Init(flockingDesc);
+	//boid.Init(flockingDesc);
+	//boids->push_back(&boid);
+	//
+	//flockingDesc.m_Position = CD::CDVector2(520, 500);
+	//flockingDesc.shapeColor = { 255, 0, 0, 255 };
+	//wanderRan.Init(flockingDesc);
+	//boids->push_back(&wanderRan);
+	//
+	//flockingDesc.m_Position = CD::CDVector2(500, 520);
+	//flockingDesc.shapeColor = { 0, 255, 0, 255 };
+	//wanderTime.Init(flockingDesc);
+	//boids->push_back(&wanderTime);
+	//
+	//flockingDesc.m_Position = CD::CDVector2(520, 520);
+	//flockingDesc.shapeColor = { 255, 0, 255, 255 };
+	//wader.Init(flockingDesc);
+	//boids->push_back(&wader);
+	//
+	//flockingDesc.m_Position = CD::CDVector2(540, 500);
+	//flockingDesc.shapeColor = { 0, 255, 255, 255 };
+	//pathFollower.Init(flockingDesc);
+	//boids->push_back(&pathFollower);
+	//
+	//flockingDesc.m_Position = CD::CDVector2(500, 540);
+	//flockingDesc.shapeColor = { 255, 255, 0, 255 };
+	//patroler.Init(flockingDesc);
+	//boids->push_back(&patroler);
+
+	BoidDescriptor FollowTheLeaderDesc;
+	FollowTheLeaderDesc.globalTime = dtime;
+	FollowTheLeaderDesc.ratio = 10;
+	FollowTheLeaderDesc.m_Speed = 1;
+	FollowTheLeaderDesc.m_Position = CD::CDVector2(500, 500);
+	FollowTheLeaderDesc.shapeColor = { 0, 0, 255, 255 };
+	FollowTheLeaderDesc.followLeader.Boids = boids;
+	FollowTheLeaderDesc.followLeader.impetu = 10;
+	FollowTheLeaderDesc.followLeader.ratioVision = 30;
+	FollowTheLeaderDesc.followLeader.distToLeader = 50;
+	FollowTheLeaderDesc.followLeader.Leader = &boid;
+
+	boid.Init(desc);
 	boids->push_back(&boid);
 
-	flockingDesc.m_Position = CD::CDVector2(520, 500);
-	flockingDesc.shapeColor = { 255, 0, 0, 255 };
-	wanderRan.Init(flockingDesc);
+	FollowTheLeaderDesc.m_Position = CD::CDVector2(520, 500);
+	FollowTheLeaderDesc.shapeColor = { 255, 0, 0, 255 };
+	wanderRan.Init(FollowTheLeaderDesc);
 	boids->push_back(&wanderRan);
 
-	flockingDesc.m_Position = CD::CDVector2(500, 520);
-	flockingDesc.shapeColor = { 0, 255, 0, 255 };
-	wanderTime.Init(flockingDesc);
+	FollowTheLeaderDesc.m_Position = CD::CDVector2(500, 520);
+	FollowTheLeaderDesc.shapeColor = { 0, 255, 0, 255 };
+	wanderTime.Init(FollowTheLeaderDesc);
 	boids->push_back(&wanderTime);
 
-	flockingDesc.m_Position = CD::CDVector2(520, 520);
-	flockingDesc.shapeColor = { 255, 0, 255, 255 };
-	wader.Init(flockingDesc);
+	FollowTheLeaderDesc.m_Position = CD::CDVector2(520, 520);
+	FollowTheLeaderDesc.shapeColor = { 255, 0, 255, 255 };
+	wader.Init(FollowTheLeaderDesc);
 	boids->push_back(&wader);
 
-	flockingDesc.m_Position = CD::CDVector2(540, 500);
-	flockingDesc.shapeColor = { 0, 255, 255, 255 };
-	pathFollower.Init(flockingDesc);
+	FollowTheLeaderDesc.m_Position = CD::CDVector2(540, 500);
+	FollowTheLeaderDesc.shapeColor = { 0, 255, 255, 255 };
+	pathFollower.Init(FollowTheLeaderDesc);
 	boids->push_back(&pathFollower);
 
-	flockingDesc.m_Position = CD::CDVector2(500, 540);
-	flockingDesc.shapeColor = { 255, 255, 0, 255 };
-	patroler.Init(flockingDesc);
+	FollowTheLeaderDesc.m_Position = CD::CDVector2(500, 540);
+	FollowTheLeaderDesc.shapeColor = { 255, 255, 0, 255 };
+	patroler.Init(FollowTheLeaderDesc);
 	boids->push_back(&patroler);
 }
 

@@ -19,6 +19,7 @@ void Boid::Init(BoidDescriptor _Desc)
 	//shape.setPointCount(3);
 	myDesc = _Desc;
 	shape.setRadius(_Desc.ratio);
+	shape.setOrigin(_Desc.ratio, _Desc.ratio);
 	m_Speed = _Desc.m_Speed;
 	m_Position = _Desc.m_Position;
 	m_Direction = _Desc.m_Direction;
@@ -105,6 +106,11 @@ void Boid::Update()
 	{
 		newDirection +=
 			flocking(this,myDesc.flocking.Boids, myDesc.flocking.ratioVision, myDesc.flocking.impetu);
+	}
+	if (myDesc.followLeader.impetu > 0)
+	{
+		newDirection +=
+			FollowTheLeader(this,myDesc.followLeader.Boids, myDesc.followLeader.ratioVision, myDesc.followLeader.impetu, myDesc.followLeader.Leader, myDesc.followLeader.distToLeader);
 	}
 	m_Direction = newDirection;
 	m_Direction.normalize();
@@ -525,10 +531,20 @@ CD::CDVector2 Boid::flocking(Boid* A, std::vector<Boid*>* Boids, float ratioVisi
 	return F;
 }
 
-CD::CDVector2 Boid::FollowTheLeader(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu, Boid* leader)
+CD::CDVector2 Boid::FollowTheLeader(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu, Boid* leader, float distToLeader)
 {
 	CD::CDVector2 F;
+	CD::CDVector2 PointBehingTheLeader;
+	PointBehingTheLeader = leader->getPosition()-(leader->getDirection()*distToLeader);
 	F += flocking(A,Boids,ratioVision,impetu);
-	F += ;
-	return CD::CDVector2();
+	CD::CDVector2 DisToLeader;
+	DisToLeader = A->getPosition() - leader->getPosition();
+	if (DisToLeader.length()>distToLeader)
+	{
+		F += seek(A->getPosition(),PointBehingTheLeader,impetu);
+	}
+	F += evade(A->getPosition(), A->getDirection(),leader->getPosition(), leader->getDirection(), leader->getSpeed(), leader->getRatio(),impetu*2);
+	F.normalize();
+	F *= impetu;
+	return F;
 }
