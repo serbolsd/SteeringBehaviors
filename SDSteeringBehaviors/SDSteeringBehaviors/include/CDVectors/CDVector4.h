@@ -248,13 +248,23 @@ namespace CD
 
 	inline CDVector4 CDVector4::normalize(const CDVector4 & vec)
 	{
-		CDVector4 result = vec;
-		float mod = squareLength(result);
-
-		float invLength = 1.0f / sqrtf(mod);
-		result.x *= invLength;
-		result.y *= invLength;
-		result.z *= invLength;
+		CDVector4 result;
+		float mod = squareLength(vec);
+		if (mod == 0)
+		{
+			result.x = 0;
+			result.y = 0;
+			result.z = 0;
+			result.w = 0;
+		}
+		else
+		{
+			float invLength = 1.0f / sqrtf(mod);
+			result.x = vec.x*invLength;
+			result.y = vec.y*invLength;
+			result.z = vec.z*invLength;
+			result.w = vec.w*invLength;
+		}
 		return result;
 	}
 
@@ -263,14 +273,21 @@ namespace CD
 		//NOTE: leave w-component untouched
 		//@@const float EPSILON = 0.000001f;
 		float mod = squareLength();
-		//@@if(xxyyzz < EPSILON)
-		//@@    return *this; // do nothing if it is zero vector
-
-		//float invLength = invSqrt(xxyyzz);
-		float invLength = 1.0f / sqrtf(mod);
-		x *= invLength;
-		y *= invLength;
-		z *= invLength;
+		if (mod==0)
+		{
+			x = 0;
+			y = 0;
+			z = 0;
+			w = 0;
+		}
+		else
+		{
+			float invLength = 1.0f / sqrtf(mod);
+			x *= invLength;
+			y *= invLength;
+			z *= invLength;
+			w *= invLength;
+		}
 		return *this;
 	}
 
@@ -278,11 +295,21 @@ namespace CD
 	{
 		CDVector4 result=*this;
 		float mod = squareLength();
-		
-		float invLength = 1.0f / sqrtf(mod);
-		result.x *= invLength;
-		result.y *= invLength;
-		result.z *= invLength;
+		if (mod==0)
+		{
+			result.x = 0;
+			result.y = 0;
+			result.z = 0;
+			result.w = 0;
+		}
+		else
+		{
+			float invLength = 1.0f / sqrtf(mod);
+			result.x *= invLength;
+			result.y *= invLength;
+			result.z *= invLength;
+			result.w *= invLength;
+		}
 		return result;
 	}
 

@@ -24,6 +24,9 @@
     <ClCompile Include="source\Boid.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="source\Obstacle.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Boid.h">
@@ -40,6 +43,12 @@
     </ClInclude>
     <ClInclude Include="include\CDVectors\CDVector4.h">
       <Filter>Archivos de encabezado\CDLIBRARY</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Obstacle.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CDVectors\preRequsitos.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

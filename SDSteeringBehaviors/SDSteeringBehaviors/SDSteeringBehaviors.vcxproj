@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="source\Boid.cpp" />
+    <ClCompile Include="source\Obstacle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Boid.h" />
@@ -161,6 +162,8 @@
     <ClInclude Include="include\CDVectors\CDVector2.h" />
     <ClInclude Include="include\CDVectors\CDVector3.h" />
     <ClInclude Include="include\CDVectors\CDVector4.h" />
+    <ClInclude Include="include\CDVectors\preRequsitos.h" />
+    <ClInclude Include="include\Obstacle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

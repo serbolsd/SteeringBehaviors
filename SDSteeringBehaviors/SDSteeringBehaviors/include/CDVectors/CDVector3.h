@@ -240,20 +240,38 @@ namespace CD
 	{
 		CDVector3 result;
 		float mod = squareLength(vec);
-		float invLength = 1.0f / sqrtf(mod);
-		result.x = vec.x*invLength;
-		result.y = vec.y*invLength;
-		result.z = vec.z*invLength;
+		if (mod == 0)
+		{
+			result.x = 0;
+			result.y = 0;
+			result.z = 0;
+		}
+		else
+		{
+			float invLength = 1.0f / sqrtf(mod);
+			result.x = vec.x * invLength;
+			result.y = vec.y * invLength;
+			result.z = vec.z * invLength;
+		}
 		return result;
 	}
 
 	inline CD::CDVector3 & CD::CDVector3::normalize()
 	{
 		float mod = squareLength();
-		float invLength = 1.0f / sqrtf(mod);
-		x *= invLength;
-		y *= invLength;
-		z *= invLength;
+		if (mod==0)
+		{
+			x =0;
+			y =0;
+			z =0;
+		}
+		else
+		{
+			float invLength = 1.0f / sqrtf(mod);
+			x *= invLength;
+			y *= invLength;
+			z *= invLength;
+		}
 		return *this;
 	}
 
@@ -261,10 +279,19 @@ namespace CD
 	{
 		CDVector3 result;
 		float mod = squareLength();
-		float invLength = 1.0f / sqrtf(mod);
-		result.x = x*invLength;
-		result.y = y*invLength;
-		result.z = z*invLength;
+		if (mod == 0)
+		{
+			result.x = 0;
+			result.y = 0;
+			result.z = 0;
+		}
+		else
+		{
+			float invLength = 1.0f / sqrtf(mod);
+			result.x = x * invLength;
+			result.y = y * invLength;
+			result.z = z * invLength;
+		}
 		return result;
 	}
 

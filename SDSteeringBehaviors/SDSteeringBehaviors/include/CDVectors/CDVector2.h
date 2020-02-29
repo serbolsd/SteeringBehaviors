@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <iostream>
+#include <CDVectors/preRequsitos.h>
 namespace CD
 {
 	///////////////////////////////////////////////////////////////////////////////
@@ -227,9 +228,17 @@ namespace CD
 	{
 		CDVector2 result;
 		float mod = squareLength(vec);
-		float invLength = 1.0f / sqrtf(mod);
-		result.x = vec.x *invLength;
-		result.y = vec.y *invLength;
+		if (mod == 0)
+		{
+			result.x = 0;
+			result.y = 0;
+		}
+		else
+		{
+			float invLength = 1.0f / sqrtf(mod);
+			result.x = vec.x * invLength;
+			result.y = vec.y * invLength;
+		}
 		return result;
 	}
 
@@ -254,9 +263,17 @@ namespace CD
 	{
 		CDVector2 result;
 		float mod = squareLength();
-		float invLength = 1.0f / sqrtf(mod);
-		result.x = x *invLength;
-		result.y = y *invLength;
+		if (mod == 0)
+		{
+			result.x = 0;
+			result.y = 0;
+		}
+		else
+		{
+			float invLength = 1.0f / sqrtf(mod);
+			result.x = x * invLength;
+			result.y = y * invLength;
+		}
 		return result;
 	}
 
