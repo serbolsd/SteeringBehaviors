@@ -241,7 +241,7 @@ void BoidsInit()
 	//flockingDesc.shapeColor = { 255, 255, 0, 255 };
 	//patroler.Init(flockingDesc);
 	//boids->push_back(&patroler);
-
+	
 	BoidDescriptor FollowTheLeaderDesc;
 	FollowTheLeaderDesc.globalTime = dtime;
 	FollowTheLeaderDesc.ratio = 20;
