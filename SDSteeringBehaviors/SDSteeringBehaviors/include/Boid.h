@@ -4,6 +4,15 @@
 #include <vector>
 class Obstacle;
 class Boid;
+enum class TYPEBOID
+{
+	UNKNOWBOID=0,
+	PLAYER,
+	TANK,
+	CAMERA,
+	TORRET,
+	SCIENTIFIC
+};
 struct SeekDescriptor
 {
 	CD::CDVector2* objetive=nullptr;
@@ -126,6 +135,7 @@ struct BoidDescriptor
 	sf::Color shapeColor = {130,0,255,255};
 	float *globalTime=nullptr;
 	std::vector <Obstacle*> *ptr_obstacles=nullptr;
+	TYPEBOID BoidType = TYPEBOID::UNKNOWBOID;
 };
 
 class Boid
@@ -143,6 +153,7 @@ public:
 	float getDistanceToView() { return myDesc.obstacleEvadeDimentions.sizeFront; };
 	float getSpeed() { return m_Speed; };
 	float getRatio() { return myDesc.ratio; };
+	TYPEBOID getTypeBoid() { return mytype; };
 
 	static CD::CDVector2 seek(CD::CDVector2 PosA, CD::CDVector2 PosB,float Impetu);
 	static CD::CDVector2 flee(CD::CDVector2 PosA, CD::CDVector2 PosB,float Impetu);
@@ -192,4 +203,5 @@ private:
 	sf::VertexArray linesForObstacleEvade;
 	sf::VertexArray backLeftToObstacle;
 	sf::VertexArray frontRightToObstacle;
+	TYPEBOID mytype = TYPEBOID::UNKNOWBOID;
 };

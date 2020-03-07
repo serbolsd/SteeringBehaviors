@@ -16,6 +16,12 @@
     <Filter Include="Archivos de encabezado\CDLIBRARY">
       <UniqueIdentifier>{09ce4c29-6a5f-47e6-88d2-cfc1c47a252e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Estados">
+      <UniqueIdentifier>{3709ca2f-0e26-46a0-81f9-4e7cb9b4d529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Estados">
+      <UniqueIdentifier>{ba3f8c0d-7b42-48e5-b619-305300b111f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -26,6 +32,27 @@
     </ClCompile>
     <ClCompile Include="source\Obstacle.cpp">
       <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="source\States.cpp">
+      <Filter>Archivos de origen\Estados</Filter>
+    </ClCompile>
+    <ClCompile Include="source\StateIdle.cpp">
+      <Filter>Archivos de origen\Estados</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Statechasing.cpp">
+      <Filter>Archivos de origen\Estados</Filter>
+    </ClCompile>
+    <ClCompile Include="source\StateWalking.cpp">
+      <Filter>Archivos de origen\Estados</Filter>
+    </ClCompile>
+    <ClCompile Include="source\StateShooting.cpp">
+      <Filter>Archivos de origen\Estados</Filter>
+    </ClCompile>
+    <ClCompile Include="source\StateExploding.cpp">
+      <Filter>Archivos de origen\Estados</Filter>
+    </ClCompile>
+    <ClCompile Include="source\StateLooking.cpp">
+      <Filter>Archivos de origen\Estados</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="include\CDVectors\preRequsitos.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\States.h">
+      <Filter>Archivos de encabezado\Estados</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

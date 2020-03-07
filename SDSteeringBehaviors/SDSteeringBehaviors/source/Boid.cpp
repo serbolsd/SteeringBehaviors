@@ -30,6 +30,7 @@ void Boid::Init(BoidDescriptor _Desc)
 	m_Speed = _Desc.Speed;
 	m_Position = _Desc.Position;
 	m_Direction = _Desc.Direction;
+	mytype = _Desc.BoidType;
 	if (m_Direction!=CD::CDVector2(0,0))
 	{
 		m_DirectionView = m_Direction.getnormalize();
