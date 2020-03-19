@@ -9,13 +9,20 @@ StateShooting::~StateShooting()
 {
 }
 
-State* StateShooting::update(Boid* _boid)
+void StateShooting::onEnter()
 {
-	prepare();
+}
+
+ENUMSTATES StateShooting::onUpdate(Boid* _boid)
+{
 	//if (!_boid->playerInRange)
 	//{
-	//	return new StateLooking();
+	//	return ENUMSTATES::LOOKINGSTATE;
 	//}
 	//intance bullet
-	return new StateShooting();
+	return ENUMSTATES::SHOOTINGSTATE;
+}
+
+void StateShooting::onExit()
+{
 }

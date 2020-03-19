@@ -9,50 +9,44 @@ void Update();
 void Render();
 void Input();
 void Delete();
-sf::RenderWindow* wind;
-Boid boid;
-Boid wanderRan;
-Boid wanderTime;
-Boid wader;
-Boid pathFollower;
-Boid patroler;
-CD::CDVector2 *MousePosition;
-std::vector<Boid*> *boids;
-std::vector<Obstacle*> *obstacles;
-std::vector<CD::CDVector2> *path;
-float *dtime;
+sf::RenderWindow g_wind(sf::VideoMode(900, 900), "window");
 
-Obstacle firstObstacle;
-Obstacle SecondObstacle;
+CD::CDVector2 g_MousePosition;
+std::vector<Boid*> g_boidsVector;
+std::vector<Obstacle*> g_ObstaclesVector;
+std::vector<CD::CDVector2> g_pointsPathVector;
+float g_deltaTime;
+
 int main()
 {
-	//sum();
-	wind= new sf::RenderWindow(sf::VideoMode(900, 900), "window");
+	//sum(); 
+	
 	Init();
-	wind->setFramerateLimit(40);
+	g_wind.setFramerateLimit(40);
+	sf::RenderWindow createWin;
 	sf::Event event;
 	sf::Clock clock;
 	sf::Time currentTime;
 	sf::Time deltaTime;
 	
-	while (wind->isOpen())
+	while (g_wind.isOpen())
 	{
 		clock.restart();
 		//system("cls");
-		while (wind->pollEvent(event))
+		while (g_wind.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed||
 				event.key.code == sf::Keyboard::Escape)
-				wind->close();
+				g_wind.close();
 			
 
 		}
-		wind->clear(sf::Color(0, 0, 0, 0));
+		g_wind.clear(sf::Color(0, 0, 0, 0));
 		Update();
 		Render();
-		wind->display();
+		g_wind.display();
 		deltaTime = clock.getElapsedTime();
-		*dtime = deltaTime.asSeconds();
+		g_deltaTime = deltaTime.asSeconds();
 	}
 	Delete();
 	return 0;
@@ -60,46 +54,57 @@ int main()
 
 void Init()
 {
-	dtime = new float(0);
-	MousePosition = new CD::CDVector2;
-	path = new std::vector<CD::CDVector2>;
-	path->push_back(CD::CDVector2(400,400));
-	path->push_back(CD::CDVector2(800, 400));
-	path->push_back(CD::CDVector2(600, 800));
+	g_deltaTime = 0;
+	//g_MousePosition = new CD::CDVector2;
+	//g_Path = new std::vector<CD::CDVector2>;
+	g_pointsPathVector.push_back(CD::CDVector2(400,400));
+	g_pointsPathVector.push_back(CD::CDVector2(800, 400));
+	g_pointsPathVector.push_back(CD::CDVector2(600, 800));
 	ObstaclesInit();
 	BoidsInit();
 }
 
 void ObstaclesInit()
 {
-	obstacles = new std::vector<Obstacle*>;
+	Obstacle *firstObstacle = new Obstacle();
+	Obstacle *SecondObstacle = new Obstacle();
+	std::vector<Obstacle*>::iterator iteratorObstaclesVector;
+	iteratorObstaclesVector = g_ObstaclesVector.begin();
+	//obstacles = new std::vector<Obstacle*>;
 	ObstacleDescriptor obstacleDesc;
 	obstacleDesc.ratio = 40;
 	obstacleDesc.position = { 200,200 };
-	firstObstacle.Init(obstacleDesc);
-	obstacles->push_back(&firstObstacle);
+	firstObstacle->Init(obstacleDesc);
+	iteratorObstaclesVector=g_ObstaclesVector.insert(iteratorObstaclesVector ,firstObstacle);
 	obstacleDesc.ratio = 20;
 	obstacleDesc.position = { 280,240 };
-	SecondObstacle.Init(obstacleDesc);
-	obstacles->push_back(&SecondObstacle);
+	SecondObstacle->Init(obstacleDesc);
+	iteratorObstaclesVector = g_ObstaclesVector.insert(iteratorObstaclesVector, SecondObstacle);
 }
 
 void BoidsInit()
 {
-	boids = new std::vector<Boid*>;
+	Boid* boid = new Boid();
+	Boid* wanderRan = new Boid();
+	Boid* wanderTime = new Boid();
+	Boid* wader = new Boid();
+	Boid* pathFollower = new Boid();
+	Boid* patroler = new Boid();
+	std::vector<Boid*>::iterator iteratorBoidsVector;
+	iteratorBoidsVector = g_boidsVector.begin();
 	BoidDescriptor descSeek;
-	descSeek.globalTime = dtime;
+	descSeek.globalTime = &g_deltaTime;
 	descSeek.Direction = { 0 ,0 };
 	descSeek.Position = { 500,500 };
 	descSeek.Speed = 3;
 	descSeek.ratio = 20;
 	descSeek.masa = 0.1f;
 	descSeek.seek.impetu = 10;
-	descSeek.seek.objetive = MousePosition;
-	descSeek.ptr_obstacles = obstacles;
+	descSeek.seek.objetive = &g_MousePosition;
+	descSeek.ptr_obstacles = &g_ObstaclesVector;
 	descSeek.obstacleEvadeDimentions.impetu=15;
-	boid.Init(descSeek);
-	boids->push_back(&boid);
+	boid->Init(descSeek);
+	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector,boid);
 	/*BoidDescriptor descForEvade;
 	descForEvade.m_Direction = { 0,0 };
 	descForEvade.Position = { 600,600 };
@@ -123,7 +128,7 @@ void BoidsInit()
 	wanderRandDesc.wander.limitsX = CD::CDVector2(0, 900);
 	wanderRandDesc.wander.limitsY = CD::CDVector2(0, 900);
 	wanderRandDesc.wander.impetu = 10;
-	wanderRandDesc.globalTime = dtime;
+	wanderRandDesc.globalTime = &g_deltaTime;
 	wanderRandDesc.ratio = 4;
 	wanderRandDesc.Speed = 1;
 	wanderRandDesc.Position = CD::CDVector2(400, 400);
@@ -134,7 +139,7 @@ void BoidsInit()
 	wanderTimeDesc.wander.limitsY = CD::CDVector2(0, 900);
 	wanderTimeDesc.wander.impetu = 10;
 	wanderTimeDesc.wander.timeToNextPoint = 3;
-	wanderTimeDesc.globalTime = dtime;
+	wanderTimeDesc.globalTime = &g_deltaTime;
 	wanderTimeDesc.ratio = 4;
 	wanderTimeDesc.Speed = 1;
 	wanderTimeDesc.Position = CD::CDVector2(200, 200);
@@ -145,7 +150,7 @@ void BoidsInit()
 	wanderDesc.wander.openingAngleInDegrees = 20;
 	wanderDesc.wander.impetu = 10;
 	wanderDesc.wander.DistoToPointProyection = 10;
-	wanderDesc.globalTime = dtime;
+	wanderDesc.globalTime = &g_deltaTime;
 	wanderDesc.ratio = 4;
 	wanderDesc.Speed = 1;
 	wanderDesc.Position = CD::CDVector2(500, 500);
@@ -161,9 +166,9 @@ void BoidsInit()
 	BoidDescriptor folloPathDes;
 	folloPathDes.followPath.IndexPoint = 0;
 	folloPathDes.followPath.impetu = 10;
-	folloPathDes.followPath.Points = path;
+	folloPathDes.followPath.Points = &g_pointsPathVector;
 	folloPathDes.followPath.ratio = 30;
-	folloPathDes.globalTime = dtime;
+	folloPathDes.globalTime = &g_deltaTime;
 	folloPathDes.ratio = 4;
 	folloPathDes.Speed = 4;
 	folloPathDes.masa = 0.2f;
@@ -174,14 +179,14 @@ void BoidsInit()
 	//boids->push_back(&pathFollower);
 
 	BoidDescriptor patrolDesc;
-	patrolDesc.globalTime = dtime;
+	patrolDesc.globalTime = &g_deltaTime;
 	patrolDesc.ratio = 4;
 	patrolDesc.Speed = 4;
 	patrolDesc.masa = 0.2f;
 	patrolDesc.Position = CD::CDVector2(500, 500);
 	patrolDesc.shapeColor = { 0, 0, 255, 255 };
 	patrolDesc.patrol.indexPath = 0;
-	patrolDesc.patrol.Points = path;
+	patrolDesc.patrol.Points = &g_pointsPathVector;
 	patrolDesc.patrol.impetu = 10;
 	patrolDesc.patrol.Ratio = 30;
 	patrolDesc.patrol.type = TypePatrol::PatrolTypeInverted;
@@ -198,12 +203,12 @@ void BoidsInit()
 	//boids->push_back(&pathFollower);
 
 	BoidDescriptor flockingDesc;
-	flockingDesc.globalTime = dtime;
+	flockingDesc.globalTime = &g_deltaTime;
 	flockingDesc.ratio = 8;
 	flockingDesc.Speed = 1;
 	flockingDesc.Position = CD::CDVector2(500, 500);
 	flockingDesc.shapeColor = { 0, 0, 255, 255 };
-	flockingDesc.flocking.Boids = boids;
+	flockingDesc.flocking.Boids = &g_boidsVector;
 	flockingDesc.flocking.impetuDirection = 20;
 	flockingDesc.flocking.impetuCohesion = 5;
 	flockingDesc.flocking.impetuSeparation = 50;
@@ -243,13 +248,13 @@ void BoidsInit()
 	//boids->push_back(&patroler);
 	
 	BoidDescriptor FollowTheLeaderDesc;
-	FollowTheLeaderDesc.globalTime = dtime;
+	FollowTheLeaderDesc.globalTime = &g_deltaTime;
 	FollowTheLeaderDesc.ratio = 20;
 	FollowTheLeaderDesc.Speed = 2;
 	FollowTheLeaderDesc.masa = 0.2f;
 	FollowTheLeaderDesc.Position = CD::CDVector2(500, 500);
 	FollowTheLeaderDesc.shapeColor = { 0, 0, 255, 255 };
-	FollowTheLeaderDesc.followLeader.Boids = boids;
+	FollowTheLeaderDesc.followLeader.Boids = &g_boidsVector;
 	FollowTheLeaderDesc.followLeader.impetu = 10;
 	FollowTheLeaderDesc.followLeader.impetuFollow = 10;
 	FollowTheLeaderDesc.followLeader.impetuEvade = 20;
@@ -258,21 +263,21 @@ void BoidsInit()
 	FollowTheLeaderDesc.followLeader.impetuSeparation = 10;
 	FollowTheLeaderDesc.followLeader.ratioVision = 30;
 	FollowTheLeaderDesc.followLeader.distToLeader = 50;
-	FollowTheLeaderDesc.followLeader.Leader = &boid;
-	FollowTheLeaderDesc.ptr_obstacles = obstacles;
+	FollowTheLeaderDesc.followLeader.Leader = boid;
+	FollowTheLeaderDesc.ptr_obstacles = &g_ObstaclesVector;
 	FollowTheLeaderDesc.obstacleEvadeDimentions.impetu =20 ;
 
 	BoidDescriptor descArrive;
-	descArrive.globalTime = dtime;
+	descArrive.globalTime = &g_deltaTime;
 	descArrive.Direction = { 0 ,0 };
 	descArrive.Position = { 500,500 };
 	descArrive.Speed = 2;
 	descArrive.ratio = 15;
 	descArrive.masa = 0.1f;
 	descArrive.arrive.impetu = 10;
-	descArrive.arrive.objetive = MousePosition;
+	descArrive.arrive.objetive = &g_MousePosition;
 	descArrive.arrive.ratio = 20;
-	descArrive.ptr_obstacles = obstacles;
+	descArrive.ptr_obstacles = &g_ObstaclesVector;
 	descArrive.obstacleEvadeDimentions.impetu = 10;
 
 	//boid.Init(descArrive);
@@ -280,41 +285,41 @@ void BoidsInit()
 	
 	FollowTheLeaderDesc.Position = CD::CDVector2(520, 500);
 	FollowTheLeaderDesc.shapeColor = { 255, 0, 0, 255 };
-	wanderRan.Init(FollowTheLeaderDesc);
-	boids->push_back(&wanderRan);
+	wanderRan->Init(FollowTheLeaderDesc);
+	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wanderRan);
 	
 	FollowTheLeaderDesc.Position = CD::CDVector2(500, 520);
 	FollowTheLeaderDesc.shapeColor = { 0, 255, 0, 255 };
-	wanderTime.Init(FollowTheLeaderDesc);
-	boids->push_back(&wanderTime);
+	wanderTime->Init(FollowTheLeaderDesc);
+	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wanderTime);
 	
 	FollowTheLeaderDesc.Position = CD::CDVector2(520, 520);
 	FollowTheLeaderDesc.shapeColor = { 255, 0, 255, 255 };
-	wader.Init(FollowTheLeaderDesc);
-	boids->push_back(&wader);
+	wader->Init(FollowTheLeaderDesc);
+	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wader);
 	
 	FollowTheLeaderDesc.Position = CD::CDVector2(540, 500);
 	FollowTheLeaderDesc.shapeColor = { 0, 255, 255, 255 };
-	pathFollower.Init(FollowTheLeaderDesc);
-	boids->push_back(&pathFollower);
+	pathFollower->Init(FollowTheLeaderDesc);
+	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, pathFollower);
 	
 	FollowTheLeaderDesc.Position = CD::CDVector2(500, 540);
 	FollowTheLeaderDesc.shapeColor = { 255, 255, 0, 255 };
-	patroler.Init(FollowTheLeaderDesc);
-	boids->push_back(&patroler);
+	patroler->Init(FollowTheLeaderDesc);
+	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, patroler);
 }
 
 void Update()
 {
-	sf::Vector2i Mpos=sf::Mouse::getPosition(*wind);
-	sf::Vector2f cordPos=wind->mapPixelToCoords(Mpos);
-	MousePosition->x = cordPos.x;
-	MousePosition->y = cordPos.y;
+	sf::Vector2i Mpos=sf::Mouse::getPosition(g_wind);
+	sf::Vector2f cordPos=g_wind.mapPixelToCoords(Mpos);
+	g_MousePosition.x = cordPos.x;
+	g_MousePosition.y = cordPos.y;
 	//boid.Update();
 	//PersuOrEvadeboid.Update();
-	for(int i=0; i< boids->size();i++)
+	for(int i=0; i< g_boidsVector.size();i++)
 	{
-		boids[0][i]->Update();
+		g_boidsVector[i]->Update();
 	}
 }
 
@@ -322,13 +327,13 @@ void Render()
 {
 	//boid.Render(*wind);
 	//PersuOrEvadeboid.Render(*wind);
-	for (int i = 0; i < obstacles->size(); i++)
+	for (int i = 0; i < g_ObstaclesVector.size(); i++)
 	{
-		obstacles[0][i]->Render(*wind);
+		g_ObstaclesVector[i]->Render(g_wind);
 	}
-	for (int i = 0; i < boids->size(); i++)
+	for (int i = 0; i < g_boidsVector.size(); i++)
 	{
-		boids[0][i]->Render(*wind);
+		g_boidsVector[i]->Render(g_wind);
 	}
 }
 
@@ -339,18 +344,23 @@ void Input()
 void Delete()
 {
 	//boid.Delete();
-	delete dtime;
-	for (int i = 0; i < obstacles->size(); i++)
+	//delete dtime;
+	for (int i = 0; i < g_ObstaclesVector.size(); i++)
 	{
-		obstacles[0][i]->Delete();
+		if (g_ObstaclesVector[i]!=nullptr)
+		{
+			delete g_ObstaclesVector[i];
+		}
+		//obstacles[0][i]->Delete();
 		//delete boids[0][i];
 	}
-	for (int i = 0; i < boids->size(); i++)
+	for (int i = 0; i < g_boidsVector.size(); i++)
 	{
-		boids[0][i]->Delete();
+		if (g_boidsVector[i] != nullptr)
+		{
+			delete g_boidsVector[i];
+		}
+		//boids[0][i]->Delete();
 		//delete boids[0][i];
 	}
-	delete boids;
-	delete path;
-	//PersuOrEvadeboid.Delete();
 }

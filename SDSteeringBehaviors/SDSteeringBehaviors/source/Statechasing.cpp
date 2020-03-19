@@ -9,13 +9,15 @@ Statechasing::~Statechasing()
 {
 }
 
-State* Statechasing::update(Boid* _boid)
+void Statechasing::onEnter()
 {
-	prepare();
-	//if (_boid->inRangePlayer)
-	//{
-	//	return new StateExploding();
-	//}
-	//persu player;
-	return new Statechasing();
+}
+
+ENUMSTATES Statechasing::onUpdate(Boid* _boid)
+{
+	return ENUMSTATES::CHASINGSTATE;
+}
+
+void Statechasing::onExit()
+{
 }

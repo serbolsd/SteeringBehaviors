@@ -9,10 +9,17 @@ StateExploding::~StateExploding()
 {
 }
 
-State* StateExploding::update(Boid* _boid)
+void StateExploding::onEnter()
 {
-	prepare();
-	
+}
+
+ENUMSTATES StateExploding::onUpdate(Boid* _boid)
+{
 	//_boid->player.addDamage(_damage);
 	//destroy object
+	return ENUMSTATES::EXPLOTINGSTATE;
+}
+
+void StateExploding::onExit()
+{
 }

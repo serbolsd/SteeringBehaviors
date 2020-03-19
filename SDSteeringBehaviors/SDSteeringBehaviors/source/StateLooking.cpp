@@ -9,12 +9,19 @@ StateLooking::~StateLooking()
 {
 }
 
-State* StateLooking::update(Boid* _boid)
+void StateLooking::onEnter()
 {
-	prepare();
+}
+
+ENUMSTATES StateLooking::onUpdate(Boid* _boid)
+{
 	//if (_boid->IsWatchingPlayer)
 	//{
-	//	return new StateShooting();
+	//	return ENUMSTATES::SHOOTINGSTATE;
 	//}
-	return new StateLooking();
+	return ENUMSTATES::LOOKINGSTATE;
+}
+
+void StateLooking::onExit()
+{
 }

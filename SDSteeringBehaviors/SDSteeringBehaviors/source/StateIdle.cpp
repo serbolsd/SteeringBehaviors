@@ -9,36 +9,42 @@ StateIdle::~StateIdle()
 {
 }
 
-State* StateIdle::update(Boid* _boid)
+void StateIdle::onEnter()
 {
-    prepare();
-	switch (_boid->getTypeBoid())
-	{
+}
+
+ENUMSTATES StateIdle::onUpdate(Boid* _boid)
+{
+    switch (_boid->getTypeBoid())
+    {
     case TYPEBOID::UNKNOWBOID:
-        return new StateIdle();
         break;
     case TYPEBOID::PLAYER:
-        if (_boid->getDirection()!=CD::CDVector2(0,0))
+        if (_boid->getDirection() != CD::CDVector2(0, 0))
         {
-            return new StateWalking();
+            return ENUMSTATES::WALKINGSTATE;
         }
         break;
     case TYPEBOID::TANK:
         //if (Watch player)
         //{
-        //   return new Statechasing();
+        //   return ENUMSTATES::CHASINGSTATE;
         //}
         break;
     case TYPEBOID::CAMERA:
-        //   return new StateLooking();
+        //   return ENUMSTATES::LOOKINGSTATE;
         break;
     case TYPEBOID::TORRET:
-        //   return new StateLooking();
+        //   return ENUMSTATES::LOOKINGSTATE;
         break;
     case TYPEBOID::SCIENTIFIC:
         break;
     default:
-        break;  
-	}
-    return new StateIdle();
+        break;
+    }
+    return ENUMSTATES::IDLESTATE;
+}
+
+void StateIdle::onExit()
+{
 }

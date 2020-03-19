@@ -9,12 +9,19 @@ StateWalking::~StateWalking()
 {
 }
 
-State* StateWalking::update(Boid* _boid)
+void StateWalking::onEnter()
 {
-	prepare();
-	if (_boid->getDirection()==CD::CDVector2(0,0))
+}
+
+ENUMSTATES StateWalking::onUpdate(Boid* _boid)
+{
+	if (_boid->getDirection() == CD::CDVector2(0, 0))
 	{
-		return new StateIdle();
+		return ENUMSTATES::IDLESTATE;
 	}
-	return new StateWalking();
+	return ENUMSTATES::WALKINGSTATE;
+}
+
+void StateWalking::onExit()
+{
 }

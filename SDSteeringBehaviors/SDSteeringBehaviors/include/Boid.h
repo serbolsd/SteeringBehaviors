@@ -2,6 +2,7 @@
 #include "CDVectors.h"
 #include "SFML/Graphics.hpp"
 #include <vector>
+#include "States.h"
 class Obstacle;
 class Boid;
 enum class TYPEBOID
@@ -143,17 +144,17 @@ class Boid
 public:
 	Boid();
 	~Boid();
-	void Init(BoidDescriptor _Desc);
+	void Init(const BoidDescriptor& _Desc);
 	void Update();
 	void Render(sf::RenderWindow &_wind);
 	void Delete();
-	CD::CDVector2 getPosition() { return m_Position; };
-	CD::CDVector2 getDirection() { return m_Direction; };
-	CD::CDVector2 getDirectionView() { return m_DirectionView; };
-	float getDistanceToView() { return myDesc.obstacleEvadeDimentions.sizeFront; };
-	float getSpeed() { return m_Speed; };
-	float getRatio() { return myDesc.ratio; };
-	TYPEBOID getTypeBoid() { return mytype; };
+	CD::CDVector2 getPosition() { return m_position; };
+	CD::CDVector2 getDirection() { return m_direction; };
+	CD::CDVector2 getDirectionView() { return m_directionView; };
+	float getDistanceToView() { return m_myDesc.obstacleEvadeDimentions.sizeFront; };
+	float getSpeed() { return m_speed; };
+	float getRatio() { return m_myDesc.ratio; };
+	TYPEBOID getTypeBoid() { return m_mytype; };
 
 	static CD::CDVector2 seek(CD::CDVector2 PosA, CD::CDVector2 PosB,float Impetu);
 	static CD::CDVector2 flee(CD::CDVector2 PosA, CD::CDVector2 PosB,float Impetu);
@@ -182,26 +183,29 @@ private:
 	void calculateDimensionToDetecteCollision();
 	bool detectedCollision(Obstacle* _obstacle);
 
-	CD::CDVector2 m_Position;
-	CD::CDVector2 m_Direction;
-	CD::CDVector2 m_DirectionView;
-	CD::CDVector2 Right;
-	float m_Speed=0;
-	sf::CircleShape shape;
-	BoidDescriptor myDesc;
-	float ElapsedTime=0;
-	float impetuForCollision = 0;
-	CD::CDVector2 frontRightCollisionPointPos;
-	CD::CDVector2 frontLeftCollisionPointPos;
-	CD::CDVector2 backRightCollisionPointPos;
-	CD::CDVector2 backLeftCollisionPointPos;
-	float sumLeftAndFronVisionObstacle = 0;
-	float anche = 0;
-	float large = 0;
-	float hipotenuse = 0;
-	bool thereAreObstacles = false;
-	sf::VertexArray linesForObstacleEvade;
-	sf::VertexArray backLeftToObstacle;
-	sf::VertexArray frontRightToObstacle;
-	TYPEBOID mytype = TYPEBOID::UNKNOWBOID;
+	CD::CDVector2 m_position;
+	CD::CDVector2 m_direction;
+	CD::CDVector2 m_directionView;
+	CD::CDVector2 m_right;
+	float m_speed=0;
+	sf::CircleShape m_shape;
+	BoidDescriptor m_myDesc;
+
+	float m_elapsedTime=0;
+	float m_impetuForCollision = 0;
+	CD::CDVector2 m_frontRightCollisionPointPos;
+	CD::CDVector2 m_frontLeftCollisionPointPos;
+	CD::CDVector2 m_backRightCollisionPointPos;
+	CD::CDVector2 m_backLeftCollisionPointPos;
+	float m_sumLeftAndFronVisionObstacle = 0;
+	float m_anche = 0;
+	float m_large = 0;
+	float m_hipotenuse = 0;
+	bool m_thereAreObstacles = false;
+	sf::VertexArray m_linesForObstacleEvade;
+	sf::VertexArray m_backLeftToObstacle;
+	sf::VertexArray m_frontRightToObstacle;
+
+	TYPEBOID m_mytype = TYPEBOID::UNKNOWBOID;
+	State* m_myState = nullptr;
 };

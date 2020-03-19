@@ -5,67 +5,68 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include "Obstacle.h"
+#include <stdlib.h>
 
 Boid::Boid()
 {
-	m_Speed = 0;
+	m_speed = 0;
 }
 
 Boid::~Boid()
 {
 }
 
-void Boid::Init(BoidDescriptor _Desc)
+void Boid::Init(const BoidDescriptor & _Desc)
 {
-	linesForObstacleEvade.setPrimitiveType(sf::LinesStrip);
-	linesForObstacleEvade.resize(4);
-	backLeftToObstacle.setPrimitiveType(sf::LinesStrip);
-	backLeftToObstacle.resize(2);
-	frontRightToObstacle.setPrimitiveType(sf::LinesStrip);
-	frontRightToObstacle.resize(2);
-	//shape.setPointCount(3);
-	myDesc = _Desc;
-	shape.setRadius(_Desc.ratio);
-	shape.setOrigin(_Desc.ratio, _Desc.ratio);
-	m_Speed = _Desc.Speed;
-	m_Position = _Desc.Position;
-	m_Direction = _Desc.Direction;
-	mytype = _Desc.BoidType;
-	if (m_Direction!=CD::CDVector2(0,0))
+	m_linesForObstacleEvade.setPrimitiveType(sf::LinesStrip);
+	m_linesForObstacleEvade.resize(4);
+	m_backLeftToObstacle.setPrimitiveType(sf::LinesStrip);
+	m_backLeftToObstacle.resize(2);
+	m_frontRightToObstacle.setPrimitiveType(sf::LinesStrip);
+	m_frontRightToObstacle.resize(2);
+	//m_shape.setPointCount(3);
+	m_myDesc = _Desc;
+	m_shape.setRadius(_Desc.ratio);
+	m_shape.setOrigin(_Desc.ratio, _Desc.ratio);
+	m_speed = _Desc.Speed;
+	m_position = _Desc.Position;
+	m_direction = _Desc.Direction;
+	m_mytype = _Desc.BoidType;
+	if (m_direction!=CD::CDVector2(0,0))
 	{
-		m_DirectionView = m_Direction.getnormalize();
+		m_directionView = m_direction.getnormalize();
 	}
 	else
 	{
-		m_DirectionView = _Desc.DirectionView;
+		m_directionView = _Desc.DirectionView;
 	}
-	Right = {m_DirectionView.y,-m_Direction.x};
-	shape.setFillColor(myDesc.shapeColor);
-	if (myDesc.ptr_obstacles != nullptr&& myDesc.ptr_obstacles->size()>0)
+	m_right = {m_directionView.y,-m_direction.x};
+	m_shape.setFillColor(m_myDesc.shapeColor);
+	if (m_myDesc.ptr_obstacles != nullptr&& m_myDesc.ptr_obstacles->size()>0)
 	{
-		thereAreObstacles = true;
+		m_thereAreObstacles = true;
 	}
 	else
 	{
 		return;
 	}
-	if (myDesc.obstacleEvadeDimentions.sizeFront<myDesc.ratio)
+	if (m_myDesc.obstacleEvadeDimentions.sizeFront<m_myDesc.ratio)
 	{
-		myDesc.obstacleEvadeDimentions.sizeFront = myDesc.ratio*6;
+		m_myDesc.obstacleEvadeDimentions.sizeFront = m_myDesc.ratio*6;
 	}
-	if (myDesc.obstacleEvadeDimentions.sizeBack < myDesc.ratio)
+	if (m_myDesc.obstacleEvadeDimentions.sizeBack < m_myDesc.ratio)
 	{
-		myDesc.obstacleEvadeDimentions.sizeBack = myDesc.ratio*2;
+		m_myDesc.obstacleEvadeDimentions.sizeBack = m_myDesc.ratio*2;
 	}
-	if (myDesc.obstacleEvadeDimentions.sizeLeft < myDesc.ratio)
+	if (m_myDesc.obstacleEvadeDimentions.sizeLeft < m_myDesc.ratio)
 	{
-		myDesc.obstacleEvadeDimentions.sizeLeft = myDesc.ratio*2;
+		m_myDesc.obstacleEvadeDimentions.sizeLeft = m_myDesc.ratio*2;
 	}
-	if (myDesc.obstacleEvadeDimentions.sizeRight < myDesc.ratio)
+	if (m_myDesc.obstacleEvadeDimentions.sizeRight < m_myDesc.ratio)
 	{
-		myDesc.obstacleEvadeDimentions.sizeRight = myDesc.ratio*2;
+		m_myDesc.obstacleEvadeDimentions.sizeRight = m_myDesc.ratio*2;
 	}
-	shape.setPosition(m_Position.x, m_Position.y);
+	m_shape.setPosition(m_position.x, m_position.y);
 	CalculateImpetuForCollision();
 	calculatePointsToDetecteCollision();
 	calculateDimensionToDetecteCollision();
@@ -73,140 +74,140 @@ void Boid::Init(BoidDescriptor _Desc)
 
 void Boid::Update()
 {
-	ElapsedTime += *myDesc.globalTime;
+	m_elapsedTime += *m_myDesc.globalTime;
 	CD::CDVector2 newDirection = { 0,0 };
-	m_Direction = m_DirectionView * m_Speed;
-	if (myDesc.seek.impetu>0)
+	m_direction = m_directionView * m_speed;
+	if (m_myDesc.seek.impetu>0)
 	{
-		newDirection += seek(m_Position,*myDesc.seek.objetive, myDesc.seek.impetu);
+		newDirection += seek(m_position,*m_myDesc.seek.objetive, m_myDesc.seek.impetu);
 	}
-	if (myDesc.flee.impetu>0)
+	if (m_myDesc.flee.impetu>0)
 	{
-		if (myDesc.flee.ratio > 0)
+		if (m_myDesc.flee.ratio > 0)
 		{
-			newDirection += fleeRatio(m_Position, *myDesc.flee.objetive, myDesc.flee.impetu, myDesc.flee.ratio);
+			newDirection += fleeRatio(m_position, *m_myDesc.flee.objetive, m_myDesc.flee.impetu, m_myDesc.flee.ratio);
 		}
 		else
 		{
-			newDirection += flee(m_Position, *myDesc.flee.objetive, myDesc.flee.impetu);
+			newDirection += flee(m_position, *m_myDesc.flee.objetive, m_myDesc.flee.impetu);
 		}
 	}
-	if (myDesc.evade.impetu > 0)
+	if (m_myDesc.evade.impetu > 0)
 	{
 		newDirection +=
-			evade(m_Position,m_Direction, myDesc.evade.objetive->getPosition(), myDesc.evade.objetive->getDirection(), myDesc.evade.objetive->getSpeed(), myDesc.evade.timeProyection, myDesc.evade.impetu);
+			evade(m_position,m_direction, m_myDesc.evade.objetive->getPosition(), m_myDesc.evade.objetive->getDirection(), m_myDesc.evade.objetive->getSpeed(), m_myDesc.evade.timeProyection, m_myDesc.evade.impetu);
 	}
-	if (myDesc.persu.impetu > 0)
+	if (m_myDesc.persu.impetu > 0)
 	{
 		newDirection +=
-			persu(m_Position, myDesc.persu.objetive->getPosition(), myDesc.persu.objetive->getDirection(), myDesc.persu.objetive->getSpeed(), myDesc.persu.timeProyection, myDesc.persu.impetu);
+			persu(m_position, m_myDesc.persu.objetive->getPosition(), m_myDesc.persu.objetive->getDirection(), m_myDesc.persu.objetive->getSpeed(), m_myDesc.persu.timeProyection, m_myDesc.persu.impetu);
 	}
-	if (myDesc.wander.impetu > 0)
+	if (m_myDesc.wander.impetu > 0)
 	{
-		switch (myDesc.wander.type)
+		switch (m_myDesc.wander.type)
 		{
 		case TypeWander::unknowWanderType:
 			break;
 		case TypeWander::WanderTypeRandom:
 			newDirection +=
-			wanderRandom(m_Position, myDesc.wander.limitsX, myDesc.wander.limitsY, myDesc.wander.impetu);
+			wanderRandom(m_position, m_myDesc.wander.limitsX, m_myDesc.wander.limitsY, m_myDesc.wander.impetu);
 			break;
 		case TypeWander::wanderTypeTime:
 			newDirection +=
-				wanderTime(m_Position,m_Direction, myDesc.wander.limitsX, myDesc.wander.limitsY, 
-					myDesc.wander.impetu, ElapsedTime, myDesc.wander.timeToNextPoint);
+				wanderTime(m_position,m_direction, m_myDesc.wander.limitsX, m_myDesc.wander.limitsY, 
+					m_myDesc.wander.impetu, m_elapsedTime, m_myDesc.wander.timeToNextPoint);
 			break;
 		case TypeWander::WanderTypeVision:
 			newDirection +=
-				wander(m_Position,m_Direction, myDesc.wander.impetu,myDesc.wander.DistoToPointProyection, 
-					myDesc.wander.ratio, myDesc.wander.openingAngleInDegrees);
+				wander(m_position,m_direction, m_myDesc.wander.impetu,m_myDesc.wander.DistoToPointProyection, 
+					m_myDesc.wander.ratio, m_myDesc.wander.openingAngleInDegrees);
 			break;
 		default:
 			break;
 		}
 	}
-	if (myDesc.followPath.impetu > 0)
+	if (m_myDesc.followPath.impetu > 0)
 	{
 		newDirection +=
-			FollowPath(m_Position, *myDesc.followPath.Points, myDesc.followPath.impetu, myDesc.followPath.IndexPoint, myDesc.followPath.ratio);
+			FollowPath(m_position, *m_myDesc.followPath.Points, m_myDesc.followPath.impetu, m_myDesc.followPath.IndexPoint, m_myDesc.followPath.ratio);
 	}
-	if (myDesc.patrol.impetu > 0)
+	if (m_myDesc.patrol.impetu > 0)
 	{
-		switch (myDesc.patrol.type)
+		switch (m_myDesc.patrol.type)
 		{			
 		case TypePatrol::PatrolTypeCircuit:
 			newDirection +=
-				PatrolCircuit(m_Position,*myDesc.patrol.Points,myDesc.patrol.impetu,myDesc.patrol.indexPath, myDesc.patrol.Ratio,ElapsedTime ,myDesc.patrol.timeToStay);
+				PatrolCircuit(m_position,*m_myDesc.patrol.Points,m_myDesc.patrol.impetu,m_myDesc.patrol.indexPath, m_myDesc.patrol.Ratio,m_elapsedTime ,m_myDesc.patrol.timeToStay);
 			break;
 		case TypePatrol::PatrolTypeInverted:
 			newDirection +=
-				PatrolInverted(m_Position, *myDesc.patrol.Points, myDesc.patrol.impetu, myDesc.patrol.indexPath, myDesc.patrol.Ratio, ElapsedTime, myDesc.patrol.timeToStay,myDesc.patrol.bReturn);
+				PatrolInverted(m_position, *m_myDesc.patrol.Points, m_myDesc.patrol.impetu, m_myDesc.patrol.indexPath, m_myDesc.patrol.Ratio, m_elapsedTime, m_myDesc.patrol.timeToStay,m_myDesc.patrol.bReturn);
 			break;
 		default:
 			break;
 		}
 	}
-	if (myDesc.flocking.impetuDirection > 0)
+	if (m_myDesc.flocking.impetuDirection > 0)
 	{
 		newDirection +=
-			flocking(this,myDesc.flocking.Boids, myDesc.flocking.ratioVision, myDesc.flocking.impetuDirection, myDesc.flocking.impetuCohesion, myDesc.flocking.impetuSeparation);
+			flocking(this,m_myDesc.flocking.Boids, m_myDesc.flocking.ratioVision, m_myDesc.flocking.impetuDirection, m_myDesc.flocking.impetuCohesion, m_myDesc.flocking.impetuSeparation);
 	}
-	if (myDesc.followLeader.impetuFollow > 0)
+	if (m_myDesc.followLeader.impetuFollow > 0)
 	{
 		newDirection +=
-			FollowTheLeader(this,myDesc.followLeader.Boids, myDesc.followLeader.ratioVision, myDesc.followLeader.impetuFollow, myDesc.followLeader.impetuEvade, myDesc.followLeader.impetuDirection, myDesc.followLeader.impetuCohesion, myDesc.followLeader.impetuSeparation, myDesc.followLeader.Leader, myDesc.followLeader.distToLeader);
+			FollowTheLeader(this,m_myDesc.followLeader.Boids, m_myDesc.followLeader.ratioVision, m_myDesc.followLeader.impetuFollow, m_myDesc.followLeader.impetuEvade, m_myDesc.followLeader.impetuDirection, m_myDesc.followLeader.impetuCohesion, m_myDesc.followLeader.impetuSeparation, m_myDesc.followLeader.Leader, m_myDesc.followLeader.distToLeader);
 	}
-	if (thereAreObstacles)
+	if (m_thereAreObstacles)
 	{
 		newDirection +=
-		obstacleCollision(this,myDesc.ptr_obstacles,impetuForCollision);
+		obstacleCollision(this,m_myDesc.ptr_obstacles,m_impetuForCollision);
 		newDirection +=
-		obstacleEvade(this, myDesc.ptr_obstacles, myDesc.obstacleEvadeDimentions.impetu);
+		obstacleEvade(this, m_myDesc.ptr_obstacles, m_myDesc.obstacleEvadeDimentions.impetu);
 	}
 	if (newDirection!=CD::CDVector2(0,0))
 	{
-		//newDirection = truncar(newDirection,m_Speed);
-		m_Direction = Inercia(m_Direction,newDirection,myDesc.masa);
-		newDirection = truncar(newDirection,m_Speed);
-		m_DirectionView = m_Direction.getnormalize();
-		Right = { m_DirectionView.y,-m_Direction.x };
+		//newDirection = truncar(newDirection,m_speed);
+		m_direction = Inercia(m_direction,newDirection,m_myDesc.masa);
+		newDirection = truncar(newDirection,m_speed);
+		m_directionView = m_direction.getnormalize();
+		m_right = { m_directionView.y,-m_direction.x };
 		
 	}
 	else
 	{
-		m_Direction = CD::CDVector2(0, 0);
+		m_direction = CD::CDVector2(0, 0);
 	}
 	
-	if (myDesc.arrive.impetu > 0)
+	if (m_myDesc.arrive.impetu > 0)
 	{
-		newDirection = arrive(m_Position, m_Direction, *myDesc.arrive.objetive, m_Speed, myDesc.arrive.ratio,myDesc.masa);
+		newDirection = arrive(m_position, m_direction, *m_myDesc.arrive.objetive, m_speed, m_myDesc.arrive.ratio,m_myDesc.masa);
 		
-		m_Direction = newDirection;
+		m_direction = newDirection;
 		if (newDirection != CD::CDVector2(0, 0))
 		{
-			//m_Direction += (newDirection * myDesc.masa);
-			//m_Direction.normalize();
-			m_DirectionView = m_Direction.getnormalize();
-			//m_DirectionView.normalize();
-			Right = { m_DirectionView.y,-m_DirectionView.x };
+			//m_direction += (newDirection * m_myDesc.masa);
+			//m_direction.normalize();
+			m_directionView = m_direction.getnormalize();
+			//m_directionView.normalize();
+			m_right = { m_directionView.y,-m_directionView.x };
 		}
 		else
 		{
-			m_Direction = CD::CDVector2(0, 0);
+			m_direction = CD::CDVector2(0, 0);
 		}
 	}
 	else
 	{
-		m_Direction *= m_Speed;
+		m_direction *= m_speed;
 	}
 	calculatePointsToDetecteCollision();
 }
 
 void Boid::Render(sf::RenderWindow& _wind)
 {
-	m_Position += m_Direction;
-	shape.setPosition(m_Position.x, m_Position.y);
-	_wind.draw(shape);
+	m_position += m_direction;
+	m_shape.setPosition(m_position.x, m_position.y);
+	_wind.draw(m_shape);
 	//_wind.draw(linesForObstacleEvade);
 	//_wind.draw(backLeftToObstacle);
 	//_wind.draw(frontRightToObstacle);
@@ -214,15 +215,15 @@ void Boid::Render(sf::RenderWindow& _wind)
 
 void Boid::Delete()
 {
-	delete myDesc.seek.objetive;
-	delete myDesc.flee.objetive;
-	delete myDesc.arrive.objetive;
-	if (myDesc.evade.objetive!=nullptr)
+	delete m_myDesc.seek.objetive;
+	delete m_myDesc.flee.objetive;
+	delete m_myDesc.arrive.objetive;
+	if (m_myDesc.evade.objetive!=nullptr)
 	{
-		delete myDesc.evade.objetive;
+		delete m_myDesc.evade.objetive;
 
 	}
-	delete myDesc.persu.objetive;
+	delete m_myDesc.persu.objetive;
 }
 
 CD::CDVector2 Boid::seek(CD::CDVector2 PosA, CD::CDVector2 PosB, float Impetu)
@@ -312,21 +313,20 @@ CD::CDVector2 Boid::evade(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 
 	{
 		Dir = { -PosB.y,PosB.x };
 		Dir += Dist;
-		Dir.normalize();
-		F = Dir * Impetu;
 	}
 	else
 	{
 		Dir = flee(PosA,PosB,Impetu);
 		Dir += flee(PosA,PPpos,Impetu);
-		Dir.normalize();
-		F = Dir * Impetu;
 	}
+	Dir.normalize();
+	F = Dir * Impetu;
 	return F;
 }
 
 CD::CDVector2 Boid::wanderRandom(CD::CDVector2 PosA, CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu)
 {
+	srand((unsigned int)time(NULL));
 	float x = LimitsX.x + std::rand() % (int)LimitsX.y +1;
 	float y = LimitsY.x + std::rand() % (int)LimitsY.y +1;
 	CD::CDVector2 point = { x,y };
@@ -339,19 +339,9 @@ CD::CDVector2 Boid::wanderRandom(CD::CDVector2 PosA, CD::CDVector2 LimitsX, CD::
 CD::CDVector2 Boid::wanderTime(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu, float &timeElapsed, float TimeToNextPoint)
 {
 	CD::CDVector2 F;
-	if (DirA == CD::CDVector2(0,0))
+	srand((unsigned int)time(NULL));
+	if (timeElapsed>=TimeToNextPoint|| DirA == CD::CDVector2(0, 0))
 	{
-		srand((unsigned int)time(NULL));
-		float x = LimitsX.x + std::rand() % (int)LimitsX.y + 1;
-		float y = LimitsY.x + std::rand() % (int)LimitsY.y + 1;
-		
-		CD::CDVector2 point = { x,y };
-		F = seek(PosA,point,impetu);
-		return F;
-	}
-	if (timeElapsed>=TimeToNextPoint)
-	{
-		srand((unsigned int)time(NULL));
 		float x = LimitsX.x + std::rand() % (int)LimitsX.y + 1;
 		float y = LimitsY.x + std::rand() % (int)LimitsY.y + 1;
 		CD::CDVector2 point = { x,y };
@@ -370,17 +360,17 @@ CD::CDVector2 Boid::wander(CD::CDVector2 PosA, CD::CDVector2 DirA, float impetu,
 {
 
 	CD::CDVector2 F;
+	srand((unsigned int)time(NULL));
 	if (DirA == CD::CDVector2(0, 0))
 	{
-		srand((unsigned int)time(NULL));
-		float x = std::rand() % (int)1 -0.5f;
-		float y =  std::rand() % (int)1 -0.5f;
+		float x = -0.5f + (std::rand() / RAND_MAX);
+		float y = -0.5f + (std::rand() / RAND_MAX);
 
 		CD::CDVector2 point = { x,y };
 		F = seek(PosA, point, impetu);
 		return F;
 	}
-	srand((unsigned int)time(NULL));
+	
 	CD::CDVector2 C = PosA + (DirA * distToProyection);
 	float Adir = std::atan(DirA.y/DirA.x);
 	Adir *= (180 / 3.1415f);
@@ -439,17 +429,14 @@ CD::CDVector2 Boid::PatrolCircuit(CD::CDVector2 PosA, std::vector<CD::CDVector2>
 	CD::CDVector2 v2;
 	CD::CDVector2 nextPoint;
 	int index = indexPath;
-	int nextindex = index+1;
+	int nextindex = index+1;nextPoint = Points[nextindex];
+		v2 = Points[nextindex] - Points[index];
 	if (indexPath == Points.size() - 1)
 	{
 		nextPoint = Points[0];
 		v2 = Points[0] - Points[index];
 	}
-	else
-	{
-		nextPoint = Points[nextindex];
-		v2 = Points[nextindex] - Points[index];
-	}
+	
 	CD::CDVector2 dist = PosA - nextPoint;
 	float distance = dist.length();
 	if (distance <= Ratio)
@@ -459,7 +446,7 @@ CD::CDVector2 Boid::PatrolCircuit(CD::CDVector2 PosA, std::vector<CD::CDVector2>
 			//Action;
 			return	CD::CDVector2();
 		}
-		indexPath++;
+		++indexPath;
 		if (indexPath == Points.size())
 		{
 			indexPath = 0;
@@ -722,87 +709,87 @@ CD::CDVector2 Boid::truncar(CD::CDVector2 Dir, float speed)
 
 void Boid::CalculateImpetuForCollision()
 {
-	impetuForCollision += myDesc.seek.impetu;
-	impetuForCollision += myDesc.flee.impetu;
-	impetuForCollision += myDesc.persu.impetu;
-	impetuForCollision += myDesc.evade.impetu;
-	impetuForCollision += myDesc.arrive.impetu;
-	impetuForCollision += myDesc.wander.impetu;
-	impetuForCollision += myDesc.followPath.impetu;
-	impetuForCollision += myDesc.patrol.impetu;
-	impetuForCollision += myDesc.flocking.impetuCohesion;
-	impetuForCollision += myDesc.flocking.impetuDirection;
-	impetuForCollision += myDesc.flocking.impetuSeparation;
-	impetuForCollision += myDesc.followLeader.impetuCohesion;
-	impetuForCollision += myDesc.followLeader.impetuDirection;
-	impetuForCollision += myDesc.followLeader.impetuEvade;
-	impetuForCollision += myDesc.followLeader.impetuFollow;
-	impetuForCollision += myDesc.followLeader.impetuSeparation;
-	impetuForCollision += 1;
-	impetuForCollision *= 10;
+	m_impetuForCollision += m_myDesc.seek.impetu;
+	m_impetuForCollision += m_myDesc.flee.impetu;
+	m_impetuForCollision += m_myDesc.persu.impetu;
+	m_impetuForCollision += m_myDesc.evade.impetu;
+	m_impetuForCollision += m_myDesc.arrive.impetu;
+	m_impetuForCollision += m_myDesc.wander.impetu;
+	m_impetuForCollision += m_myDesc.followPath.impetu;
+	m_impetuForCollision += m_myDesc.patrol.impetu;
+	m_impetuForCollision += m_myDesc.flocking.impetuCohesion;
+	m_impetuForCollision += m_myDesc.flocking.impetuDirection;
+	m_impetuForCollision += m_myDesc.flocking.impetuSeparation;
+	m_impetuForCollision += m_myDesc.followLeader.impetuCohesion;
+	m_impetuForCollision += m_myDesc.followLeader.impetuDirection;
+	m_impetuForCollision += m_myDesc.followLeader.impetuEvade;
+	m_impetuForCollision += m_myDesc.followLeader.impetuFollow;
+	m_impetuForCollision += m_myDesc.followLeader.impetuSeparation;
+	m_impetuForCollision += 1;
+	m_impetuForCollision *= 10;
 }
 
 void Boid::calculatePointsToDetecteCollision()
 {
 
-	frontRightCollisionPointPos = m_DirectionView*myDesc.obstacleEvadeDimentions.sizeFront;
-	frontRightCollisionPointPos += Right * myDesc.obstacleEvadeDimentions.sizeRight;
-	frontRightCollisionPointPos += m_Position;
+	m_frontRightCollisionPointPos = m_directionView*m_myDesc.obstacleEvadeDimentions.sizeFront;
+	m_frontRightCollisionPointPos += m_right * m_myDesc.obstacleEvadeDimentions.sizeRight;
+	m_frontRightCollisionPointPos += m_position;
 
-	frontLeftCollisionPointPos = m_DirectionView * myDesc.obstacleEvadeDimentions.sizeFront;
-	frontLeftCollisionPointPos += -Right * myDesc.obstacleEvadeDimentions.sizeLeft;
-	frontLeftCollisionPointPos += m_Position;
+	m_frontLeftCollisionPointPos = m_directionView * m_myDesc.obstacleEvadeDimentions.sizeFront;
+	m_frontLeftCollisionPointPos += -m_right * m_myDesc.obstacleEvadeDimentions.sizeLeft;
+	m_frontLeftCollisionPointPos += m_position;
 
-	backRightCollisionPointPos = -m_DirectionView * myDesc.obstacleEvadeDimentions.sizeBack;
-	backRightCollisionPointPos += Right * myDesc.obstacleEvadeDimentions.sizeRight;
-	backRightCollisionPointPos += m_Position;
+	m_backRightCollisionPointPos = -m_directionView * m_myDesc.obstacleEvadeDimentions.sizeBack;
+	m_backRightCollisionPointPos += m_right * m_myDesc.obstacleEvadeDimentions.sizeRight;
+	m_backRightCollisionPointPos += m_position;
 
-	backLeftCollisionPointPos = -m_DirectionView * myDesc.obstacleEvadeDimentions.sizeBack;
-	backLeftCollisionPointPos += -Right * myDesc.obstacleEvadeDimentions.sizeLeft;
-	backLeftCollisionPointPos += m_Position;
+	m_backLeftCollisionPointPos = -m_directionView * m_myDesc.obstacleEvadeDimentions.sizeBack;
+	m_backLeftCollisionPointPos += -m_right * m_myDesc.obstacleEvadeDimentions.sizeLeft;
+	m_backLeftCollisionPointPos += m_position;
 
-	linesForObstacleEvade[0].position = { backLeftCollisionPointPos.x,backLeftCollisionPointPos.y};
-	linesForObstacleEvade[1].position = { frontLeftCollisionPointPos.x,frontLeftCollisionPointPos.y};
-	linesForObstacleEvade[2].position = { frontRightCollisionPointPos.x,frontRightCollisionPointPos.y};
-	linesForObstacleEvade[3].position = { backRightCollisionPointPos.x,backRightCollisionPointPos.y};
+	//linesForObstacleEvade[0].position = { m_backLeftCollisionPointPos.x,m_backLeftCollisionPointPos.y};
+	//linesForObstacleEvade[1].position = { m_frontLeftCollisionPointPos.x,m_frontLeftCollisionPointPos.y};
+	//linesForObstacleEvade[2].position = { m_frontRightCollisionPointPos.x,m_frontRightCollisionPointPos.y};
+	//linesForObstacleEvade[3].position = { m_backRightCollisionPointPos.x,m_backRightCollisionPointPos.y};
 }
 
 void Boid::calculateDimensionToDetecteCollision()
 {
-	sumLeftAndFronVisionObstacle =
-		myDesc.obstacleEvadeDimentions.sizeFront + myDesc.obstacleEvadeDimentions.sizeBack
-		+myDesc.obstacleEvadeDimentions.sizeLeft + myDesc.obstacleEvadeDimentions.sizeRight;
-	sumLeftAndFronVisionObstacle *= 2;
-	anche= myDesc.obstacleEvadeDimentions.sizeLeft + myDesc.obstacleEvadeDimentions.sizeRight;
-	large = myDesc.obstacleEvadeDimentions.sizeFront + myDesc.obstacleEvadeDimentions.sizeBack;
+	m_sumLeftAndFronVisionObstacle =
+		m_myDesc.obstacleEvadeDimentions.sizeFront + m_myDesc.obstacleEvadeDimentions.sizeBack
+		+m_myDesc.obstacleEvadeDimentions.sizeLeft + m_myDesc.obstacleEvadeDimentions.sizeRight;
+	m_sumLeftAndFronVisionObstacle *= 2;
+	m_anche= m_myDesc.obstacleEvadeDimentions.sizeLeft + m_myDesc.obstacleEvadeDimentions.sizeRight;
+	m_large = m_myDesc.obstacleEvadeDimentions.sizeFront + m_myDesc.obstacleEvadeDimentions.sizeBack;
 
-	hipotenuse = sqrt((anche*anche+large*large));
+	m_hipotenuse = sqrt((m_anche*m_anche+m_large*m_large));
 }
 
 bool Boid::detectedCollision(Obstacle* _obstacle)
 {
 	float ObstacleRatio = _obstacle->getRatio();
 	CD::CDVector2 obstaclePosition = _obstacle->getPosition();
-	CD::CDVector2 hipotenusa1= frontLeftCollisionPointPos;
-	CD::CDVector2 hipotenusa2= backRightCollisionPointPos;
-	CD::CDVector2 collisionPoint = m_Position- obstaclePosition;
+	CD::CDVector2 hipotenusa1= m_frontLeftCollisionPointPos;
+	CD::CDVector2 hipotenusa2= m_backRightCollisionPointPos;
+	CD::CDVector2 collisionPoint = m_position- obstaclePosition;
 	collisionPoint.normalize();
 	collisionPoint *= ObstacleRatio;
 	collisionPoint += obstaclePosition;
-	//frontRightToObstacle[0].position = { frontLeftCollisionPointPos.x,frontLeftCollisionPointPos.y };
+	//frontRightToObstacle[0].position = { m_frontLeftCollisionPointPos.x,m_frontLeftCollisionPointPos.y };
 	//frontRightToObstacle[1].position = { collisionPoint.x,collisionPoint.y };
 	//
-	//backLeftToObstacle[0].position = { backRightCollisionPointPos.x,backRightCollisionPointPos.y };
+	//backLeftToObstacle[0].position = { m_backRightCollisionPointPos.x,m_backRightCollisionPointPos.y };
 	//backLeftToObstacle[1].position = { collisionPoint.x,collisionPoint.y };
 	hipotenusa1 -= collisionPoint;
 	hipotenusa2 -= collisionPoint;
 	float sumOfHipotenusas =
 		hipotenusa1.length()
 		+ hipotenusa2.length();
-	CD::CDVector2 v1 = backRightCollisionPointPos -frontRightCollisionPointPos;
-	CD::CDVector2 v2 = backRightCollisionPointPos - backLeftCollisionPointPos;
-	CD::CDVector2 v3 = frontLeftCollisionPointPos - frontRightCollisionPointPos;
-	CD::CDVector2 v4 = frontLeftCollisionPointPos - backLeftCollisionPointPos;
+	CD::CDVector2 v1 = m_backRightCollisionPointPos -m_frontRightCollisionPointPos;
+	CD::CDVector2 v2 = m_backRightCollisionPointPos - m_backLeftCollisionPointPos;
+	CD::CDVector2 v3 = m_frontLeftCollisionPointPos - m_frontRightCollisionPointPos;
+	CD::CDVector2 v4 = m_frontLeftCollisionPointPos - m_backLeftCollisionPointPos;
 	float proyection1 = CD::CDVector2::dot(v1, hipotenusa2);
 	proyection1 /= v1.length();
 	float proyection2 = CD::CDVector2::dot(v2, hipotenusa2);
