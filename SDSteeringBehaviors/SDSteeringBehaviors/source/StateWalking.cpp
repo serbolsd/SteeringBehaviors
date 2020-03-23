@@ -9,7 +9,7 @@ StateWalking::~StateWalking()
 {
 }
 
-void StateWalking::onEnter()
+void StateWalking::onEnter(Boid* _boid)
 {
 }
 
@@ -22,6 +22,6 @@ ENUMSTATES StateWalking::onUpdate(Boid* _boid)
 	return ENUMSTATES::WALKINGSTATE;
 }
 
-void StateWalking::onExit()
+void StateWalking::onExit(Boid* _boid)
 {
 }

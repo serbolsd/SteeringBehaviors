@@ -159,6 +159,7 @@
     <ClCompile Include="source\StateExploding.cpp" />
     <ClCompile Include="source\StateIdle.cpp" />
     <ClCompile Include="source\StateLooking.cpp" />
+    <ClCompile Include="source\StateMachine.cpp" />
     <ClCompile Include="source\States.cpp" />
     <ClCompile Include="source\StateShooting.cpp" />
     <ClCompile Include="source\StateWalking.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="include\CDVectors\CDVector4.h" />
     <ClInclude Include="include\CDVectors\preRequsitos.h" />
     <ClInclude Include="include\Obstacle.h" />
+    <ClInclude Include="include\StateMachine.h" />
     <ClInclude Include="include\States.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

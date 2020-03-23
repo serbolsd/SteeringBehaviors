@@ -9,7 +9,7 @@ StateIdle::~StateIdle()
 {
 }
 
-void StateIdle::onEnter()
+void StateIdle::onEnter(Boid* _boid)
 {
 }
 
@@ -45,6 +45,6 @@ ENUMSTATES StateIdle::onUpdate(Boid* _boid)
     return ENUMSTATES::IDLESTATE;
 }
 
-void StateIdle::onExit()
+void StateIdle::onExit(Boid* _boid)
 {
 }

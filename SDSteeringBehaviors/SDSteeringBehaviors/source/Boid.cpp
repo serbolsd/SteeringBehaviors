@@ -79,28 +79,28 @@ void Boid::Update()
 	m_direction = m_directionView * m_speed;
 	if (m_myDesc.seek.impetu>0)
 	{
-		newDirection += seek(m_position,*m_myDesc.seek.objetive, m_myDesc.seek.impetu);
+		newDirection += seek(*m_myDesc.seek.objetive, m_myDesc.seek.impetu);
 	}
 	if (m_myDesc.flee.impetu>0)
 	{
 		if (m_myDesc.flee.ratio > 0)
 		{
-			newDirection += fleeRatio(m_position, *m_myDesc.flee.objetive, m_myDesc.flee.impetu, m_myDesc.flee.ratio);
+			newDirection += fleeRatio(*m_myDesc.flee.objetive, m_myDesc.flee.impetu, m_myDesc.flee.ratio);
 		}
 		else
 		{
-			newDirection += flee(m_position, *m_myDesc.flee.objetive, m_myDesc.flee.impetu);
+			newDirection += flee(*m_myDesc.flee.objetive, m_myDesc.flee.impetu);
 		}
 	}
 	if (m_myDesc.evade.impetu > 0)
 	{
 		newDirection +=
-			evade(m_position,m_direction, m_myDesc.evade.objetive->getPosition(), m_myDesc.evade.objetive->getDirection(), m_myDesc.evade.objetive->getSpeed(), m_myDesc.evade.timeProyection, m_myDesc.evade.impetu);
+			evade(m_myDesc.evade.objetive->getPosition(), m_myDesc.evade.objetive->getDirection(), m_myDesc.evade.objetive->getSpeed(), m_myDesc.evade.timeProyection, m_myDesc.evade.impetu);
 	}
 	if (m_myDesc.persu.impetu > 0)
 	{
 		newDirection +=
-			persu(m_position, m_myDesc.persu.objetive->getPosition(), m_myDesc.persu.objetive->getDirection(), m_myDesc.persu.objetive->getSpeed(), m_myDesc.persu.timeProyection, m_myDesc.persu.impetu);
+			persu(m_myDesc.persu.objetive->getPosition(), m_myDesc.persu.objetive->getDirection(), m_myDesc.persu.objetive->getSpeed(), m_myDesc.persu.timeProyection, m_myDesc.persu.impetu);
 	}
 	if (m_myDesc.wander.impetu > 0)
 	{
@@ -110,16 +110,16 @@ void Boid::Update()
 			break;
 		case TypeWander::WanderTypeRandom:
 			newDirection +=
-			wanderRandom(m_position, m_myDesc.wander.limitsX, m_myDesc.wander.limitsY, m_myDesc.wander.impetu);
+			wanderRandom(m_myDesc.wander.limitsX, m_myDesc.wander.limitsY, m_myDesc.wander.impetu);
 			break;
 		case TypeWander::wanderTypeTime:
 			newDirection +=
-				wanderTime(m_position,m_direction, m_myDesc.wander.limitsX, m_myDesc.wander.limitsY, 
-					m_myDesc.wander.impetu, m_elapsedTime, m_myDesc.wander.timeToNextPoint);
+				wanderTime(m_myDesc.wander.limitsX, m_myDesc.wander.limitsY, 
+					m_myDesc.wander.impetu, m_myDesc.wander.timeToNextPoint);
 			break;
 		case TypeWander::WanderTypeVision:
 			newDirection +=
-				wander(m_position,m_direction, m_myDesc.wander.impetu,m_myDesc.wander.DistoToPointProyection, 
+				wander( m_myDesc.wander.impetu,m_myDesc.wander.DistoToPointProyection, 
 					m_myDesc.wander.ratio, m_myDesc.wander.openingAngleInDegrees);
 			break;
 		default:
@@ -129,7 +129,7 @@ void Boid::Update()
 	if (m_myDesc.followPath.impetu > 0)
 	{
 		newDirection +=
-			FollowPath(m_position, *m_myDesc.followPath.Points, m_myDesc.followPath.impetu, m_myDesc.followPath.IndexPoint, m_myDesc.followPath.ratio);
+			FollowPath(*m_myDesc.followPath.Points, m_myDesc.followPath.impetu, m_myDesc.followPath.IndexPoint, m_myDesc.followPath.ratio);
 	}
 	if (m_myDesc.patrol.impetu > 0)
 	{
@@ -137,11 +137,11 @@ void Boid::Update()
 		{			
 		case TypePatrol::PatrolTypeCircuit:
 			newDirection +=
-				PatrolCircuit(m_position,*m_myDesc.patrol.Points,m_myDesc.patrol.impetu,m_myDesc.patrol.indexPath, m_myDesc.patrol.Ratio,m_elapsedTime ,m_myDesc.patrol.timeToStay);
+				PatrolCircuit(*m_myDesc.patrol.Points,m_myDesc.patrol.impetu,m_myDesc.patrol.indexPath, m_myDesc.patrol.Ratio,m_elapsedTime ,m_myDesc.patrol.timeToStay);
 			break;
 		case TypePatrol::PatrolTypeInverted:
 			newDirection +=
-				PatrolInverted(m_position, *m_myDesc.patrol.Points, m_myDesc.patrol.impetu, m_myDesc.patrol.indexPath, m_myDesc.patrol.Ratio, m_elapsedTime, m_myDesc.patrol.timeToStay,m_myDesc.patrol.bReturn);
+				PatrolInverted(*m_myDesc.patrol.Points, m_myDesc.patrol.impetu, m_myDesc.patrol.indexPath, m_myDesc.patrol.Ratio, m_elapsedTime, m_myDesc.patrol.timeToStay,m_myDesc.patrol.bReturn);
 			break;
 		default:
 			break;
@@ -150,24 +150,24 @@ void Boid::Update()
 	if (m_myDesc.flocking.impetuDirection > 0)
 	{
 		newDirection +=
-			flocking(this,m_myDesc.flocking.Boids, m_myDesc.flocking.ratioVision, m_myDesc.flocking.impetuDirection, m_myDesc.flocking.impetuCohesion, m_myDesc.flocking.impetuSeparation);
+			flocking(m_myDesc.flocking.Boids, m_myDesc.flocking.ratioVision, m_myDesc.flocking.impetuDirection, m_myDesc.flocking.impetuCohesion, m_myDesc.flocking.impetuSeparation);
 	}
 	if (m_myDesc.followLeader.impetuFollow > 0)
 	{
 		newDirection +=
-			FollowTheLeader(this,m_myDesc.followLeader.Boids, m_myDesc.followLeader.ratioVision, m_myDesc.followLeader.impetuFollow, m_myDesc.followLeader.impetuEvade, m_myDesc.followLeader.impetuDirection, m_myDesc.followLeader.impetuCohesion, m_myDesc.followLeader.impetuSeparation, m_myDesc.followLeader.Leader, m_myDesc.followLeader.distToLeader);
+			FollowTheLeader(m_myDesc.followLeader.Boids, m_myDesc.followLeader.ratioVision, m_myDesc.followLeader.impetuFollow, m_myDesc.followLeader.impetuEvade, m_myDesc.followLeader.impetuDirection, m_myDesc.followLeader.impetuCohesion, m_myDesc.followLeader.impetuSeparation, m_myDesc.followLeader.Leader, m_myDesc.followLeader.distToLeader);
 	}
 	if (m_thereAreObstacles)
 	{
 		newDirection +=
-		obstacleCollision(this,m_myDesc.ptr_obstacles,m_impetuForCollision);
+		obstacleCollision(m_myDesc.ptr_obstacles,m_impetuForCollision);
 		newDirection +=
-		obstacleEvade(this, m_myDesc.ptr_obstacles, m_myDesc.obstacleEvadeDimentions.impetu);
+		obstacleEvade( m_myDesc.ptr_obstacles, m_myDesc.obstacleEvadeDimentions.impetu);
 	}
 	if (newDirection!=CD::CDVector2(0,0))
 	{
 		//newDirection = truncar(newDirection,m_speed);
-		m_direction = Inercia(m_direction,newDirection,m_myDesc.masa);
+		m_direction = Inercia(newDirection);
 		newDirection = truncar(newDirection,m_speed);
 		m_directionView = m_direction.getnormalize();
 		m_right = { m_directionView.y,-m_direction.x };
@@ -180,7 +180,7 @@ void Boid::Update()
 	
 	if (m_myDesc.arrive.impetu > 0)
 	{
-		newDirection = arrive(m_position, m_direction, *m_myDesc.arrive.objetive, m_speed, m_myDesc.arrive.ratio,m_myDesc.masa);
+		newDirection = arrive(*m_myDesc.arrive.objetive, m_myDesc.arrive.ratio,m_myDesc.masa);
 		
 		m_direction = newDirection;
 		if (newDirection != CD::CDVector2(0, 0))
@@ -226,57 +226,57 @@ void Boid::Delete()
 	delete m_myDesc.persu.objetive;
 }
 
-CD::CDVector2 Boid::seek(CD::CDVector2 PosA, CD::CDVector2 PosB, float Impetu)
+CD::CDVector2 Boid::seek(CD::CDVector2 PosB, float impetu)
 {
-	CD::CDVector2 Dir = PosB - PosA;
+	CD::CDVector2 Dir = PosB - m_position;
 	Dir.normalize();
-	CD::CDVector2 F = Dir * Impetu;
+	CD::CDVector2 F = Dir * impetu;
 	return F;
 }
 
-CD::CDVector2 Boid::flee(CD::CDVector2 PosA, CD::CDVector2 PosB, float Impetu)
+CD::CDVector2 Boid::flee(CD::CDVector2 PosB, float impetu)
 {
-	CD::CDVector2 Dir = PosA - PosB;
+	CD::CDVector2 Dir = m_position - PosB;
 	Dir.normalize();
-	CD::CDVector2 F = Dir * Impetu;
+	CD::CDVector2 F = Dir * impetu;
 	return F;
 }
 
-CD::CDVector2 Boid::fleeRatio(CD::CDVector2 PosA, CD::CDVector2 PosB, float Impetu, float ratio)
+CD::CDVector2 Boid::fleeRatio(CD::CDVector2 PosB, float impetu,float ratio)
 {
-	CD::CDVector2 Dir = PosA - PosB;
+	CD::CDVector2 Dir = m_position - PosB;
 	CD::CDVector2 F = {0,0};
-	if (Dir.length()<ratio)
+	if (Dir.length()< ratio)
 	{
 		Dir.normalize();
-		F = Dir * Impetu;
+		F = Dir * impetu;
 	}
 	return F;
 }
 
-CD::CDVector2 Boid::arrive(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 PosB, float Impetu, float ratio, float masa)
+CD::CDVector2 Boid::arrive(CD::CDVector2 PosB, float impetu, float ratio)
 {
-	CD::CDVector2 Dir = PosB - PosA;
-	float tempImpetu = Impetu;
-	if (Dir.length()<ratio)
+	CD::CDVector2 Dir = PosB - m_position;
+	float tempImpetu = impetu;
+	if (Dir.length()< ratio)
 	{
 		tempImpetu = Dir.length() / ratio;
 	}
 	Dir.normalize();
-	CD::CDVector2 F = DirA;
+	CD::CDVector2 F = m_direction;
 	CD::CDVector2 newDir = Dir;
-	newDir = truncar(newDir, Impetu);
-	F= Inercia(DirA, newDir, masa);;
-	F *= Impetu *tempImpetu;
+	newDir = truncar(newDir, impetu);
+	F= Inercia(newDir);
+	F *= impetu *tempImpetu;
 	return F;
 }
 
-CD::CDVector2 Boid::persu(CD::CDVector2 PosA, CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB, float TimeProyection, float Impetu)
+CD::CDVector2 Boid::persu(CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB, float TimeProyection, float impetu)
 {
 	CD::CDVector2 PP = ( DirB * speedB * TimeProyection );
 	CD::CDVector2 PPpos = PP + PosB;
-	CD::CDVector2 Dist = PosB - PosA;
-	CD::CDVector2 DistPP = PPpos - PosA;
+	CD::CDVector2 Dist = PosB - m_position;
+	CD::CDVector2 DistPP = PPpos - m_position;
 	CD::CDVector2 Dir;
 	CD::CDVector2 F ;
 
@@ -289,22 +289,22 @@ CD::CDVector2 Boid::persu(CD::CDVector2 PosA, CD::CDVector2 PosB, CD::CDVector2 
 		PP *= (Dist.length() / DistPP.length());
 		PPpos = PP + PosB;
 	}
-	Dir = PPpos - PosA;
+	Dir = PPpos - m_position;
 	Dir.normalize();
-	F = Dir * Impetu;
+	F = Dir * impetu;
 	return F;
 }
 
-CD::CDVector2 Boid::evade(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB, float TimeProyection, float Impetu)
+CD::CDVector2 Boid::evade( CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB, float TimeProyection, float impetu)
 {
 	CD::CDVector2 PP = (DirB * speedB * TimeProyection);
 	CD::CDVector2 PPpos = PP + PosB;
-	CD::CDVector2 Dist = PosA-PosB;
-	CD::CDVector2 DistPP = PosA - PPpos;
+	CD::CDVector2 Dist = m_position -PosB;
+	CD::CDVector2 DistPP = m_position - PPpos;
 	CD::CDVector2 Dir;
 	CD::CDVector2 F;
 
-	float space = CD::CDVector2::dot(DirB,DirA);
+	float space = CD::CDVector2::dot(DirB,m_direction);
 	if (Dist.length() > PP.length())
 	{
 		return F;
@@ -316,77 +316,77 @@ CD::CDVector2 Boid::evade(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 
 	}
 	else
 	{
-		Dir = flee(PosA,PosB,Impetu);
-		Dir += flee(PosA,PPpos,Impetu);
+		Dir = flee(PosB, impetu);
+		Dir += flee(PPpos, impetu);
 	}
 	Dir.normalize();
-	F = Dir * Impetu;
+	F = Dir * impetu;
 	return F;
 }
 
-CD::CDVector2 Boid::wanderRandom(CD::CDVector2 PosA, CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu)
+CD::CDVector2 Boid::wanderRandom(CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu)
 {
 	srand((unsigned int)time(NULL));
 	float x = LimitsX.x + std::rand() % (int)LimitsX.y +1;
 	float y = LimitsY.x + std::rand() % (int)LimitsY.y +1;
 	CD::CDVector2 point = { x,y };
 	
-	CD::CDVector2 F = seek(PosA,point,impetu);
+	CD::CDVector2 F = seek(point,impetu);
 
 	return F;
 }
 
-CD::CDVector2 Boid::wanderTime(CD::CDVector2 PosA, CD::CDVector2 DirA, CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu, float &timeElapsed, float TimeToNextPoint)
+CD::CDVector2 Boid::wanderTime(CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu, float TimeToNextPoint)
 {
 	CD::CDVector2 F;
 	srand((unsigned int)time(NULL));
-	if (timeElapsed>=TimeToNextPoint|| DirA == CD::CDVector2(0, 0))
+	if (m_elapsedTime>=TimeToNextPoint|| m_direction == CD::CDVector2(0, 0))
 	{
 		float x = LimitsX.x + std::rand() % (int)LimitsX.y + 1;
 		float y = LimitsY.x + std::rand() % (int)LimitsY.y + 1;
 		CD::CDVector2 point = { x,y };
-		F = seek(PosA, point, impetu);
-		timeElapsed = 0;
+		F = seek(point, impetu);
+		m_elapsedTime = 0;
 	}
 	else
 	{
-		F = DirA.getnormalize() * impetu;
+		F = m_direction.getnormalize() * impetu;
 	}
 	
 	return F;
 }
 
-CD::CDVector2 Boid::wander(CD::CDVector2 PosA, CD::CDVector2 DirA, float impetu, float distToProyection, float ratio, float angle)
+CD::CDVector2 Boid::wander(float impetu, float distToProyection, float ratio, float angle)
 {
 
 	CD::CDVector2 F;
 	srand((unsigned int)time(NULL));
-	if (DirA == CD::CDVector2(0, 0))
+	if (m_direction == CD::CDVector2(0, 0))
 	{
 		float x = -0.5f + (std::rand() / RAND_MAX);
 		float y = -0.5f + (std::rand() / RAND_MAX);
 
 		CD::CDVector2 point = { x,y };
-		F = seek(PosA, point, impetu);
+		F = seek(point, impetu);
 		return F;
 	}
 	
-	CD::CDVector2 C = PosA + (DirA * distToProyection);
-	float Adir = std::atan(DirA.y/DirA.x);
+	CD::CDVector2 C = m_position + (m_direction * distToProyection);
+	float Adir = std::atan(m_direction.y/ m_direction.x);
 	Adir *= (180 / 3.1415f);
 	float Fdir = Adir + (std::rand() % (int)(angle));
 	Fdir -= angle / 2;
 	//std::cout << Adir <<std::endl;
 	CD::CDVector2 posF =  { ratio * cosf(Fdir * 3.1415f / 180),ratio*sinf(Fdir * 3.1415f / 180) };
 	posF += C;
-	F = seek(PosA, posF,impetu);
+	F = seek(posF,impetu);
 
 	return F;
 }
 
-CD::CDVector2 Boid::FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio)
+CD::CDVector2 Boid::FollowPath(std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio)
 {
-	CD::CDVector2 v1 = PosA-Points[indexPath];
+	CD::CDVector2 v1 = m_position-Points[indexPath];
 	CD::CDVector2 v2;
 	CD::CDVector2 nextPoint;
 	int index = indexPath;
@@ -401,7 +401,7 @@ CD::CDVector2 Boid::FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> P
 		nextPoint = Points[nextindex];
 		v2 = Points[nextindex] - Points[index];
 	}
-	CD::CDVector2 dist = PosA - nextPoint;
+	CD::CDVector2 dist = m_position - nextPoint;
 	float distance = dist.length();
 	if (distance <=Ratio)
 	{
@@ -418,14 +418,14 @@ CD::CDVector2 Boid::FollowPath(CD::CDVector2 PosA, std::vector <CD::CDVector2> P
 		proyection *= -1;
 	}
 	CD::CDVector2 pathPoint=(v2*proyection)+Points[indexPath];
-	CD::CDVector2 F = seek(PosA,pathPoint,impetu);
-	F += seek(PosA, nextPoint,impetu);
+	CD::CDVector2 F = seek(pathPoint,impetu);
+	F += seek( nextPoint,impetu);
 	return F;
 }
 
-CD::CDVector2 Boid::PatrolCircuit(CD::CDVector2 PosA, std::vector<CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed, float timeToStay)
+CD::CDVector2 Boid::PatrolCircuit(std::vector<CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed, float timeToStay)
 {
-	CD::CDVector2 v1 = PosA - Points[indexPath];
+	CD::CDVector2 v1 = m_position - Points[indexPath];
 	CD::CDVector2 v2;
 	CD::CDVector2 nextPoint;
 	int index = indexPath;
@@ -437,7 +437,7 @@ CD::CDVector2 Boid::PatrolCircuit(CD::CDVector2 PosA, std::vector<CD::CDVector2>
 		v2 = Points[0] - Points[index];
 	}
 	
-	CD::CDVector2 dist = PosA - nextPoint;
+	CD::CDVector2 dist = m_position - nextPoint;
 	float distance = dist.length();
 	if (distance <= Ratio)
 	{
@@ -463,14 +463,14 @@ CD::CDVector2 Boid::PatrolCircuit(CD::CDVector2 PosA, std::vector<CD::CDVector2>
 		proyection *= -1;
 	}
 	CD::CDVector2 pathPoint = (v2 * proyection) + Points[indexPath];
-	CD::CDVector2 F = seek(PosA, pathPoint, impetu);
-	F += seek(PosA, nextPoint, impetu);
+	CD::CDVector2 F = seek(pathPoint, impetu);
+	F += seek(nextPoint, impetu);
 	return F;
 }
 
-CD::CDVector2 Boid::PatrolInverted(CD::CDVector2 PosA, std::vector<CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed, float timeToStay, bool& bReturn)
+CD::CDVector2 Boid::PatrolInverted(std::vector<CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed, float timeToStay, bool& bReturn)
 {
-	CD::CDVector2 v1 = PosA - Points[indexPath];
+	CD::CDVector2 v1 = m_position - Points[indexPath];
 	CD::CDVector2 v2;
 	CD::CDVector2 nextPoint;
 	int index = indexPath;
@@ -487,7 +487,7 @@ CD::CDVector2 Boid::PatrolInverted(CD::CDVector2 PosA, std::vector<CD::CDVector2
 		v2 = Points[nextindex] - Points[index];
 	}
 	
-	CD::CDVector2 dist = PosA - nextPoint;
+	CD::CDVector2 dist = m_position - nextPoint;
 	float distance = dist.length();
 	if (distance <= Ratio)
 	{
@@ -526,22 +526,22 @@ CD::CDVector2 Boid::PatrolInverted(CD::CDVector2 PosA, std::vector<CD::CDVector2
 		proyection *= -1;
 	}
 	CD::CDVector2 pathPoint = (v2 * proyection) + Points[indexPath];
-	CD::CDVector2 F = seek(PosA, pathPoint, impetu);
-	F += seek(PosA, nextPoint, impetu);
+	CD::CDVector2 F = seek(pathPoint, impetu);
+	F += seek(nextPoint, impetu);
 	return F;
 }
 
-CD::CDVector2 Boid::Direction(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu)
+CD::CDVector2 Boid::Direction(std::vector<Boid*>* Boids, float ratioVision, float impetu)
 {
 	CD::CDVector2 F;
 	int nearBoids = 0;
 	for (int i = 0; i < Boids->size(); i++)
 	{
-		if (A == Boids[0][i])
+		if (this == Boids[0][i])
 		{
 			continue;
 		}
-		CD::CDVector2 vector = A->getPosition() - Boids[0][i]->getPosition();
+		CD::CDVector2 vector = m_position - Boids[0][i]->getPosition();
 		float dist = vector.length();
 		if (dist<=ratioVision)
 		{
@@ -558,18 +558,18 @@ CD::CDVector2 Boid::Direction(Boid* A, std::vector<Boid*>* Boids, float ratioVis
 	return F;
 }
 
-CD::CDVector2 Boid::Cohesion(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetu)
+CD::CDVector2 Boid::Cohesion( std::vector<Boid*>* Boids, float ratioVision, float impetu)
 {
 	CD::CDVector2 F;
 	CD::CDVector2 CentroMasa;
 	int nearBoids = 0;
 	for (int i = 0; i < Boids->size(); i++)
 	{
-		if (A== Boids[0][i])
+		if (this== Boids[0][i])
 		{
 			continue;
 		}
-		CD::CDVector2 vector = A->getPosition() - Boids[0][i]->getPosition();
+		CD::CDVector2 vector = m_position - Boids[0][i]->getPosition();
 		float dist = vector.length();
 		if (dist <= ratioVision)
 		{
@@ -580,48 +580,47 @@ CD::CDVector2 Boid::Cohesion(Boid* A, std::vector<Boid*>* Boids, float ratioVisi
 	if (nearBoids > 0)
 	{
 		CentroMasa /= (float)nearBoids;
-		CD::CDVector2 vec = A->getPosition() - CentroMasa;
-		F = seek(A->getPosition(), CentroMasa, impetu);
+		CD::CDVector2 vec = m_position - CentroMasa;
+		F = seek(CentroMasa, impetu);
 	}
 	return F;
 }
 
-CD::CDVector2 Boid::Separation(Boid* A, std::vector<Boid*>* Boids, float impetu)
+CD::CDVector2 Boid::Separation(std::vector<Boid*>* Boids, float impetu)
 {
 	CD::CDVector2 F;
 	for (int i = 0; i < Boids->size(); i++)
 	{
-		if (A == Boids[0][i])
+		if (this == Boids[0][i])
 		{
 			continue;
 		}
-		CD::CDVector2 vecDistance = A->getPosition() - Boids[0][i]->getPosition();
+		CD::CDVector2 vecDistance = m_position - Boids[0][i]->getPosition();
 		float dist = vecDistance.length();
-		if (dist- Boids[0][i]->getRatio() <= A->getRatio())
+		if (dist- Boids[0][i]->getRatio() <= m_myDesc.ratio)
 		{
-			F += flee(A->getPosition(), Boids[0][i]->getPosition(),impetu);
+			F += flee(Boids[0][i]->getPosition(),impetu);
 		}
 	}
 	return F;
 }
 
-CD::CDVector2 Boid::flocking(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetuDiretion, float impetuCohesion, float impetuSeparation)
+CD::CDVector2 Boid::flocking(std::vector<Boid*>* Boids, float ratioVision, float impetuDiretion, float impetuCohesion, float impetuSeparation)
 {
 	CD::CDVector2 F;
-	F += Direction(A,Boids,ratioVision, impetuDiretion);
-	F += Cohesion(A,Boids,ratioVision, impetuCohesion);
-	F += Separation(A,Boids,impetuSeparation);
+	F += Direction(Boids,ratioVision, impetuDiretion);
+	F += Cohesion(Boids,ratioVision, impetuCohesion);
+	F += Separation(Boids,impetuSeparation);
 	//F.normalize();
 	//F *= impetuDiretion;
 	return F;
 }
 
-CD::CDVector2 Boid::FollowTheLeader(Boid* A, std::vector<Boid*>* Boids, float ratioVision, float impetuFollow, float impetuEvade, float impetuDiretion, float impetuCohesion, float impetuSeparation, Boid* leader, float distToLeader)
+CD::CDVector2 Boid::FollowTheLeader(std::vector<Boid*>* Boids, float ratioVision, float impetuFollow, float impetuEvade, float impetuDiretion, float impetuCohesion, float impetuSeparation, Boid* leader, float distToLeader)
 {
 	CD::CDVector2 F;
 	CD::CDVector2 PointBehingTheLeader;
 	CD::CDVector2 LeaderPos = leader->getPosition();
-	CD::CDVector2 BoidAPos = A->getPosition();
 	CD::CDVector2 LeaderDir = leader->getDirection();
 	CD::CDVector2 LeaderDirView = leader->getDirectionView();
 	LeaderDirView.normalize();
@@ -630,81 +629,77 @@ CD::CDVector2 Boid::FollowTheLeader(Boid* A, std::vector<Boid*>* Boids, float ra
 
 	}
 	PointBehingTheLeader = LeaderPos -(LeaderDirView *distToLeader);
-	F += flocking(A,Boids,ratioVision, impetuDiretion,impetuCohesion,impetuSeparation);
+	F += flocking(Boids,ratioVision, impetuDiretion,impetuCohesion,impetuSeparation);
 	CD::CDVector2 DisToLeader;
-	DisToLeader = BoidAPos - LeaderPos;
+	DisToLeader = m_position - LeaderPos;
 	//if (DisToLeader.length()>distToLeader)
 	//{
 	//}
-	F += seek(BoidAPos,PointBehingTheLeader, impetuFollow);
-	F += evade(BoidAPos, A->getDirection(), LeaderPos, LeaderDir, leader->getSpeed(), leader->getRatio(), impetuEvade);
+	F += seek(PointBehingTheLeader, impetuFollow);
+	F += evade(LeaderPos, LeaderDir, leader->getSpeed(), leader->getRatio(), impetuEvade);
 	//F.normalize();
 	//F *= impetuDiretion;
 	return F;
 }
 
-CD::CDVector2 Boid::obstacleCollision(Boid* A, std::vector<Obstacle*>* ptr_obstacles, float Impetu)
+CD::CDVector2 Boid::obstacleCollision(std::vector<Obstacle*>* ptr_obstacles, float Impetu)
 {
 	CD::CDVector2 F;
 	CD::CDVector2 vectorDist;
-	CD::CDVector2 Apos=A->getPosition();
 	CD::CDVector2 Bpos;
-	float Aratio=A->getRatio();
 	for (int i = 0; i < ptr_obstacles->size(); i++)
 	{
 		Bpos = ptr_obstacles[0][i]->getPosition();
-		vectorDist = Apos - Bpos;
+		vectorDist = m_position - Bpos;
 		float dist = vectorDist.length();
-		if (dist - ptr_obstacles[0][i]->getRatio() <= Aratio)
+		if (dist - ptr_obstacles[0][i]->getRatio() <= m_myDesc.ratio)
 		{
-			F += flee(Apos, Bpos,Impetu);
+			F += flee(Bpos,Impetu);
 		}
 	}
 	return F;
 }
 
-CD::CDVector2 Boid::obstacleEvade(Boid* A, std::vector<Obstacle*>* ptr_obstacles, float Impetu)
+CD::CDVector2 Boid::obstacleEvade(std::vector<Obstacle*>* ptr_obstacles, float Impetu)
 {
 	CD::CDVector2 F;
 	CD::CDVector2 DistanceVector;
-	CD::CDVector2 PosA=A->getPosition();
 	CD::CDVector2 PosObstacle;
-	float ratioVision = A->getDistanceToView();
+	float ratioVision = m_myDesc.obstacleEvadeDimentions.sizeFront;
 	for (int i = 0; i < ptr_obstacles->size(); i++)
 	{
 		PosObstacle = ptr_obstacles[0][i]->getPosition();
-		DistanceVector = PosA - PosObstacle;
+		DistanceVector = m_position - PosObstacle;
 		float disToObstacle = DistanceVector.length() - ptr_obstacles[0][i]->getRatio();
 		if (disToObstacle< ratioVision)
 		{
-			if (A->detectedCollision(ptr_obstacles[0][i]))
+			if (detectedCollision(ptr_obstacles[0][i]))
 			{
-				F += flee(PosA, PosObstacle,Impetu);
+				F += flee(PosObstacle,Impetu);
 			}
 		}
 	}
 	return F;
 }
 
-CD::CDVector2 Boid::Inercia(CD::CDVector2 DirA, CD::CDVector2 newDir, float masa)
+CD::CDVector2 Boid::Inercia(CD::CDVector2 newDir)
 {
 	CD::CDVector2 Dir;
 	CD::CDVector2 vectorDirection;
-	vectorDirection = DirA;
-	vectorDirection += newDir * masa;
+	vectorDirection = m_direction;
+	vectorDirection += newDir * m_myDesc.masa;
 	Dir = vectorDirection.getnormalize();
 	return Dir;
 }
 
 CD::CDVector2 Boid::truncar(CD::CDVector2 Dir, float speed)
 {
-	CD::CDVector2 Direction = Dir;
-	if (Direction.length() > speed)
+	if (m_direction.length() > m_speed)
 	{
-		Direction.normalize();
-		Direction *= speed;
+		m_direction.normalize();
+		m_direction *= speed;
 	}
-	return Direction;
+	return m_direction;
 }
 
 void Boid::CalculateImpetuForCollision()

@@ -9,7 +9,7 @@ StateLooking::~StateLooking()
 {
 }
 
-void StateLooking::onEnter()
+void StateLooking::onEnter(Boid* _boid)
 {
 }
 
@@ -22,6 +22,6 @@ ENUMSTATES StateLooking::onUpdate(Boid* _boid)
 	return ENUMSTATES::LOOKINGSTATE;
 }
 
-void StateLooking::onExit()
+void StateLooking::onExit(Boid* _boid)
 {
 }

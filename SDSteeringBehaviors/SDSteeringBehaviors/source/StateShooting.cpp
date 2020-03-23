@@ -9,7 +9,7 @@ StateShooting::~StateShooting()
 {
 }
 
-void StateShooting::onEnter()
+void StateShooting::onEnter(Boid* _boid)
 {
 }
 
@@ -23,6 +23,6 @@ ENUMSTATES StateShooting::onUpdate(Boid* _boid)
 	return ENUMSTATES::SHOOTINGSTATE;
 }
 
-void StateShooting::onExit()
+void StateShooting::onExit(Boid* _boid)
 {
 }

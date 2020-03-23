@@ -9,7 +9,7 @@ StateExploding::~StateExploding()
 {
 }
 
-void StateExploding::onEnter()
+void StateExploding::onEnter(Boid* _boid)
 {
 }
 
@@ -20,6 +20,6 @@ ENUMSTATES StateExploding::onUpdate(Boid* _boid)
 	return ENUMSTATES::EXPLOTINGSTATE;
 }
 
-void StateExploding::onExit()
+void StateExploding::onExit(Boid* _boid)
 {
 }
