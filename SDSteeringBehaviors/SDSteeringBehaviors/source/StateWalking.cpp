@@ -19,6 +19,9 @@ ENUMSTATES StateWalking::onUpdate(Boid* _boid)
 	{
 		return ENUMSTATES::IDLESTATE;
 	}
+	CD::CDVector2 pointToSeek=_boid->getDirection()+_boid->getPosition();
+	_boid->newDirection+=_boid->seek(pointToSeek, _boid->m_myDesc.seek.impetu);
+	
 	return ENUMSTATES::WALKINGSTATE;
 }
 

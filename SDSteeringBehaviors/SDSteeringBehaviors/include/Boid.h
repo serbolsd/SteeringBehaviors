@@ -4,6 +4,7 @@
 #include <vector>
 #include "States.h"
 #include <StateMachine.h>
+using namespace CD;
 class Obstacle;
 class Boid;
 enum class TYPEBOID
@@ -138,6 +139,8 @@ struct BoidDescriptor
 	float *globalTime=nullptr;
 	std::vector <Obstacle*> *ptr_obstacles=nullptr;
 	TYPEBOID BoidType = TYPEBOID::UNKNOWBOID;
+	StateMachine* pStateMachine = nullptr;
+
 };
 
 class Boid
@@ -151,6 +154,7 @@ public:
 	void Delete();
 	CD::CDVector2 getPosition() { return m_position; };
 	CD::CDVector2 getDirection() { return m_direction; };
+	void setDirection(const CD::CDVector2& _dir) { m_direction= _dir; };
 	CD::CDVector2 getDirectionView() { return m_directionView; };
 	float getDistanceToView() { return m_myDesc.obstacleEvadeDimentions.sizeFront; };
 	float getSpeed() { return m_speed; };
@@ -180,6 +184,8 @@ public:
 	CD::CDVector2 FollowTheLeader(std::vector<Boid*>* Boids, float ratioVision, float impetuFollow, float impetuEvade, float impetuDiretion, float impetuCohesion, float impetuSeparation, Boid* leader, float distToLeader);
 	CD::CDVector2 obstacleCollision(std::vector <Obstacle*>* ptr_obstacles,float Impetu);
 	CD::CDVector2 obstacleEvade(std::vector <Obstacle*>* ptr_obstacles,float Impetu);
+	BoidDescriptor m_myDesc;
+	CD::CDVector2 newDirection;
 private:
 	CD::CDVector2 Inercia(CD::CDVector2 newDir);
 	CD::CDVector2 truncar(CD::CDVector2 Dir,float speed);
@@ -194,7 +200,6 @@ private:
 	CD::CDVector2 m_right;
 	float m_speed=0;
 	sf::CircleShape m_shape;
-	BoidDescriptor m_myDesc;
 
 	float m_elapsedTime=0;
 	float m_impetuForCollision = 0;
@@ -210,7 +215,7 @@ private:
 	sf::VertexArray m_linesForObstacleEvade;
 	sf::VertexArray m_backLeftToObstacle;
 	sf::VertexArray m_frontRightToObstacle;
-
+	sf::VertexArray  linesForObstacleEvade;
 	TYPEBOID m_mytype = TYPEBOID::UNKNOWBOID;
 	State* m_pMyState = nullptr;
 	StateMachine* m_pStateMachine=nullptr;

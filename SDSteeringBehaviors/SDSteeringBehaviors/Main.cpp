@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include "Boid.h"
 #include "Obstacle.h"
+#include "StateMachine.h"
 void Init();
 void ObstaclesInit();
 void BoidsInit();
@@ -15,6 +16,7 @@ CD::CDVector2 g_MousePosition;
 std::vector<Boid*> g_boidsVector;
 std::vector<Obstacle*> g_ObstaclesVector;
 std::vector<CD::CDVector2> g_pointsPathVector;
+StateMachine g_stateMachine;
 float g_deltaTime;
 
 int main()
@@ -54,12 +56,13 @@ int main()
 
 void Init()
 {
+	g_stateMachine.init();
 	g_deltaTime = 0;
 	//g_MousePosition = new CD::CDVector2;
 	//g_Path = new std::vector<CD::CDVector2>;
-	g_pointsPathVector.push_back(CD::CDVector2(400,400));
-	g_pointsPathVector.push_back(CD::CDVector2(800, 400));
-	g_pointsPathVector.push_back(CD::CDVector2(600, 800));
+	g_pointsPathVector.push_back(CDVector2(400,400));
+	g_pointsPathVector.push_back(CDVector2(800, 400));
+	g_pointsPathVector.push_back(CDVector2(600, 800));
 	ObstaclesInit();
 	BoidsInit();
 }
@@ -103,6 +106,8 @@ void BoidsInit()
 	descSeek.seek.objetive = &g_MousePosition;
 	descSeek.ptr_obstacles = &g_ObstaclesVector;
 	descSeek.obstacleEvadeDimentions.impetu=15;
+	descSeek.pStateMachine= &g_stateMachine;
+	descSeek.BoidType= TYPEBOID::PLAYER;
 	boid->Init(descSeek);
 	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector,boid);
 	/*BoidDescriptor descForEvade;
@@ -363,4 +368,5 @@ void Delete()
 		//boids[0][i]->Delete();
 		//delete boids[0][i];
 	}
+	g_stateMachine.onDelete();
 }

@@ -57,6 +57,9 @@
     <ClCompile Include="source\StateMachine.cpp">
       <Filter>Archivos de origen\Estados</Filter>
     </ClCompile>
+    <ClCompile Include="source\playerInputs.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Boid.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="include\StateMachine.h">
       <Filter>Archivos de encabezado\Estados</Filter>
+    </ClInclude>
+    <ClInclude Include="include\playerInputs.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

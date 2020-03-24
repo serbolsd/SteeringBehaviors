@@ -9,6 +9,7 @@ public:
 	void init();
 	void updateState(Boid& _boid);
 	void onDelete();
+	State* getIdleState() { return m_pIdleState; };
 private:
 	State* m_pIdleState = nullptr;
 	State* m_pWalkingState = nullptr;

@@ -6,7 +6,7 @@
 #include <time.h>       /* time */
 #include "Obstacle.h"
 #include <stdlib.h>
-
+#include <playerInputs.h>
 Boid::Boid()
 {
 	m_speed = 0;
@@ -24,6 +24,8 @@ void Boid::Init(const BoidDescriptor & _Desc)
 	m_backLeftToObstacle.resize(2);
 	m_frontRightToObstacle.setPrimitiveType(sf::LinesStrip);
 	m_frontRightToObstacle.resize(2);
+	linesForObstacleEvade.setPrimitiveType(sf::LinesStrip);
+	linesForObstacleEvade.resize(4);
 	//m_shape.setPointCount(3);
 	m_myDesc = _Desc;
 	m_shape.setRadius(_Desc.ratio);
@@ -70,13 +72,49 @@ void Boid::Init(const BoidDescriptor & _Desc)
 	CalculateImpetuForCollision();
 	calculatePointsToDetecteCollision();
 	calculateDimensionToDetecteCollision();
+	m_pStateMachine = m_myDesc.pStateMachine;
+	if (m_pStateMachine !=nullptr)
+	{
+		m_pMyState = m_pStateMachine->getIdleState();
+	}
 }
 
 void Boid::Update()
 {
 	m_elapsedTime += *m_myDesc.globalTime;
-	CD::CDVector2 newDirection = { 0,0 };
+	newDirection = { 0,0 };
 	m_direction = m_directionView * m_speed;
+	if (m_mytype==TYPEBOID::PLAYER&& m_pStateMachine!=nullptr)
+	{
+		PlayerInput::onUpdate(*this);
+		CD::CDVector2 pointToSeek=m_direction+m_position;
+		m_eMyCurrentState=m_pMyState->onUpdate(this);
+
+		if (m_thereAreObstacles)
+		{
+			newDirection +=
+				obstacleCollision(m_myDesc.ptr_obstacles, m_impetuForCollision);
+			newDirection +=
+				obstacleEvade(m_myDesc.ptr_obstacles, m_myDesc.obstacleEvadeDimentions.impetu);
+		}
+		if (newDirection != CD::CDVector2(0, 0))
+		{
+			//newDirection = truncar(newDirection,m_speed);
+			m_direction = Inercia(newDirection);
+			m_direction = truncar(newDirection, m_speed);
+			//m_right = { m_directionView.y,-m_direction.x };
+			m_directionView = m_direction.getnormalize();
+
+		}
+		else
+		{
+			m_direction = CD::CDVector2(0, 0);
+		}
+		m_right.x = m_directionView.y;
+		m_right.y = -m_directionView.x;
+		calculatePointsToDetecteCollision();
+		return;
+	}
 	if (m_myDesc.seek.impetu>0)
 	{
 		newDirection += seek(*m_myDesc.seek.objetive, m_myDesc.seek.impetu);
@@ -208,7 +246,7 @@ void Boid::Render(sf::RenderWindow& _wind)
 	m_position += m_direction;
 	m_shape.setPosition(m_position.x, m_position.y);
 	_wind.draw(m_shape);
-	//_wind.draw(linesForObstacleEvade);
+	_wind.draw(linesForObstacleEvade);
 	//_wind.draw(backLeftToObstacle);
 	//_wind.draw(frontRightToObstacle);
 }
@@ -694,11 +732,11 @@ CD::CDVector2 Boid::Inercia(CD::CDVector2 newDir)
 
 CD::CDVector2 Boid::truncar(CD::CDVector2 Dir, float speed)
 {
-	if (m_direction.length() > m_speed)
-	{
-		m_direction.normalize();
-		m_direction *= speed;
-	}
+	//if (m_direction.length() > m_speed)
+	//{
+	//}
+	m_direction.normalize();
+	m_direction *= speed;
 	return m_direction;
 }
 
@@ -743,10 +781,10 @@ void Boid::calculatePointsToDetecteCollision()
 	m_backLeftCollisionPointPos += -m_right * m_myDesc.obstacleEvadeDimentions.sizeLeft;
 	m_backLeftCollisionPointPos += m_position;
 
-	//linesForObstacleEvade[0].position = { m_backLeftCollisionPointPos.x,m_backLeftCollisionPointPos.y};
-	//linesForObstacleEvade[1].position = { m_frontLeftCollisionPointPos.x,m_frontLeftCollisionPointPos.y};
-	//linesForObstacleEvade[2].position = { m_frontRightCollisionPointPos.x,m_frontRightCollisionPointPos.y};
-	//linesForObstacleEvade[3].position = { m_backRightCollisionPointPos.x,m_backRightCollisionPointPos.y};
+	linesForObstacleEvade[0].position = { m_backLeftCollisionPointPos.x,m_backLeftCollisionPointPos.y};
+	linesForObstacleEvade[1].position = { m_frontLeftCollisionPointPos.x,m_frontLeftCollisionPointPos.y};
+	linesForObstacleEvade[2].position = { m_frontRightCollisionPointPos.x,m_frontRightCollisionPointPos.y};
+	linesForObstacleEvade[3].position = { m_backRightCollisionPointPos.x,m_backRightCollisionPointPos.y};
 }
 
 void Boid::calculateDimensionToDetecteCollision()
@@ -781,7 +819,7 @@ bool Boid::detectedCollision(Obstacle* _obstacle)
 	float sumOfHipotenusas =
 		hipotenusa1.length()
 		+ hipotenusa2.length();
-	CD::CDVector2 v1 = m_backRightCollisionPointPos -m_frontRightCollisionPointPos;
+	CD::CDVector2 v1 = m_backRightCollisionPointPos - m_frontRightCollisionPointPos;
 	CD::CDVector2 v2 = m_backRightCollisionPointPos - m_backLeftCollisionPointPos;
 	CD::CDVector2 v3 = m_frontLeftCollisionPointPos - m_frontRightCollisionPointPos;
 	CD::CDVector2 v4 = m_frontLeftCollisionPointPos - m_backLeftCollisionPointPos;
