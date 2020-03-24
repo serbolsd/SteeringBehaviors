@@ -140,6 +140,9 @@ struct BoidDescriptor
 	std::vector <Obstacle*> *ptr_obstacles=nullptr;
 	TYPEBOID BoidType = TYPEBOID::UNKNOWBOID;
 	StateMachine* pStateMachine = nullptr;
+	Boid* pPlayer=nullptr;
+	float ratioToLooking=0;
+	float AngleToLookingInDegrees=0;
 
 };
 
@@ -150,58 +153,61 @@ public:
 	~Boid();
 	void Init(const BoidDescriptor& _Desc);
 	void Update();
-	void Render(sf::RenderWindow &_wind);
+	void Render(sf::RenderWindow& _wind);
 	void Delete();
 	CD::CDVector2 getPosition() { return m_position; };
 	CD::CDVector2 getDirection() { return m_direction; };
-	void setDirection(const CD::CDVector2& _dir) { m_direction= _dir; };
+	void setDirection(const CD::CDVector2& _dir) { m_direction = _dir; };
 	CD::CDVector2 getDirectionView() { return m_directionView; };
 	float getDistanceToView() { return m_myDesc.obstacleEvadeDimentions.sizeFront; };
 	float getSpeed() { return m_speed; };
 	float getRatio() { return m_myDesc.ratio; };
 	TYPEBOID getTypeBoid() { return m_mytype; };
-	const ENUMSTATES &getEnumCurrentState() { return m_eMyCurrentState; };
-	const ENUMSTATES &getEnumPastState() { return m_eMyPastState; };
+	const ENUMSTATES& getEnumCurrentState() { return m_eMyCurrentState; };
+	const ENUMSTATES& getEnumPastState() { return m_eMyPastState; };
 	void setState(State* _newState) { m_pMyState = _newState; };
 	State* getState() { return m_pMyState; };
 
-	CD::CDVector2 seek(CD::CDVector2 PosB,float impetu);
-	CD::CDVector2 flee( CD::CDVector2 PosB,float impetu);
+	CD::CDVector2 seek(CD::CDVector2 PosB, float impetu);
+	CD::CDVector2 flee(CD::CDVector2 PosB, float impetu);
 	CD::CDVector2 fleeRatio(CD::CDVector2 PosB, float impetu, float ratio);
 	CD::CDVector2 arrive(CD::CDVector2 PosB, float impetu, float ratio);
-	CD::CDVector2 persu(CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB,float TimeProyection, float impetu);
-	CD::CDVector2 evade(CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB,float TimeProyection, float impetu);
-	CD::CDVector2 wanderRandom(CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu);
-	CD::CDVector2 wanderTime(CD::CDVector2 LimitsX, CD::CDVector2 LimitsY,float impetu,float TimeToNextPoint);
-	CD::CDVector2 wander(float impetu,float distToProyection,float ratio,float angle);
-	CD::CDVector2 FollowPath( std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio);
-	CD::CDVector2 PatrolCircuit(std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed,float timeToStay);
-	CD::CDVector2 PatrolInverted(std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed,float timeToStay,bool &bReturn);
+	CD::CDVector2 persu(CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB, float TimeProyection, float impetu);
+	CD::CDVector2 evade(CD::CDVector2 PosB, CD::CDVector2 DirB, float speedB, float TimeProyection, float impetu);
+	CD::CDVector2 wanderRandom(CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu);
+	CD::CDVector2 wanderTime(CD::CDVector2 LimitsX, CD::CDVector2 LimitsY, float impetu, float TimeToNextPoint);
+	CD::CDVector2 wander(float impetu, float distToProyection, float ratio, float angle);
+	CD::CDVector2 FollowPath(std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio);
+	CD::CDVector2 PatrolCircuit(std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed, float timeToStay);
+	CD::CDVector2 PatrolInverted(std::vector <CD::CDVector2> Points, float impetu, int& indexPath, float Ratio, float& timeElapsed, float timeToStay, bool& bReturn);
 	CD::CDVector2 Direction(std::vector<Boid*>* Boids, float ratioVision, float impetu);
 	CD::CDVector2 Cohesion(std::vector<Boid*>* Boids, float ratioVision, float impetu);
 	CD::CDVector2 Separation(std::vector<Boid*>* Boids, float impetu);
 	CD::CDVector2 flocking(std::vector<Boid*>* Boids, float ratioVision, float impetuDiretion, float impetuCohesion, float impetuSeparation);
 	CD::CDVector2 FollowTheLeader(std::vector<Boid*>* Boids, float ratioVision, float impetuFollow, float impetuEvade, float impetuDiretion, float impetuCohesion, float impetuSeparation, Boid* leader, float distToLeader);
-	CD::CDVector2 obstacleCollision(std::vector <Obstacle*>* ptr_obstacles,float Impetu);
-	CD::CDVector2 obstacleEvade(std::vector <Obstacle*>* ptr_obstacles,float Impetu);
+	CD::CDVector2 obstacleCollision(std::vector <Obstacle*>* ptr_obstacles, float Impetu);
+	CD::CDVector2 obstacleEvade(std::vector <Obstacle*>* ptr_obstacles, float Impetu);
+	bool lookingForPlayer(Boid* objetive, float angle, float ratio);
 	BoidDescriptor m_myDesc;
 	CD::CDVector2 newDirection;
-private:
 	CD::CDVector2 Inercia(CD::CDVector2 newDir);
-	CD::CDVector2 truncar(CD::CDVector2 Dir,float speed);
+	CD::CDVector2 truncar(CD::CDVector2 Dir, float speed);
+	void updateForWalking();
+private:
 	void CalculateImpetuForCollision();
 	void calculatePointsToDetecteCollision();
 	void calculateDimensionToDetecteCollision();
 	bool detectedCollision(Obstacle* _obstacle);
+	float calculateAngle(const CDVector2& _vec);
 
 	CD::CDVector2 m_position;
 	CD::CDVector2 m_direction;
 	CD::CDVector2 m_directionView;
 	CD::CDVector2 m_right;
-	float m_speed=0;
+	float m_speed = 0;
 	sf::CircleShape m_shape;
 
-	float m_elapsedTime=0;
+	float m_elapsedTime = 0;
 	float m_impetuForCollision = 0;
 	CD::CDVector2 m_frontRightCollisionPointPos;
 	CD::CDVector2 m_frontLeftCollisionPointPos;
@@ -218,7 +224,9 @@ private:
 	sf::VertexArray  linesForObstacleEvade;
 	TYPEBOID m_mytype = TYPEBOID::UNKNOWBOID;
 	State* m_pMyState = nullptr;
-	StateMachine* m_pStateMachine=nullptr;
+	StateMachine* m_pStateMachine = nullptr;
 	ENUMSTATES m_eMyCurrentState = ENUMSTATES::IDLESTATE;
 	ENUMSTATES m_eMyPastState = ENUMSTATES::UNKNOWSTATE;
+
+	const float degTorad = 3.1415f / 180;
 };

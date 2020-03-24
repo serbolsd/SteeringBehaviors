@@ -20,16 +20,13 @@ ENUMSTATES StateIdle::onUpdate(Boid* _boid)
     case TYPEBOID::UNKNOWBOID:
         break;
     case TYPEBOID::PLAYER:
-        if (_boid->getDirection() != CD::CDVector2(0, 0))
+        if (_boid->newDirection != CD::CDVector2(0, 0))
         {
             return ENUMSTATES::WALKINGSTATE;
         }
         break;
     case TYPEBOID::TANK:
-        //if (Watch player)
-        //{
-        //   return ENUMSTATES::CHASINGSTATE;
-        //}
+        return ENUMSTATES::LOOKINGSTATE;
         break;
     case TYPEBOID::CAMERA:
         //   return ENUMSTATES::LOOKINGSTATE;

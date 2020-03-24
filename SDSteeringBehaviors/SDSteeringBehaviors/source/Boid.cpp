@@ -83,36 +83,25 @@ void Boid::Update()
 {
 	m_elapsedTime += *m_myDesc.globalTime;
 	newDirection = { 0,0 };
-	m_direction = m_directionView * m_speed;
+	//m_direction = m_directionView * m_speed;
 	if (m_mytype==TYPEBOID::PLAYER&& m_pStateMachine!=nullptr)
 	{
 		PlayerInput::onUpdate(*this);
-		CD::CDVector2 pointToSeek=m_direction+m_position;
+		if (newDirection == CD::CDVector2(0, 0))
+		{
+			m_direction = { 0,0 };
+		}
+		CD::CDVector2 pointToSeek= newDirection +m_position;
 		m_eMyCurrentState=m_pMyState->onUpdate(this);
-
-		if (m_thereAreObstacles)
-		{
-			newDirection +=
-				obstacleCollision(m_myDesc.ptr_obstacles, m_impetuForCollision);
-			newDirection +=
-				obstacleEvade(m_myDesc.ptr_obstacles, m_myDesc.obstacleEvadeDimentions.impetu);
-		}
-		if (newDirection != CD::CDVector2(0, 0))
-		{
-			//newDirection = truncar(newDirection,m_speed);
-			m_direction = Inercia(newDirection);
-			m_direction = truncar(newDirection, m_speed);
-			//m_right = { m_directionView.y,-m_direction.x };
-			m_directionView = m_direction.getnormalize();
-
-		}
-		else
-		{
-			m_direction = CD::CDVector2(0, 0);
-		}
-		m_right.x = m_directionView.y;
-		m_right.y = -m_directionView.x;
-		calculatePointsToDetecteCollision();
+		m_pStateMachine->updateState(*this);
+		//updateForEveryone();
+		return;
+	}
+	else if (m_mytype != TYPEBOID::UNKNOWBOID && m_pStateMachine != nullptr)
+	{
+		m_eMyCurrentState = m_pMyState->onUpdate(this);
+		m_pStateMachine->updateState(*this);
+		//updateForEveryone();
 		return;
 	}
 	if (m_myDesc.seek.impetu>0)
@@ -208,7 +197,7 @@ void Boid::Update()
 		m_direction = Inercia(newDirection);
 		newDirection = truncar(newDirection,m_speed);
 		m_directionView = m_direction.getnormalize();
-		m_right = { m_directionView.y,-m_direction.x };
+		m_right = { m_directionView.y,-m_directionView.x };
 		
 	}
 	else
@@ -415,7 +404,7 @@ CD::CDVector2 Boid::wander(float impetu, float distToProyection, float ratio, fl
 	float Fdir = Adir + (std::rand() % (int)(angle));
 	Fdir -= angle / 2;
 	//std::cout << Adir <<std::endl;
-	CD::CDVector2 posF =  { ratio * cosf(Fdir * 3.1415f / 180),ratio*sinf(Fdir * 3.1415f / 180) };
+	CD::CDVector2 posF =  { ratio * cosf(Fdir * degTorad),ratio*sinf(Fdir * degTorad) };
 	posF += C;
 	F = seek(posF,impetu);
 
@@ -720,6 +709,44 @@ CD::CDVector2 Boid::obstacleEvade(std::vector<Obstacle*>* ptr_obstacles, float I
 	return F;
 }
 
+bool Boid::lookingForPlayer(Boid*objetive,float angle,float ratio)
+{
+	CDVector2 objetivePos = objetive->getPosition();
+	CD::CDVector2 collisionPoint = m_position - objetivePos;
+	collisionPoint.normalize();
+	collisionPoint *= objetive->getRatio();
+	collisionPoint += objetivePos;
+	CDVector2 vectorToObjetive = collisionPoint - m_position;
+	CDVector2 vectorToCheckObjetive = collisionPoint - m_position;
+	float magnitude = vectorToObjetive.length();
+	vectorToCheckObjetive.normalize();
+	float parentesco = vectorToCheckObjetive.dot(m_directionView);
+	if (ratio< magnitude|| parentesco<0)
+	{
+		return false;
+	}
+	float Adir = calculateAngle(m_directionView);
+	vectorToObjetive.normalize();
+
+	
+	float AtoObjetive = calculateAngle(vectorToObjetive);
+
+
+	float Adir1 = Adir;
+	float Adir2 = Adir;
+	Adir1 -= angle* degTorad / 2;
+	Adir2 += angle * degTorad / 2;
+	if (AtoObjetive>=Adir1&& AtoObjetive<=Adir2)
+	{
+		std::cout << "wachando";
+		return true;
+	}
+	//std::cout << Adir <<std::endl;
+	//CD::CDVector2 posF = { ratio * cosf(Fdir * degTorad),ratio * sinf(Fdir * degTorad) };
+	//posF += C;
+	return false;
+}
+
 CD::CDVector2 Boid::Inercia(CD::CDVector2 newDir)
 {
 	CD::CDVector2 Dir;
@@ -738,6 +765,34 @@ CD::CDVector2 Boid::truncar(CD::CDVector2 Dir, float speed)
 	m_direction.normalize();
 	m_direction *= speed;
 	return m_direction;
+}
+
+void Boid::updateForWalking()
+{
+	m_pStateMachine->updateState(*this);
+	if (m_thereAreObstacles)
+	{
+		newDirection +=
+			obstacleCollision(m_myDesc.ptr_obstacles, m_impetuForCollision);
+		newDirection +=
+			obstacleEvade(m_myDesc.ptr_obstacles, m_myDesc.obstacleEvadeDimentions.impetu);
+	}
+	if (newDirection != CD::CDVector2(0, 0))
+	{
+		//newDirection = truncar(newDirection,m_speed);
+		m_direction = Inercia(newDirection);
+		m_direction = truncar(newDirection, m_speed);
+		//m_right = { m_directionView.y,-m_direction.x };
+		m_directionView = m_direction.getnormalize();
+
+	}
+	else
+	{
+		m_direction = CD::CDVector2(0, 0);
+	}
+	m_right.x = m_directionView.y;
+	m_right.y = -m_directionView.x;
+	calculatePointsToDetecteCollision();
 }
 
 void Boid::CalculateImpetuForCollision()
@@ -837,4 +892,46 @@ bool Boid::detectedCollision(Obstacle* _obstacle)
 		return true;
 	}
 	return false;
+}
+
+float Boid::calculateAngle(const CDVector2& _vec)
+{
+	float angle = 0;
+	if (_vec.y > 0 || _vec.x < 0)
+	{
+		float x = _vec.x;
+		float y = _vec.y;
+		if (_vec.y > 0 && _vec.x < 0)
+		{
+			angle = std::atan((-y / x));
+		}
+		else
+		{
+			if (_vec.y > 0)
+			{
+				//y *= -1;
+			}
+			else if (_vec.x < 0)
+			{
+				x *= -1;
+			}
+			angle = std::atan(-(y / x));
+		}
+		//angle *= (180 / 3.1415f);//tranforn to degrees
+		//if (_vec.y > 0 && _vec.x > 0)
+		//{
+		//	angle += 360;//tranforn to degrees
+		//}
+		//if (_vec.y > 0 && _vec.x < 0)
+		//{
+		//	angle += 180;
+		//}
+
+	}
+	else
+	{
+		angle = std::atan((-_vec.y / _vec.x));
+		//angle *= (180 / 3.1415f);//tranforn to degrees
+	}
+	return angle;
 }

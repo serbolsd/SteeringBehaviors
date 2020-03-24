@@ -89,10 +89,10 @@ void BoidsInit()
 {
 	Boid* boid = new Boid();
 	Boid* wanderRan = new Boid();
-	Boid* wanderTime = new Boid();
-	Boid* wader = new Boid();
-	Boid* pathFollower = new Boid();
-	Boid* patroler = new Boid();
+	//Boid* wanderTime = new Boid();
+	//Boid* wader = new Boid();
+	//Boid* pathFollower = new Boid();
+	//Boid* patroler = new Boid();
 	std::vector<Boid*>::iterator iteratorBoidsVector;
 	iteratorBoidsVector = g_boidsVector.begin();
 	BoidDescriptor descSeek;
@@ -101,7 +101,7 @@ void BoidsInit()
 	descSeek.Position = { 500,500 };
 	descSeek.Speed = 3;
 	descSeek.ratio = 20;
-	descSeek.masa = 0.1f;
+	descSeek.masa = 1;
 	descSeek.seek.impetu = 10;
 	descSeek.seek.objetive = &g_MousePosition;
 	descSeek.ptr_obstacles = &g_ObstaclesVector;
@@ -271,6 +271,14 @@ void BoidsInit()
 	FollowTheLeaderDesc.followLeader.Leader = boid;
 	FollowTheLeaderDesc.ptr_obstacles = &g_ObstaclesVector;
 	FollowTheLeaderDesc.obstacleEvadeDimentions.impetu =20 ;
+	FollowTheLeaderDesc.BoidType = TYPEBOID::TANK;
+	FollowTheLeaderDesc.pStateMachine = &g_stateMachine;
+	FollowTheLeaderDesc.ratioToLooking = 60;
+	FollowTheLeaderDesc.AngleToLookingInDegrees = 90;
+	FollowTheLeaderDesc.pPlayer = boid;
+	FollowTheLeaderDesc.DirectionView = {1,0};
+	FollowTheLeaderDesc.persu.impetu = 10;
+	FollowTheLeaderDesc.persu.timeProyection = 4;
 
 	BoidDescriptor descArrive;
 	descArrive.globalTime = &g_deltaTime;
@@ -285,6 +293,8 @@ void BoidsInit()
 	descArrive.ptr_obstacles = &g_ObstaclesVector;
 	descArrive.obstacleEvadeDimentions.impetu = 10;
 
+
+
 	//boid.Init(descArrive);
 	//boids->push_back(&boid);
 	
@@ -295,23 +305,23 @@ void BoidsInit()
 	
 	FollowTheLeaderDesc.Position = CD::CDVector2(500, 520);
 	FollowTheLeaderDesc.shapeColor = { 0, 255, 0, 255 };
-	wanderTime->Init(FollowTheLeaderDesc);
-	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wanderTime);
-	
-	FollowTheLeaderDesc.Position = CD::CDVector2(520, 520);
-	FollowTheLeaderDesc.shapeColor = { 255, 0, 255, 255 };
-	wader->Init(FollowTheLeaderDesc);
-	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wader);
-	
-	FollowTheLeaderDesc.Position = CD::CDVector2(540, 500);
-	FollowTheLeaderDesc.shapeColor = { 0, 255, 255, 255 };
-	pathFollower->Init(FollowTheLeaderDesc);
-	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, pathFollower);
-	
-	FollowTheLeaderDesc.Position = CD::CDVector2(500, 540);
-	FollowTheLeaderDesc.shapeColor = { 255, 255, 0, 255 };
-	patroler->Init(FollowTheLeaderDesc);
-	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, patroler);
+	//wanderTime->Init(FollowTheLeaderDesc);
+	//iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wanderTime);
+	//
+	//FollowTheLeaderDesc.Position = CD::CDVector2(520, 520);
+	//FollowTheLeaderDesc.shapeColor = { 255, 0, 255, 255 };
+	//wader->Init(FollowTheLeaderDesc);
+	//iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wader);
+	//
+	//FollowTheLeaderDesc.Position = CD::CDVector2(540, 500);
+	//FollowTheLeaderDesc.shapeColor = { 0, 255, 255, 255 };
+	//pathFollower->Init(FollowTheLeaderDesc);
+	//iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, pathFollower);
+	//
+	//FollowTheLeaderDesc.Position = CD::CDVector2(500, 540);
+	//FollowTheLeaderDesc.shapeColor = { 255, 255, 0, 255 };
+	//patroler->Init(FollowTheLeaderDesc);
+	//iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, patroler);
 }
 
 void Update()
