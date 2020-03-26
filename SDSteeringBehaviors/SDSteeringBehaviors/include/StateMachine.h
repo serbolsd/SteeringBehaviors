@@ -17,4 +17,5 @@ private:
 	State* m_pLookingState = nullptr;
 	State* m_pShootingState = nullptr;
 	State* m_pExplotingState=nullptr;
+	State* m_pDeadState=nullptr;
 };

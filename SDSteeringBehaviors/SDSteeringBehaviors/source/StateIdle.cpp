@@ -29,10 +29,10 @@ ENUMSTATES StateIdle::onUpdate(Boid* _boid)
         return ENUMSTATES::LOOKINGSTATE;
         break;
     case TYPEBOID::CAMERA:
-        //   return ENUMSTATES::LOOKINGSTATE;
+        return ENUMSTATES::LOOKINGSTATE;
         break;
     case TYPEBOID::TORRET:
-        //   return ENUMSTATES::LOOKINGSTATE;
+        return ENUMSTATES::LOOKINGSTATE;
         break;
     case TYPEBOID::SCIENTIFIC:
         break;

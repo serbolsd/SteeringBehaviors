@@ -3,6 +3,7 @@
 #include "Boid.h"
 #include "Obstacle.h"
 #include "StateMachine.h"
+#include <Laser.h>
 void Init();
 void ObstaclesInit();
 void BoidsInit();
@@ -17,6 +18,8 @@ std::vector<Boid*> g_boidsVector;
 std::vector<Obstacle*> g_ObstaclesVector;
 std::vector<CD::CDVector2> g_pointsPathVector;
 StateMachine g_stateMachine;
+Boid* g_pPlayer;
+Laser g_Laser;
 float g_deltaTime;
 
 int main()
@@ -56,6 +59,7 @@ int main()
 
 void Init()
 {
+	g_Laser.init(CDVector2(100,450), CDVector2(300, 450),&g_deltaTime);
 	g_stateMachine.init();
 	g_deltaTime = 0;
 	//g_MousePosition = new CD::CDVector2;
@@ -89,6 +93,7 @@ void BoidsInit()
 {
 	Boid* boid = new Boid();
 	Boid* wanderRan = new Boid();
+	g_pPlayer = boid;
 	//Boid* wanderTime = new Boid();
 	//Boid* wader = new Boid();
 	//Boid* pathFollower = new Boid();
@@ -98,10 +103,10 @@ void BoidsInit()
 	BoidDescriptor descSeek;
 	descSeek.globalTime = &g_deltaTime;
 	descSeek.Direction = { 0 ,0 };
-	descSeek.Position = { 500,500 };
-	descSeek.Speed = 3;
+	descSeek.Position = { 300,300 };
+	descSeek.Speed = 5;
 	descSeek.ratio = 20;
-	descSeek.masa = 1;
+	descSeek.masa = 0.7;
 	descSeek.seek.impetu = 10;
 	descSeek.seek.objetive = &g_MousePosition;
 	descSeek.ptr_obstacles = &g_ObstaclesVector;
@@ -272,9 +277,11 @@ void BoidsInit()
 	FollowTheLeaderDesc.ptr_obstacles = &g_ObstaclesVector;
 	FollowTheLeaderDesc.obstacleEvadeDimentions.impetu =20 ;
 	FollowTheLeaderDesc.BoidType = TYPEBOID::TANK;
+	//FollowTheLeaderDesc.BoidType = TYPEBOID::TORRET;
 	FollowTheLeaderDesc.pStateMachine = &g_stateMachine;
-	FollowTheLeaderDesc.ratioToLooking = 60;
-	FollowTheLeaderDesc.AngleToLookingInDegrees = 90;
+	FollowTheLeaderDesc.ratioToLooking = 60;//tank
+	//FollowTheLeaderDesc.ratioToLooking = 150;//torret
+	FollowTheLeaderDesc.AngleToLookingInDegrees = 60;
 	FollowTheLeaderDesc.pPlayer = boid;
 	FollowTheLeaderDesc.DirectionView = {1,0};
 	FollowTheLeaderDesc.persu.impetu = 10;
@@ -299,7 +306,7 @@ void BoidsInit()
 	//boids->push_back(&boid);
 	
 	FollowTheLeaderDesc.Position = CD::CDVector2(520, 500);
-	FollowTheLeaderDesc.shapeColor = { 255, 0, 0, 255 };
+	FollowTheLeaderDesc.shapeColor = { 0, 0, 255, 255 };
 	wanderRan->Init(FollowTheLeaderDesc);
 	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wanderRan);
 	
@@ -326,6 +333,7 @@ void BoidsInit()
 
 void Update()
 {
+	g_Laser.update(g_boidsVector, g_pPlayer);
 	sf::Vector2i Mpos=sf::Mouse::getPosition(g_wind);
 	sf::Vector2f cordPos=g_wind.mapPixelToCoords(Mpos);
 	g_MousePosition.x = cordPos.x;
@@ -342,6 +350,7 @@ void Render()
 {
 	//boid.Render(*wind);
 	//PersuOrEvadeboid.Render(*wind);
+	g_Laser.render(g_wind);
 	for (int i = 0; i < g_ObstaclesVector.size(); i++)
 	{
 		g_ObstaclesVector[i]->Render(g_wind);

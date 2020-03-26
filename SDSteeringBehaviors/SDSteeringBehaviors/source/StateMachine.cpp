@@ -16,6 +16,7 @@ void StateMachine::init()
 	m_pLookingState = new StateLooking();
 	m_pShootingState = new StateShooting();
 	m_pExplotingState = new StateExploding();
+	m_pDeadState = new StateDead();
 }
 
 void StateMachine::updateState(Boid& _boid)
@@ -25,7 +26,8 @@ void StateMachine::updateState(Boid& _boid)
 	bool ChangingState = false;
 	if (currentState != pastState)
 	{
-		ChangingState = false;
+		pastState = currentState;
+		ChangingState = true;
 		_boid.getState()->onExit(&_boid);
 	}
 	switch (_boid.getEnumCurrentState())
@@ -49,6 +51,9 @@ void StateMachine::updateState(Boid& _boid)
 		break;
 	case ENUMSTATES::EXPLOTINGSTATE:
 		_boid.setState(m_pExplotingState);
+		break;
+	case ENUMSTATES::DEADSTATE:
+		_boid.setState(m_pDeadState);
 		break;
 	default:
 		break;
@@ -85,5 +90,9 @@ void StateMachine::onDelete()
 	if (m_pExplotingState != nullptr)
 	{
 		delete m_pExplotingState;
+	}
+	if (m_pDeadState!=nullptr)
+	{
+		delete m_pDeadState;
 	}
 }

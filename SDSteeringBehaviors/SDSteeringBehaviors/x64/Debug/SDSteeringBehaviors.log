@@ -1,0 +1,8 @@
+﻿  Laser.cpp
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Laser.h(22,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Laser.h(23,41): warning C4305: 'inicializando': truncamiento de 'double' a 'const float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(20,29): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(21,36): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(22,28): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(204,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+  SDSteeringBehaviors.vcxproj -> D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\x64\Debug\SDSteeringBehaviors.exe

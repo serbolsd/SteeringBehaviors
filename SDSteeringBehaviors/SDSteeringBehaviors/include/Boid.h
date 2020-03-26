@@ -143,7 +143,7 @@ struct BoidDescriptor
 	Boid* pPlayer=nullptr;
 	float ratioToLooking=0;
 	float AngleToLookingInDegrees=0;
-
+	float Damage = 0;
 };
 
 class Boid
@@ -188,26 +188,40 @@ public:
 	CD::CDVector2 obstacleCollision(std::vector <Obstacle*>* ptr_obstacles, float Impetu);
 	CD::CDVector2 obstacleEvade(std::vector <Obstacle*>* ptr_obstacles, float Impetu);
 	bool lookingForPlayer(Boid* objetive, float angle, float ratio);
+	bool playerInRange(Boid* objetive, float ratio);
+	bool isPlayerNear(Boid* objetive);
 	BoidDescriptor m_myDesc;
 	CD::CDVector2 newDirection;
 	CD::CDVector2 Inercia(CD::CDVector2 newDir);
 	CD::CDVector2 truncar(CD::CDVector2 Dir, float speed);
 	void updateForWalking();
+	void updateForLoking();
+	void applyDamageToPlayer(Boid* _player);
+	void takeDamageToPlayer();
+	void rotate();
+	void semirotate();
+	bool m_isDead = false;
+	float m_timeToChasing = .3;
+	float m_elapsedTime = 0;
+	sf::CircleShape m_shape;
 private:
+	CD::CDVector2 instanceBullet();
 	void CalculateImpetuForCollision();
 	void calculatePointsToDetecteCollision();
 	void calculateDimensionToDetecteCollision();
 	bool detectedCollision(Obstacle* _obstacle);
 	float calculateAngle(const CDVector2& _vec);
+	void initLifeBars();
 
 	CD::CDVector2 m_position;
 	CD::CDVector2 m_direction;
 	CD::CDVector2 m_directionView;
 	CD::CDVector2 m_right;
 	float m_speed = 0;
-	sf::CircleShape m_shape;
-
-	float m_elapsedTime = 0;
+	
+	float m_timeToTakeDamage=0.5;
+	const float m_constTimeToTakeDamage=1;
+	
 	float m_impetuForCollision = 0;
 	CD::CDVector2 m_frontRightCollisionPointPos;
 	CD::CDVector2 m_frontLeftCollisionPointPos;
@@ -217,16 +231,24 @@ private:
 	float m_anche = 0;
 	float m_large = 0;
 	float m_hipotenuse = 0;
+	int m_life = 6;
+	int m_maxLife = 6;
 	bool m_thereAreObstacles = false;
 	sf::VertexArray m_linesForObstacleEvade;
 	sf::VertexArray m_backLeftToObstacle;
 	sf::VertexArray m_frontRightToObstacle;
 	sf::VertexArray  linesForObstacleEvade;
+	sf::VertexArray  leftLoking;
+	sf::VertexArray  rightLoking;
+	sf::VertexArray  ratioLoking;
 	TYPEBOID m_mytype = TYPEBOID::UNKNOWBOID;
 	State* m_pMyState = nullptr;
 	StateMachine* m_pStateMachine = nullptr;
 	ENUMSTATES m_eMyCurrentState = ENUMSTATES::IDLESTATE;
 	ENUMSTATES m_eMyPastState = ENUMSTATES::UNKNOWSTATE;
+
+	sf::RectangleShape lifeBars[6];
+	float timeToActived= 0.5;
 
 	const float degTorad = 3.1415f / 180;
 };

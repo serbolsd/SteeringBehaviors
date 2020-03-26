@@ -152,11 +152,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Laser.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="source\Boid.cpp" />
     <ClCompile Include="source\Obstacle.cpp" />
     <ClCompile Include="source\playerInputs.cpp" />
     <ClCompile Include="source\Statechasing.cpp" />
+    <ClCompile Include="source\StateDead.cpp" />
     <ClCompile Include="source\StateExploding.cpp" />
     <ClCompile Include="source\StateIdle.cpp" />
     <ClCompile Include="source\StateLooking.cpp" />
@@ -172,6 +174,7 @@
     <ClInclude Include="include\CDVectors\CDVector3.h" />
     <ClInclude Include="include\CDVectors\CDVector4.h" />
     <ClInclude Include="include\CDVectors\preRequsitos.h" />
+    <ClInclude Include="include\Laser.h" />
     <ClInclude Include="include\Obstacle.h" />
     <ClInclude Include="include\playerInputs.h" />
     <ClInclude Include="include\StateMachine.h" />

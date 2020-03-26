@@ -8,7 +8,8 @@ enum class ENUMSTATES
 	LOOKINGSTATE,
 	SHOOTINGSTATE,
 	WALKINGSTATE,
-	EXPLOTINGSTATE
+	EXPLOTINGSTATE,
+	DEADSTATE
 };
 class Boid;
 class State
@@ -89,6 +90,18 @@ class StateLooking :public State
 public:
 	StateLooking();
 	~StateLooking();
+	void onEnter(Boid* _boid) override;
+	ENUMSTATES onUpdate(Boid* _boid) override;
+	void onExit(Boid* _boid) override;
+private:
+
+};
+
+class StateDead :public State
+{
+public:
+	StateDead();
+	~StateDead();
 	void onEnter(Boid* _boid) override;
 	ENUMSTATES onUpdate(Boid* _boid) override;
 	void onExit(Boid* _boid) override;

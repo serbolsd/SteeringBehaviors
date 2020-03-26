@@ -60,6 +60,12 @@
     <ClCompile Include="source\playerInputs.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="source\StateDead.cpp">
+      <Filter>Archivos de origen\Estados</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Laser.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Boid.h">
@@ -90,6 +96,9 @@
       <Filter>Archivos de encabezado\Estados</Filter>
     </ClInclude>
     <ClInclude Include="include\playerInputs.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Laser.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

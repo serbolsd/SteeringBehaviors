@@ -14,6 +14,7 @@ Boid::Boid()
 
 Boid::~Boid()
 {
+
 }
 
 void Boid::Init(const BoidDescriptor & _Desc)
@@ -26,6 +27,13 @@ void Boid::Init(const BoidDescriptor & _Desc)
 	m_frontRightToObstacle.resize(2);
 	linesForObstacleEvade.setPrimitiveType(sf::LinesStrip);
 	linesForObstacleEvade.resize(4);
+	leftLoking.setPrimitiveType(sf::LinesStrip);;
+	leftLoking.resize(2);
+	rightLoking.setPrimitiveType(sf::LinesStrip);;
+	rightLoking.resize(2);
+	ratioLoking.setPrimitiveType(sf::LinesStrip);;
+	ratioLoking.resize(2);
+
 	//m_shape.setPointCount(3);
 	m_myDesc = _Desc;
 	m_shape.setRadius(_Desc.ratio);
@@ -77,10 +85,18 @@ void Boid::Init(const BoidDescriptor & _Desc)
 	{
 		m_pMyState = m_pStateMachine->getIdleState();
 	}
+	if (m_mytype==TYPEBOID::PLAYER)
+	{
+		initLifeBars();
+	}
 }
 
 void Boid::Update()
 {
+	if (m_isDead)
+	{
+		return;
+	}
 	m_elapsedTime += *m_myDesc.globalTime;
 	newDirection = { 0,0 };
 	//m_direction = m_directionView * m_speed;
@@ -95,6 +111,7 @@ void Boid::Update()
 		m_eMyCurrentState=m_pMyState->onUpdate(this);
 		m_pStateMachine->updateState(*this);
 		//updateForEveryone();
+		m_eMyPastState = m_eMyCurrentState;
 		return;
 	}
 	else if (m_mytype != TYPEBOID::UNKNOWBOID && m_pStateMachine != nullptr)
@@ -102,6 +119,7 @@ void Boid::Update()
 		m_eMyCurrentState = m_pMyState->onUpdate(this);
 		m_pStateMachine->updateState(*this);
 		//updateForEveryone();
+		m_eMyPastState = m_eMyCurrentState;
 		return;
 	}
 	if (m_myDesc.seek.impetu>0)
@@ -232,10 +250,27 @@ void Boid::Update()
 
 void Boid::Render(sf::RenderWindow& _wind)
 {
+	if (m_isDead)
+	{
+		return;
+	}
 	m_position += m_direction;
 	m_shape.setPosition(m_position.x, m_position.y);
 	_wind.draw(m_shape);
 	_wind.draw(linesForObstacleEvade);
+	if (m_mytype!=TYPEBOID::PLAYER&& m_mytype != TYPEBOID::UNKNOWBOID)
+	{
+		_wind.draw(leftLoking);
+		_wind.draw(rightLoking);
+		_wind.draw(ratioLoking);
+	}
+	else if (m_mytype == TYPEBOID::PLAYER)
+	{
+		for (size_t i = 0; i < m_maxLife; i++)
+		{
+			_wind.draw(lifeBars[i]);
+		}
+	}
 	//_wind.draw(backLeftToObstacle);
 	//_wind.draw(frontRightToObstacle);
 }
@@ -709,7 +744,7 @@ CD::CDVector2 Boid::obstacleEvade(std::vector<Obstacle*>* ptr_obstacles, float I
 	return F;
 }
 
-bool Boid::lookingForPlayer(Boid*objetive,float angle,float ratio)
+bool Boid::lookingForPlayer(Boid* objetive, float angle, float ratio)
 {
 	CDVector2 objetivePos = objetive->getPosition();
 	CD::CDVector2 collisionPoint = m_position - objetivePos;
@@ -721,6 +756,22 @@ bool Boid::lookingForPlayer(Boid*objetive,float angle,float ratio)
 	float magnitude = vectorToObjetive.length();
 	vectorToCheckObjetive.normalize();
 	float parentesco = vectorToCheckObjetive.dot(m_directionView);
+
+	float aApertura = angle * degTorad / 2;
+
+	float apertura = m_directionView.length() * sin(aApertura);
+	CDVector2 right = (-m_right * apertura) + m_directionView;
+	CDVector2 left = (m_right * apertura) + m_directionView;
+	CDVector2 mid = (m_directionView*ratio)+m_position;
+	left *= ratio;
+	left += m_position;
+	right *= ratio;
+	right += m_position;
+
+	ratioLoking[0].position = leftLoking[0].position = rightLoking[0].position = { m_position.x,m_position.y };
+	leftLoking[1].position = { left.x,left.y };
+	rightLoking[1].position = { right.x,right.y };
+	ratioLoking[1].position = { mid.x , mid.y};
 	if (ratio< magnitude|| parentesco<0)
 	{
 		return false;
@@ -734,16 +785,59 @@ bool Boid::lookingForPlayer(Boid*objetive,float angle,float ratio)
 
 	float Adir1 = Adir;
 	float Adir2 = Adir;
-	Adir1 -= angle* degTorad / 2;
-	Adir2 += angle * degTorad / 2;
-	if (AtoObjetive>=Adir1&& AtoObjetive<=Adir2)
+
+	Adir1 -= aApertura;
+	Adir2 += aApertura;
+	if (AtoObjetive >= Adir1 && AtoObjetive <= Adir2)
 	{
 		std::cout << "wachando";
 		return true;
 	}
+	//if (m_directionView.x < 0)
+	//{
+	//	
+	//}
+	//else
+	//{
+	//	if (AtoObjetive <= Adir1 && AtoObjetive >= Adir2)
+	//	{
+	//		std::cout << "wachando";
+	//		return true;
+	//	}
+	//}
+	
 	//std::cout << Adir <<std::endl;
 	//CD::CDVector2 posF = { ratio * cosf(Fdir * degTorad),ratio * sinf(Fdir * degTorad) };
 	//posF += C;
+	return false;
+}
+
+bool Boid::playerInRange(Boid* objetive, float ratio)
+{
+	CDVector2 objetivePos = objetive->getPosition();
+	CD::CDVector2 collisionPoint = m_position - objetivePos;
+	collisionPoint.normalize();
+	collisionPoint *= objetive->getRatio();
+	collisionPoint += objetivePos;
+	CDVector2 vectorToObjetive = collisionPoint - m_position;
+	CDVector2 vectorToCheckObjetive = collisionPoint - m_position;
+	float magnitude = vectorToObjetive.length();
+
+	if (ratio < magnitude )
+	{
+		return false;
+	}
+	return true;
+}
+
+bool Boid::isPlayerNear(Boid* objetive)
+{
+	float sumRatios = m_myDesc.ratio + objetive->getRatio();
+	CDVector2 distanceVec = m_position - objetive->getPosition();
+	if (distanceVec.length()<= sumRatios)
+	{
+		return true;
+	}
 	return false;
 }
 
@@ -793,6 +887,56 @@ void Boid::updateForWalking()
 	m_right.x = m_directionView.y;
 	m_right.y = -m_directionView.x;
 	calculatePointsToDetecteCollision();
+}
+
+void Boid::updateForLoking()
+{
+	m_right.x = m_directionView.y;
+	m_right.y = -m_directionView.x;
+	calculatePointsToDetecteCollision();
+}
+
+void Boid::applyDamageToPlayer(Boid* _player)
+{
+	_player->takeDamageToPlayer();
+}
+
+void Boid::takeDamageToPlayer()
+{
+	if (m_elapsedTime> m_timeToTakeDamage)
+	{
+		m_timeToTakeDamage = m_constTimeToTakeDamage + m_elapsedTime;
+		m_life -= 1;
+		lifeBars[m_life].setFillColor(sf::Color::Red);
+		if (m_life <= 0)
+		{
+			m_isDead;
+		}
+	}
+	
+}
+
+void Boid::rotate()
+{
+	float x = sin(m_elapsedTime * 2);
+	float y = cos(m_elapsedTime * 2);
+	m_directionView = { x,y };
+	m_directionView.normalize();
+	updateForLoking();
+}
+
+void Boid::semirotate()
+{
+	float x = sin(m_elapsedTime);
+	float y = cos(m_elapsedTime);
+	m_directionView = { x,y };
+	m_directionView.normalize();
+	updateForLoking();
+}
+
+CD::CDVector2 Boid::instanceBullet()
+{
+	return CD::CDVector2();
 }
 
 void Boid::CalculateImpetuForCollision()
@@ -899,6 +1043,7 @@ float Boid::calculateAngle(const CDVector2& _vec)
 	float angle = 0;
 	if (_vec.y > 0 || _vec.x < 0)
 	{
+		float sum = 3.1415f;
 		float x = _vec.x;
 		float y = _vec.y;
 		if (_vec.y > 0 && _vec.x < 0)
@@ -914,8 +1059,12 @@ float Boid::calculateAngle(const CDVector2& _vec)
 			else if (_vec.x < 0)
 			{
 				x *= -1;
+				//sum *= 1.5;
 			}
-			angle = std::atan(-(y / x));
+			angle = std::atan(-(-y / x));
+		}if (_vec.y > 0 && _vec.x > 0)
+		{
+			sum *= 1.5f;
 		}
 		//angle *= (180 / 3.1415f);//tranforn to degrees
 		//if (_vec.y > 0 && _vec.x > 0)
@@ -924,8 +1073,8 @@ float Boid::calculateAngle(const CDVector2& _vec)
 		//}
 		//if (_vec.y > 0 && _vec.x < 0)
 		//{
-		//	angle += 180;
 		//}
+			angle += sum;
 
 	}
 	else
@@ -934,4 +1083,28 @@ float Boid::calculateAngle(const CDVector2& _vec)
 		//angle *= (180 / 3.1415f);//tranforn to degrees
 	}
 	return angle;
+}
+
+void Boid::initLifeBars()
+{
+	sf::Color barColor = sf::Color::Green;
+	sf::Vector2f size = {5,16};
+	lifeBars[0].setPosition(1, 1);
+	lifeBars[0].setFillColor(barColor);
+	lifeBars[0].setSize(size);
+	lifeBars[1].setPosition(9, 1);
+	lifeBars[1].setFillColor(barColor);
+	lifeBars[1].setSize(size);;
+	lifeBars[2].setPosition(17, 1);
+	lifeBars[2].setFillColor(barColor);
+	lifeBars[2].setSize(size);
+	lifeBars[3].setPosition(25, 1);
+	lifeBars[3].setFillColor(barColor);
+	lifeBars[3].setSize(size);
+	lifeBars[4].setPosition(33, 1);
+	lifeBars[4].setFillColor(barColor);
+	lifeBars[4].setSize(size);
+	lifeBars[5].setPosition(41, 1);
+	lifeBars[5].setFillColor(barColor);
+	lifeBars[5].setSize(size);
 }

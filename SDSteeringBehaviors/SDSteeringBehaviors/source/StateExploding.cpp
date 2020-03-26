@@ -11,15 +11,17 @@ StateExploding::~StateExploding()
 
 void StateExploding::onEnter(Boid* _boid)
 {
+	_boid->applyDamageToPlayer(_boid->m_myDesc.pPlayer);
 }
 
 ENUMSTATES StateExploding::onUpdate(Boid* _boid)
 {
-	//_boid->player.addDamage(_damage);
-	//destroy object
-	return ENUMSTATES::EXPLOTINGSTATE;
+	//quisa meter un temporizador
+	//agregar estado de muerte
+	return ENUMSTATES::DEADSTATE;
 }
 
 void StateExploding::onExit(Boid* _boid)
 {
+
 }
