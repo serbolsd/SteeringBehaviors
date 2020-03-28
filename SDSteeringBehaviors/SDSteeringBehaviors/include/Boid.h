@@ -7,6 +7,7 @@
 using namespace CD;
 class Obstacle;
 class Boid;
+class Wall;
 enum class TYPEBOID
 {
 	UNKNOWBOID=0,
@@ -144,6 +145,8 @@ struct BoidDescriptor
 	float ratioToLooking=0;
 	float AngleToLookingInDegrees=0;
 	float Damage = 0;
+	float rotateSpeed;//0-1
+	std::vector <Wall*>* pWalls = nullptr;
 };
 
 class Boid
@@ -187,6 +190,7 @@ public:
 	CD::CDVector2 FollowTheLeader(std::vector<Boid*>* Boids, float ratioVision, float impetuFollow, float impetuEvade, float impetuDiretion, float impetuCohesion, float impetuSeparation, Boid* leader, float distToLeader);
 	CD::CDVector2 obstacleCollision(std::vector <Obstacle*>* ptr_obstacles, float Impetu);
 	CD::CDVector2 obstacleEvade(std::vector <Obstacle*>* ptr_obstacles, float Impetu);
+	CD::CDVector2 wallCollision(std::vector<Wall*>*_walls);
 	bool lookingForPlayer(Boid* objetive, float angle, float ratio);
 	bool playerInRange(Boid* objetive, float ratio);
 	bool isPlayerNear(Boid* objetive);
@@ -199,6 +203,7 @@ public:
 	void applyDamageToPlayer(Boid* _player);
 	void takeDamageToPlayer();
 	void rotate();
+	void rotateToObjetive(Boid* _player);
 	void semirotate();
 	bool m_isDead = false;
 	float m_timeToChasing = .3;
@@ -212,7 +217,8 @@ private:
 	bool detectedCollision(Obstacle* _obstacle);
 	float calculateAngle(const CDVector2& _vec);
 	void initLifeBars();
-
+	void updateLaserTorret(Boid*_player);
+	float calculateProyectionOfVector(const CDVector2& _mainVector, const CDVector2& _VectorToProyect);
 	CD::CDVector2 m_position;
 	CD::CDVector2 m_direction;
 	CD::CDVector2 m_directionView;
@@ -248,7 +254,18 @@ private:
 	ENUMSTATES m_eMyPastState = ENUMSTATES::UNKNOWSTATE;
 
 	sf::RectangleShape lifeBars[6];
+	sf::RectangleShape m_LaserTooret;
+	sf::CircleShape m_ratioDetection;
 	float timeToActived= 0.5;
 
 	const float degTorad = 3.1415f / 180;
+	CDVector2 m_pointToView;
+	CDVector2 m_pointViewed;
+	const float m_ratioLaserTorret = 4;
+	public:
+	bool goingToPos = false;
+	float m_timeToRotate=0;
+	const float m_constTimeToRotate = 3;
+	bool m_waitingForNexRotate = false;
+
 };

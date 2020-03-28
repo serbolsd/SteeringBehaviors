@@ -28,6 +28,8 @@ ENUMSTATES StateLooking::onUpdate(Boid* _boid)
 		//if (_boid->lookingForPlayer(_boid->m_myDesc.pPlayer, _boid->m_myDesc.AngleToLookingInDegrees, _boid->m_myDesc.ratioToLooking))
 		//	return ENUMSTATES::SHOOTINGSTATE;
 		_boid->lookingForPlayer(_boid->m_myDesc.pPlayer, _boid->m_myDesc.AngleToLookingInDegrees, _boid->m_myDesc.ratioToLooking);
+		if (_boid->playerInRange(_boid->m_myDesc.pPlayer, _boid->m_myDesc.ratioToLooking))
+			return ENUMSTATES::SHOOTINGSTATE;
 		_boid->rotate();
 		break;
 	case TYPEBOID::SCIENTIFIC:

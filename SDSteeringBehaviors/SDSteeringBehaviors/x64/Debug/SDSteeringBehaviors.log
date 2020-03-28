@@ -1,8 +1,12 @@
-﻿  Laser.cpp
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Laser.h(22,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Laser.h(23,41): warning C4305: 'inicializando': truncamiento de 'double' a 'const float'
+﻿  Boid.cpp
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(20,29): warning C4100: '_boid': parámetro formal sin referencia
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(21,36): warning C4100: '_boid': parámetro formal sin referencia
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(22,28): warning C4100: '_boid': parámetro formal sin referencia
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(204,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(209,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(967,43): warning C4100: 'Dir': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1038,11): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1039,11): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1042,21): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1046,21): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1099,8): warning C4189: 'kinship': la variable local se ha inicializado pero no se hace referencia a ella
   SDSteeringBehaviors.vcxproj -> D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\x64\Debug\SDSteeringBehaviors.exe

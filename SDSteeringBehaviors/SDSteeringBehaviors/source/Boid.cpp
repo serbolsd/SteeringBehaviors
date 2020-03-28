@@ -7,6 +7,7 @@
 #include "Obstacle.h"
 #include <stdlib.h>
 #include <playerInputs.h>
+#include <Wall.h>
 Boid::Boid()
 {
 	m_speed = 0;
@@ -89,6 +90,20 @@ void Boid::Init(const BoidDescriptor & _Desc)
 	{
 		initLifeBars();
 	}
+	if (m_mytype == TYPEBOID::TORRET)
+	{
+		
+		m_LaserTooret.setSize(sf::Vector2f(m_myDesc.ratioToLooking - m_myDesc.ratio, m_ratioLaserTorret));
+		m_LaserTooret.setOrigin(sf::Vector2f(0, m_ratioLaserTorret / 2));
+		m_LaserTooret.setFillColor(sf::Color::Red);
+		float angle = calculateAngle(m_directionView.getnormalize());
+		angle *= 180 / 3.1415f;
+		m_LaserTooret.setRotation(-angle);
+		updateLaserTorret(m_myDesc.pPlayer);
+	}
+	m_ratioDetection.setRadius(m_myDesc.ratioToLooking);
+	m_ratioDetection.setOrigin(m_myDesc.ratioToLooking, m_myDesc.ratioToLooking);
+	m_ratioDetection.setFillColor(sf::Color(125,0,0,100));
 }
 
 void Boid::Update()
@@ -112,6 +127,10 @@ void Boid::Update()
 		m_pStateMachine->updateState(*this);
 		//updateForEveryone();
 		m_eMyPastState = m_eMyCurrentState;
+		if (m_myDesc.pWalls != nullptr)
+		{
+			wallCollision(m_myDesc.pWalls);
+		}
 		return;
 	}
 	else if (m_mytype != TYPEBOID::UNKNOWBOID && m_pStateMachine != nullptr)
@@ -120,6 +139,10 @@ void Boid::Update()
 		m_pStateMachine->updateState(*this);
 		//updateForEveryone();
 		m_eMyPastState = m_eMyCurrentState;
+		if (m_myDesc.pWalls!=nullptr)
+		{
+			wallCollision(m_myDesc.pWalls);
+		}
 		return;
 	}
 	if (m_myDesc.seek.impetu>0)
@@ -256,6 +279,11 @@ void Boid::Render(sf::RenderWindow& _wind)
 	}
 	m_position += m_direction;
 	m_shape.setPosition(m_position.x, m_position.y);
+	if (m_mytype != TYPEBOID::PLAYER && m_mytype != TYPEBOID::UNKNOWBOID)
+	{
+		m_ratioDetection.setPosition(m_position.x, m_position.y);
+		_wind.draw(m_ratioDetection);
+	}
 	_wind.draw(m_shape);
 	_wind.draw(linesForObstacleEvade);
 	if (m_mytype!=TYPEBOID::PLAYER&& m_mytype != TYPEBOID::UNKNOWBOID)
@@ -270,6 +298,10 @@ void Boid::Render(sf::RenderWindow& _wind)
 		{
 			_wind.draw(lifeBars[i]);
 		}
+	}
+	if (m_mytype==TYPEBOID::TORRET)
+	{
+		_wind.draw(m_LaserTooret);
 	}
 	//_wind.draw(backLeftToObstacle);
 	//_wind.draw(frontRightToObstacle);
@@ -744,6 +776,87 @@ CD::CDVector2 Boid::obstacleEvade(std::vector<Obstacle*>* ptr_obstacles, float I
 	return F;
 }
 
+CD::CDVector2 Boid::wallCollision(std::vector<Wall*> *_walls)
+{
+	CDVector2 frontMidDir=m_position+ m_direction+(m_direction.getnormalize()*m_myDesc.ratio);
+	CDVector2 frontLeftDir=m_position-(m_right*m_myDesc.ratio)+m_direction + (m_direction.getnormalize() * m_myDesc.ratio);
+	CDVector2 frontLeftPos=m_position-(m_right*m_myDesc.ratio);
+	CDVector2 frontRightDir = m_position + (m_right * m_myDesc.ratio) + m_direction + (m_direction.getnormalize() * m_myDesc.ratio);
+	CDVector2 frontRightPos = m_position + (m_right * m_myDesc.ratio);
+	for (size_t i = 0; i < _walls->size(); i++)
+	{
+		CD::CDVector2 wallPivot = _walls[0][i]->getPos1();
+		float compareFM, compareLM, compareRM = 0;
+		compareFM = wallPivot.dot(frontMidDir);
+		compareLM = wallPivot.dot(frontLeftDir);
+		compareRM = wallPivot.dot(frontRightDir);
+		if (compareFM<0&& compareLM<0&& compareRM<0)
+		{
+			continue;
+		}
+		CDVector2 wallVector = _walls[0][i]->getWallVector();
+		CDVector2 wallToPos = m_position - wallPivot;
+		CDVector2 wallToDir = frontMidDir - wallPivot;
+		float angle1, angle2,angleWall;
+		angleWall = _walls[0][i]->getAngle();
+		angle1 = calculateAngle(wallToPos);
+		angle1 *= 180.0f / 3.1415f;
+		if (angle1<0)
+		{
+			angle1 = 360 - angle1;
+		}
+		angle2 = calculateAngle(wallToDir);
+		angle2 *= 180.0f / 3.1415f;
+		if (angle2 < 0)
+		{
+			angle2 = 360 - angle2;
+		}
+		if (!(angle1< angleWall&&angle2>angleWall)&& !(angle1> angleWall && angle2<angleWall))
+		{
+			return CD::CDVector2();
+		}
+		float proyection1 = wallToPos.length()/wallVector.length();
+		float proyection2 = wallToDir.length() / wallVector.length();
+		if (proyection1>1 &&proyection2>1 )
+		{
+			return CD::CDVector2();
+		}
+		CDVector2 nearPoint = (wallVector * proyection1)+wallPivot;
+		CDVector2 DirToNearPoint = nearPoint - m_position;
+		float distanceToNearPoint = DirToNearPoint.length();
+		if (distanceToNearPoint <m_myDesc.ratio)
+		{
+			m_direction = { 0,0 };
+			CDVector2 newPos = m_position - nearPoint;
+			newPos.normalize();
+			newPos *= m_myDesc.ratio;
+			m_position = newPos + nearPoint;
+			return CD::CDVector2();
+		}
+
+		float y = calculateAngle(DirToNearPoint.getnormalize());
+		y = sin(y);
+		y *= distanceToNearPoint;
+		distanceToNearPoint += y;
+		CDVector2 newNearPoint = nearPoint - wallPivot;
+		float newLenght = newNearPoint.length()+y;
+		proyection1 = newLenght / wallVector.length();
+		if (proyection1>1)
+		{
+			return CD::CDVector2();
+		}
+		nearPoint = (wallVector * proyection1) + wallPivot;
+
+		m_direction = { 0,0 };
+		CDVector2 newPos = m_position-nearPoint;
+		newPos.normalize();
+		newPos *= m_myDesc.ratio;
+		m_position = newPos + nearPoint;
+	}
+	
+	return CD::CDVector2();
+}
+
 bool Boid::lookingForPlayer(Boid* objetive, float angle, float ratio)
 {
 	CDVector2 objetivePos = objetive->getPosition();
@@ -882,7 +995,7 @@ void Boid::updateForWalking()
 	}
 	else
 	{
-		m_direction = CD::CDVector2(0, 0);
+		m_direction = CD::CDVector2(0, 0); 
 	}
 	m_right.x = m_directionView.y;
 	m_right.y = -m_directionView.x;
@@ -918,11 +1031,81 @@ void Boid::takeDamageToPlayer()
 
 void Boid::rotate()
 {
-	float x = sin(m_elapsedTime * 2);
-	float y = cos(m_elapsedTime * 2);
-	m_directionView = { x,y };
+	if (!m_waitingForNexRotate)
+	{
+		//
+		srand((unsigned int)time(NULL));
+		float x = (std::rand() & 10);
+		float y = (std::rand() & 10);
+		while (x<m_directionView.x*10+4&& x > m_directionView.x * 10 - 4)
+		{
+			x = (std::rand() & 10);
+		}
+		while (y<m_directionView.y * 10 + 4 && y > m_directionView.y * 10 - 4)
+		{
+			y = (std::rand() & 10);
+		}
+		x -= 5;
+		y -= 5;
+		x /= 5;
+		y /= 5;
+		m_pointToView = { x,y };
+		m_pointToView.normalize();
+		goingToPos = true;
+		m_waitingForNexRotate = true;
+		m_pointViewed = m_directionView;
+	}
+	else
+	{
+		if (goingToPos)
+		{
+
+			CD::CDVector2 vectorDirection;
+			vectorDirection = m_pointToView;
+			vectorDirection -= m_pointViewed;
+			vectorDirection.normalize();
+			vectorDirection *= m_myDesc.rotateSpeed;
+			m_directionView +=vectorDirection;
+			m_directionView.normalize();
+			float kinship = m_directionView.dot(m_pointToView);
+			updateLaserTorret(m_myDesc.pPlayer);
+			if (kinship>=0&& kinship<=1)
+			{
+				m_timeToRotate = m_elapsedTime + m_constTimeToRotate;
+				goingToPos = false;
+			} 
+		}
+		else
+		{
+			//updateForLoking();
+			if (m_elapsedTime > m_timeToRotate)
+			{
+				m_waitingForNexRotate = false;
+			}
+		}
+	}
+	updateForLoking();
+	
+}
+
+void Boid::rotateToObjetive(Boid* _player)
+{
+	CD::CDVector2 vectorDirection;
+	CD::CDVector2 objetivePos=_player->getPosition();
+	vectorDirection = objetivePos-m_position;
+	vectorDirection.normalize();
+	//vectorDirection -= m_pointViewed;
+	//vectorDirection.normalize();
+	float kinship = m_directionView.dot(vectorDirection);
+	vectorDirection *= m_myDesc.rotateSpeed*2;
+
+	m_directionView += vectorDirection;
 	m_directionView.normalize();
 	updateForLoking();
+	m_timeToRotate = m_elapsedTime + m_constTimeToRotate;
+	goingToPos = false;
+	updateLaserTorret(m_myDesc.pPlayer);
+	
 }
 
 void Boid::semirotate()
@@ -1064,7 +1247,8 @@ float Boid::calculateAngle(const CDVector2& _vec)
 			angle = std::atan(-(-y / x));
 		}if (_vec.y > 0 && _vec.x > 0)
 		{
-			sum *= 1.5f;
+			angle = std::atan((-_vec.y / _vec.x));
+			return angle;
 		}
 		//angle *= (180 / 3.1415f);//tranforn to degrees
 		//if (_vec.y > 0 && _vec.x > 0)
@@ -1107,4 +1291,63 @@ void Boid::initLifeBars()
 	lifeBars[5].setPosition(41, 1);
 	lifeBars[5].setFillColor(barColor);
 	lifeBars[5].setSize(size);
+}
+
+void Boid::updateLaserTorret(Boid*_player)
+{
+
+	float angle = calculateAngle(m_directionView.getnormalize());
+	angle *= 180 / 3.1415f;
+	m_LaserTooret.setRotation(-angle);
+	CDVector2 pos = m_position + (m_directionView * m_myDesc.ratio);
+	m_LaserTooret.setPosition(pos.x, pos.y);
+	CDVector2 playerPos =  _player->getPosition();
+	CDVector2 objetivePos = m_position - playerPos;
+	objetivePos.normalize();
+	objetivePos *= _player->getRatio();
+	objetivePos += playerPos;
+	objetivePos = objetivePos-m_position ;
+	CDVector2 front = m_directionView * m_myDesc.ratioToLooking;
+	float kinship = objetivePos.dot(front);
+	if (kinship<0)
+	{
+		return;
+	}
+	CDVector2 vectorProyection = playerPos - m_position;
+	float proyection = vectorProyection.length();
+	proyection /= front.length();
+	if (proyection>1)
+	{
+		proyection = 1;
+	}
+	CD::CDVector2 nearPoint = (front * proyection) + m_position;
+	CDVector2 boidCollisionPoint = nearPoint - playerPos;
+	if (boidCollisionPoint.length()< _player->getRatio())
+	{
+
+		_player->takeDamageToPlayer();
+		return;
+	}
+	boidCollisionPoint.normalize();
+	boidCollisionPoint *= _player->getRatio();
+	boidCollisionPoint += playerPos;
+	nearPoint -= boidCollisionPoint;
+	float length = nearPoint.length();
+
+	if (length- m_ratioLaserTorret <= m_ratioLaserTorret)
+	{
+		_player->takeDamageToPlayer();
+
+	}
+}
+
+float Boid::calculateProyectionOfVector(const CDVector2& _mainVector, const CDVector2& _VectorToProyect)
+{
+	float kiship = _mainVector.dot(_VectorToProyect);
+	if (kiship<0)
+	{
+		return 0;
+	}
+	float proyection = _VectorToProyect.length() / _mainVector.length();
+	return proyection;
 }

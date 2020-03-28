@@ -119,6 +119,18 @@ void Laser::checkBoids(std::vector<Boid*> _boid)
 		proyection /= m_sizeToPos1.length();
 		CD::CDVector2 nearPoint1 = (m_sizeToPos1 * proyection) + m_pos2;
 		CDVector2 boidCollisionPoint1 = nearPoint1 - boidPosition;
+		if (boidCollisionPoint1.length() < _boid[i]->getRatio() + m_ratio)
+		{
+
+			if (_boid[i]->getTypeBoid() == TYPEBOID::PLAYER)
+			{
+				_boid[i]->takeDamageToPlayer();
+			}
+			else
+			{
+				_boid[i]->m_isDead = true;
+			}
+		}
 		boidCollisionPoint1.normalize();
 		boidCollisionPoint1 *= _boid[i]->getRatio();
 		boidCollisionPoint1 += boidPosition;
@@ -175,9 +187,11 @@ float Laser::calculateAngle(const CDVector2& _vec)
 				//sum *= 1.5;
 			}
 			angle = std::atan(-(-y / x));
-		}if (_vec.y > 0 && _vec.x > 0)
+		}
+		if (_vec.y > 0 && _vec.x > 0)
 		{
-			sum *= 1.5f;
+			angle = std::atan((-_vec.y / _vec.x));
+			return angle;
 		}
 		//angle *= (180 / 3.1415f);//tranforn to degrees
 		//if (_vec.y > 0 && _vec.x > 0)

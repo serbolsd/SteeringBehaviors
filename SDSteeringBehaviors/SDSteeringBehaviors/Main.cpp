@@ -4,6 +4,7 @@
 #include "Obstacle.h"
 #include "StateMachine.h"
 #include <Laser.h>
+#include <Wall.h>
 void Init();
 void ObstaclesInit();
 void BoidsInit();
@@ -17,6 +18,7 @@ CD::CDVector2 g_MousePosition;
 std::vector<Boid*> g_boidsVector;
 std::vector<Obstacle*> g_ObstaclesVector;
 std::vector<CD::CDVector2> g_pointsPathVector;
+std::vector<Wall*> g_wallsVector;
 StateMachine g_stateMachine;
 Boid* g_pPlayer;
 Laser g_Laser;
@@ -59,9 +61,12 @@ int main()
 
 void Init()
 {
-	g_Laser.init(CDVector2(100,450), CDVector2(300, 450),&g_deltaTime);
+	g_Laser.init(CDVector2(100,450), CDVector2(50, 500),&g_deltaTime);
 	g_stateMachine.init();
 	g_deltaTime = 0;
+	Wall* newWall = new Wall();
+	newWall->init({600,0} ,{600,300});
+	g_wallsVector.push_back(newWall);
 	//g_MousePosition = new CD::CDVector2;
 	//g_Path = new std::vector<CD::CDVector2>;
 	g_pointsPathVector.push_back(CDVector2(400,400));
@@ -94,18 +99,15 @@ void BoidsInit()
 	Boid* boid = new Boid();
 	Boid* wanderRan = new Boid();
 	g_pPlayer = boid;
-	//Boid* wanderTime = new Boid();
-	//Boid* wader = new Boid();
-	//Boid* pathFollower = new Boid();
-	//Boid* patroler = new Boid();
+	Boid* wanderTime = new Boid();
 	std::vector<Boid*>::iterator iteratorBoidsVector;
 	iteratorBoidsVector = g_boidsVector.begin();
 	BoidDescriptor descSeek;
 	descSeek.globalTime = &g_deltaTime;
 	descSeek.Direction = { 0 ,0 };
 	descSeek.Position = { 300,300 };
-	descSeek.Speed = 5;
-	descSeek.ratio = 20;
+	descSeek.Speed = 10;
+	descSeek.ratio = 10;
 	descSeek.masa = 0.7;
 	descSeek.seek.impetu = 10;
 	descSeek.seek.objetive = &g_MousePosition;
@@ -113,6 +115,7 @@ void BoidsInit()
 	descSeek.obstacleEvadeDimentions.impetu=15;
 	descSeek.pStateMachine= &g_stateMachine;
 	descSeek.BoidType= TYPEBOID::PLAYER;
+	descSeek.pWalls= &g_wallsVector;
 	boid->Init(descSeek);
 	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector,boid);
 	/*BoidDescriptor descForEvade;
@@ -310,10 +313,33 @@ void BoidsInit()
 	wanderRan->Init(FollowTheLeaderDesc);
 	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wanderRan);
 	
-	FollowTheLeaderDesc.Position = CD::CDVector2(500, 520);
-	FollowTheLeaderDesc.shapeColor = { 0, 255, 0, 255 };
-	//wanderTime->Init(FollowTheLeaderDesc);
-	//iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wanderTime);
+
+
+	BoidDescriptor torretDesc;
+	torretDesc.globalTime = &g_deltaTime;
+	torretDesc.ratio = 20;
+	torretDesc.Speed = 2;
+	torretDesc.masa = 0.2f;
+	torretDesc.Position = CD::CDVector2(500, 500);
+	torretDesc.shapeColor = { 0, 0, 255, 255 };
+	torretDesc.ptr_obstacles = &g_ObstaclesVector;
+	torretDesc.obstacleEvadeDimentions.impetu = 20;
+	//torretDesc.BoidType = TYPEBOID::TANK;
+	torretDesc.BoidType = TYPEBOID::TORRET;
+	torretDesc.pStateMachine = &g_stateMachine;
+	torretDesc.ratioToLooking = 60;//tank
+	torretDesc.ratioToLooking = 150;//torret
+	torretDesc.AngleToLookingInDegrees = 60;
+	torretDesc.pPlayer = boid;
+	torretDesc.DirectionView = { 1,0 };
+	torretDesc.persu.impetu = 10;
+	torretDesc.persu.timeProyection = 4;
+	torretDesc.rotateSpeed = 0.02;
+	
+	torretDesc.Position = CD::CDVector2(500, 520);
+	torretDesc.shapeColor = { 0, 255, 0, 255 };
+	wanderTime->Init(torretDesc);
+	iteratorBoidsVector = g_boidsVector.insert(iteratorBoidsVector, wanderTime);
 	//
 	//FollowTheLeaderDesc.Position = CD::CDVector2(520, 520);
 	//FollowTheLeaderDesc.shapeColor = { 255, 0, 255, 255 };
@@ -350,6 +376,10 @@ void Render()
 {
 	//boid.Render(*wind);
 	//PersuOrEvadeboid.Render(*wind);
+	for (size_t i = 0; i < g_wallsVector.size(); i++)
+	{
+		g_wallsVector[i]->render(g_wind);
+	}
 	g_Laser.render(g_wind);
 	for (int i = 0; i < g_ObstaclesVector.size(); i++)
 	{
@@ -386,6 +416,10 @@ void Delete()
 		}
 		//boids[0][i]->Delete();
 		//delete boids[0][i];
+	}
+	for (size_t i = 0; i < g_wallsVector.size(); i++)
+	{
+		delete g_wallsVector[i];
 	}
 	g_stateMachine.onDelete();
 }
