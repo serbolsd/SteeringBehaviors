@@ -5,6 +5,10 @@
 #include "StateMachine.h"
 #include <Laser.h>
 #include <Wall.h>
+#include <SimpleEditor.h>
+#include <SceneManager.h>
+//#define EDITOR
+#define GAME 1
 void Init();
 void ObstaclesInit();
 void BoidsInit();
@@ -12,22 +16,24 @@ void Update();
 void Render();
 void Input();
 void Delete();
-sf::RenderWindow g_wind(sf::VideoMode(900, 900), "window");
+sf::RenderWindow g_wind(sf::VideoMode(1500, 900), "window");
 
 CD::CDVector2 g_MousePosition;
 std::vector<Boid*> g_boidsVector;
 std::vector<Obstacle*> g_ObstaclesVector;
 std::vector<CD::CDVector2> g_pointsPathVector;
 std::vector<Wall*> g_wallsVector;
+std::vector<std::vector<CDVector2*>> g_PathsVectors;
+sf::Text g_text;
+sf::Font font;
 StateMachine g_stateMachine;
 Boid* g_pPlayer;
 Laser g_Laser;
 float g_deltaTime;
-
+SimpleEditor g_editor;
+SceneManager g_sceneManager;
 int main()
 {
-	//sum(); 
-	
 	Init();
 	g_wind.setFramerateLimit(40);
 	sf::RenderWindow createWin;
@@ -61,19 +67,28 @@ int main()
 
 void Init()
 {
-	g_Laser.init(CDVector2(100,450), CDVector2(50, 500),&g_deltaTime);
 	g_stateMachine.init();
 	g_deltaTime = 0;
+#ifdef EDITOR
+	g_editor.Init(900,900,&g_deltaTime,&g_wind);
+#elif GAME
+	g_sceneManager.init(&g_deltaTime,&g_stateMachine);
+#else
+	g_Laser.init(CDVector2(100, 450), CDVector2(50, 500), &g_deltaTime);
+	
 	Wall* newWall = new Wall();
-	newWall->init({600,0} ,{600,300});
+	newWall->init({ 607,171 }, { 880,306 });
 	g_wallsVector.push_back(newWall);
 	//g_MousePosition = new CD::CDVector2;
 	//g_Path = new std::vector<CD::CDVector2>;
-	g_pointsPathVector.push_back(CDVector2(400,400));
+	g_pointsPathVector.push_back(CDVector2(400, 400));
 	g_pointsPathVector.push_back(CDVector2(800, 400));
 	g_pointsPathVector.push_back(CDVector2(600, 800));
 	ObstaclesInit();
 	BoidsInit();
+#endif // EDITOR
+
+	
 }
 
 void ObstaclesInit()
@@ -359,21 +374,34 @@ void BoidsInit()
 
 void Update()
 {
+#ifdef EDITOR
+	g_editor.Update();
+#elif GAME
+	g_sceneManager.Update();
+#else
 	g_Laser.update(g_boidsVector, g_pPlayer);
-	sf::Vector2i Mpos=sf::Mouse::getPosition(g_wind);
-	sf::Vector2f cordPos=g_wind.mapPixelToCoords(Mpos);
+	sf::Vector2i Mpos = sf::Mouse::getPosition(g_wind);
+	sf::Vector2f cordPos = g_wind.mapPixelToCoords(Mpos);
 	g_MousePosition.x = cordPos.x;
 	g_MousePosition.y = cordPos.y;
 	//boid.Update();
 	//PersuOrEvadeboid.Update();
-	for(int i=0; i< g_boidsVector.size();i++)
+	for (int i = 0; i < g_boidsVector.size(); i++)
 	{
 		g_boidsVector[i]->Update();
 	}
+#endif // EDITOR
+
+	
 }
 
 void Render()
 {
+#ifdef EDITOR
+	g_editor.render(g_wind);
+#elif GAME
+	g_sceneManager.render(g_wind);
+#else
 	//boid.Render(*wind);
 	//PersuOrEvadeboid.Render(*wind);
 	for (size_t i = 0; i < g_wallsVector.size(); i++)
@@ -389,6 +417,10 @@ void Render()
 	{
 		g_boidsVector[i]->Render(g_wind);
 	}
+#endif // EDITOR
+
+	
+	
 }
 
 void Input()
@@ -397,11 +429,18 @@ void Input()
 
 void Delete()
 {
+
+	g_stateMachine.onDelete();
+#ifdef EDITOR
+	g_editor.onDelete();
+#elif GAME
+	g_sceneManager.onDelete();
+#else
 	//boid.Delete();
 	//delete dtime;
 	for (int i = 0; i < g_ObstaclesVector.size(); i++)
 	{
-		if (g_ObstaclesVector[i]!=nullptr)
+		if (g_ObstaclesVector[i] != nullptr)
 		{
 			delete g_ObstaclesVector[i];
 		}
@@ -421,5 +460,7 @@ void Delete()
 	{
 		delete g_wallsVector[i];
 	}
-	g_stateMachine.onDelete();
+#endif // EDITOR
+
+	
 }

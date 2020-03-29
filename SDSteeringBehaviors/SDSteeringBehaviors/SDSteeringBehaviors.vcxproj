@@ -158,6 +158,7 @@
     <ClCompile Include="source\Obstacle.cpp" />
     <ClCompile Include="source\playerInputs.cpp" />
     <ClCompile Include="source\PowerCells.cpp" />
+    <ClCompile Include="source\SceneManager.cpp" />
     <ClCompile Include="source\SimpleEditor.cpp" />
     <ClCompile Include="source\Statechasing.cpp" />
     <ClCompile Include="source\StateDead.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="source\StateShooting.cpp" />
     <ClCompile Include="source\StateWalking.cpp" />
     <ClCompile Include="source\Wall.cpp" />
+    <ClCompile Include="source\winPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Boid.h" />
@@ -181,10 +183,12 @@
     <ClInclude Include="include\Obstacle.h" />
     <ClInclude Include="include\playerInputs.h" />
     <ClInclude Include="include\PowerCells.h" />
+    <ClInclude Include="include\SceneManager.h" />
     <ClInclude Include="include\SimpleEditor.h" />
     <ClInclude Include="include\StateMachine.h" />
     <ClInclude Include="include\States.h" />
     <ClInclude Include="include\Wall.h" />
+    <ClInclude Include="include\winPoint.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

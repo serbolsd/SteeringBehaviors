@@ -12,6 +12,8 @@ public:
 	void init(const CDVector2& _pos1,const CDVector2& _pos2,float*_deltaTime);
 	void update(std::vector<Boid*> _boid, Boid* _player);
 	void render(sf::RenderWindow& _wind);
+	CDVector2 getPos1() { return m_pos1; };
+	CDVector2 getPos2() { return m_pos2; };
 	float* m_pDeltaTime=nullptr;
 private:
 	void waitForPlayer(Boid*_player);
@@ -23,7 +25,7 @@ private:
 	const float m_constTimeToActivate = 0.2;
 	bool m_isActivated = false;
 	bool m_isGoingToActivated = false;
-	float m_ratio=10;
+	float m_ratio=5;
 	CDVector2 m_pos1;
 	CDVector2 m_pos2;
 	CDVector2 m_sizeToPos1;

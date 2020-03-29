@@ -19,7 +19,6 @@ void Laser::init(const CDVector2& _pos1, const CDVector2& _pos2,float* _deltaTim
 	angle *= 180 / 3.1415f;
 	m_length = m_sizeToPos1.length();
 	line.setPrimitiveType(sf::PrimitiveType::Lines);
-	line.setPrimitiveType(sf::PrimitiveType::Lines);
 	line.resize(2);
 	line[0].color = m_colorDesactivated;
 	line[0].position = { m_pos1.x,m_pos1.y };
@@ -64,7 +63,7 @@ void Laser::update(std::vector<Boid*> _boid, Boid* _player)
 
 void Laser::render(sf::RenderWindow& _wind)
 {
-	//_wind.draw(line);
+	_wind.draw(line);
 	_wind.draw(lin);
 }
 

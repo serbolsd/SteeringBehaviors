@@ -161,6 +161,8 @@ public:
 	CD::CDVector2 getPosition() { return m_position; };
 	CD::CDVector2 getDirection() { return m_direction; };
 	void setDirection(const CD::CDVector2& _dir) { m_direction = _dir; };
+	void setPosicion(const CD::CDVector2& _pos) { m_position = _pos; };
+
 	CD::CDVector2 getDirectionView() { return m_directionView; };
 	float getDistanceToView() { return m_myDesc.obstacleEvadeDimentions.sizeFront; };
 	float getSpeed() { return m_speed; };
@@ -170,7 +172,8 @@ public:
 	const ENUMSTATES& getEnumPastState() { return m_eMyPastState; };
 	void setState(State* _newState) { m_pMyState = _newState; };
 	State* getState() { return m_pMyState; };
-
+	void setRatioToLooking(const float &_ratio);
+	//void serAngleToLooking();
 	CD::CDVector2 seek(CD::CDVector2 PosB, float impetu);
 	CD::CDVector2 flee(CD::CDVector2 PosB, float impetu);
 	CD::CDVector2 fleeRatio(CD::CDVector2 PosB, float impetu, float ratio);

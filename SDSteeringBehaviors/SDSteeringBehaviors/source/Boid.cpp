@@ -59,7 +59,7 @@ void Boid::Init(const BoidDescriptor & _Desc)
 	}
 	else
 	{
-		return;
+		//return;
 	}
 	if (m_myDesc.obstacleEvadeDimentions.sizeFront<m_myDesc.ratio)
 	{
@@ -318,6 +318,13 @@ void Boid::Delete()
 
 	}
 	delete m_myDesc.persu.objetive;
+}
+
+void Boid::setRatioToLooking(const float& _ratio)
+{
+	m_myDesc.ratioToLooking = _ratio;
+	m_ratioDetection.setRadius(_ratio);
+	m_ratioDetection.setOrigin(_ratio, _ratio);
 }
 
 CD::CDVector2 Boid::seek(CD::CDVector2 PosB, float impetu)
@@ -799,27 +806,51 @@ CD::CDVector2 Boid::wallCollision(std::vector<Wall*> *_walls)
 		CDVector2 wallToDir = frontMidDir - wallPivot;
 		float angle1, angle2,angleWall;
 		angleWall = _walls[0][i]->getAngle();
+		if (angleWall < 0)
+		{
+			angleWall = 360 + angleWall;
+		}
 		angle1 = calculateAngle(wallToPos);
 		angle1 *= 180.0f / 3.1415f;
 		if (angle1<0)
 		{
-			angle1 = 360 - angle1;
+			angle1 = 360 + angle1;
 		}
 		angle2 = calculateAngle(wallToDir);
 		angle2 *= 180.0f / 3.1415f;
 		if (angle2 < 0)
 		{
-			angle2 = 360 - angle2;
+			angle2 = 360 + angle2;
 		}
+		
 		if (!(angle1< angleWall&&angle2>angleWall)&& !(angle1> angleWall && angle2<angleWall))
 		{
-			return CD::CDVector2();
+			continue;
+		}
+		bool isInRange = true;
+		if (angle1 < angle2)
+		{
+			float diference = angle2 - angle1;
+			if (diference > 180)
+			{
+				continue;
+				isInRange = false;
+			}
+		}
+		else if (angle2 < angle1)
+		{
+			float diference = angle1 - angle2;
+			if (diference > 180)
+			{
+				continue;
+				isInRange = false;
+			}
 		}
 		float proyection1 = wallToPos.length()/wallVector.length();
 		float proyection2 = wallToDir.length() / wallVector.length();
 		if (proyection1>1 &&proyection2>1 )
 		{
-			return CD::CDVector2();
+			continue;
 		}
 		CDVector2 nearPoint = (wallVector * proyection1)+wallPivot;
 		CDVector2 DirToNearPoint = nearPoint - m_position;
@@ -831,7 +862,7 @@ CD::CDVector2 Boid::wallCollision(std::vector<Wall*> *_walls)
 			newPos.normalize();
 			newPos *= m_myDesc.ratio;
 			m_position = newPos + nearPoint;
-			return CD::CDVector2();
+			continue;
 		}
 
 		float y = calculateAngle(DirToNearPoint.getnormalize());
@@ -843,7 +874,7 @@ CD::CDVector2 Boid::wallCollision(std::vector<Wall*> *_walls)
 		proyection1 = newLenght / wallVector.length();
 		if (proyection1>1)
 		{
-			return CD::CDVector2();
+			continue;
 		}
 		nearPoint = (wallVector * proyection1) + wallPivot;
 
