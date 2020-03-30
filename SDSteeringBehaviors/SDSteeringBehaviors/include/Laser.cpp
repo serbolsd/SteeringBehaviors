@@ -123,7 +123,7 @@ void Laser::checkBoids(std::vector<Boid*> _boid)
 
 			if (_boid[i]->getTypeBoid() == TYPEBOID::PLAYER)
 			{
-				_boid[i]->takeDamageToPlayer();
+				_boid[i]->takeDamageToPlayer(_boid[i]);
 			}
 			else
 			{
@@ -152,7 +152,7 @@ void Laser::checkBoids(std::vector<Boid*> _boid)
 		{
 			if (_boid[i]->getTypeBoid()==TYPEBOID::PLAYER)
 			{
-				_boid[i]->takeDamageToPlayer();
+				_boid[i]->takeDamageToPlayer(_boid[i]);
 			}
 			else
 			{

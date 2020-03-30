@@ -75,9 +75,11 @@ void Init()
 	g_sceneManager.init(&g_deltaTime,&g_stateMachine);
 #else
 	g_Laser.init(CDVector2(100, 450), CDVector2(50, 500), &g_deltaTime);
-	
+	//493 210
+	//	POS: 537 228
+	//	POS : 532 260
 	Wall* newWall = new Wall();
-	newWall->init({ 607,171 }, { 880,306 });
+	newWall->init({ 493, 210 }, { 537, 228 });
 	g_wallsVector.push_back(newWall);
 	//g_MousePosition = new CD::CDVector2;
 	//g_Path = new std::vector<CD::CDVector2>;

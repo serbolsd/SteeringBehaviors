@@ -32,6 +32,11 @@ public:
 	void onDelete();
 private:
 	void loadNextLevel();
+	void checkIfPlayerTakeCell();
+	void checkIfPlayerIsOnWinPoint();
+	void resetVars();
+	void initScore();
+	void updateScore();
 	Boid* m_player;
 	WinPoint m_winPoint;
 	std::vector<Wall*> m_vectorpWalls;
@@ -45,5 +50,14 @@ private:
 	BoidDescriptor TankDesc;
 	BoidDescriptor TorretDesc;
 	int m_currentLevel = 0;
+	int m_lastLevel = 0;
+	int m_PowerPointsOfLevel = 0;
+	int m_PowerPointsToke = 0;
+	sf::ConvexShape* wallsGeometri;
 	float* m_pDeltaTime = nullptr;
+	StateMachine* m_stateMachine;
+	bool m_bResetLevel = false;
+	sf::Font m_font;
+	sf::Text m_score;
+	bool m_bAlreadyInit = false;
 };

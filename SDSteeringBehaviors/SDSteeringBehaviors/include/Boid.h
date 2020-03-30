@@ -203,13 +203,13 @@ public:
 	CD::CDVector2 truncar(CD::CDVector2 Dir, float speed);
 	void updateForWalking();
 	void updateForLoking();
-	void applyDamageToPlayer(Boid* _player);
-	void takeDamageToPlayer();
+	void applyDamageToPlayer(Boid* _player, Boid* _bully);
+	void takeDamageToPlayer(Boid* _bully);
 	void rotate();
 	void rotateToObjetive(Boid* _player);
 	void semirotate();
 	bool m_isDead = false;
-	float m_timeToChasing = .3;
+	float m_timeToChasing = .4;
 	float m_elapsedTime = 0;
 	sf::CircleShape m_shape;
 private:
@@ -221,6 +221,7 @@ private:
 	float calculateAngle(const CDVector2& _vec);
 	void initLifeBars();
 	void updateLaserTorret(Boid*_player);
+	CDVector2 calculateCollisionPoint(const CDVector2& _Mypos, const CDVector2& obstacleToMyDir,Wall* _wall );
 	float calculateProyectionOfVector(const CDVector2& _mainVector, const CDVector2& _VectorToProyect);
 	CD::CDVector2 m_position;
 	CD::CDVector2 m_direction;
@@ -228,8 +229,8 @@ private:
 	CD::CDVector2 m_right;
 	float m_speed = 0;
 	
-	float m_timeToTakeDamage=0.5;
-	const float m_constTimeToTakeDamage=1;
+	float m_timeToTakeDamage=0.2;
+	const float m_constTimeToTakeDamage=0.5;
 	
 	float m_impetuForCollision = 0;
 	CD::CDVector2 m_frontRightCollisionPointPos;
@@ -270,5 +271,5 @@ private:
 	float m_timeToRotate=0;
 	const float m_constTimeToRotate = 3;
 	bool m_waitingForNexRotate = false;
-
+	CDVector2 m_vectorZero = { 0,0 };
 };

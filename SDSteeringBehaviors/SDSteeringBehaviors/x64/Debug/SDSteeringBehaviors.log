@@ -1,10 +1,49 @@
-﻿  Main.cpp
+﻿  Laser.cpp
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Laser.h(24,29): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Laser.h(25,41): warning C4305: 'inicializando': truncamiento de 'double' a 'const float'
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(20,29): warning C4100: '_boid': parámetro formal sin referencia
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(21,36): warning C4100: '_boid': parámetro formal sin referencia
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(22,28): warning C4100: '_boid': parámetro formal sin referencia
 D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(212,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Laser.h(24,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Laser.h(25,41): warning C4305: 'inicializando': truncamiento de 'double' a 'const float'
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\Main.cpp(126,21): warning C4305: '=': truncamiento de 'double' a 'float'
-D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\Main.cpp(352,31): warning C4305: '=': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(232,30): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+  Boid.cpp
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(20,29): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(21,36): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(22,28): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(212,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(232,30): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(877,43): warning C4100: 'Dir': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(949,11): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(950,11): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(953,21): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(957,21): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1010,8): warning C4189: 'kinship': la variable local se ha inicializado pero no se hace referencia a ella
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1294,30): warning C4189: 'compareRM': la variable local se ha inicializado pero no se hace referencia a ella
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1294,19): warning C4101: 'compareLM': variable local sin referencia
+  playerInputs.cpp
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(20,29): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(21,36): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(22,28): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(212,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(232,30): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+  StateExploding.cpp
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(20,29): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(21,36): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(22,28): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(212,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(232,30): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\StateExploding.cpp(17,43): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\StateExploding.cpp(24,35): warning C4100: '_boid': parámetro formal sin referencia
+  StateIdle.cpp
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(20,29): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(21,36): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\States.h(22,28): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(212,28): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\include\Boid.h(232,30): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\StateIdle.cpp(12,31): warning C4100: '_boid': parámetro formal sin referencia
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\StateIdle.cpp(45,30): warning C4100: '_boid': parámetro formal sin referencia
+  Generando código...
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1286): warning C4715: 'Boid::wallCollision': no todas las rutas de acceso de control devuelven un valor
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1426): warning C4702: no se puede tener acceso al código
+D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\SDSteeringBehaviors\source\Boid.cpp(1435): warning C4702: no se puede tener acceso al código
   SDSteeringBehaviors.vcxproj -> D:\UNIVERSIDAD\6TO\IA\GIT\SteeringBehaviors\SDSteeringBehaviors\x64\Debug\SDSteeringBehaviors.exe

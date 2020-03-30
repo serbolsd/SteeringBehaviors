@@ -285,11 +285,11 @@ void Boid::Render(sf::RenderWindow& _wind)
 		_wind.draw(m_ratioDetection);
 	}
 	_wind.draw(m_shape);
-	_wind.draw(linesForObstacleEvade);
+	//_wind.draw(linesForObstacleEvade);
 	if (m_mytype!=TYPEBOID::PLAYER&& m_mytype != TYPEBOID::UNKNOWBOID)
 	{
-		_wind.draw(leftLoking);
-		_wind.draw(rightLoking);
+		//_wind.draw(leftLoking);
+		//_wind.draw(rightLoking);
 		_wind.draw(ratioLoking);
 	}
 	else if (m_mytype == TYPEBOID::PLAYER)
@@ -783,111 +783,6 @@ CD::CDVector2 Boid::obstacleEvade(std::vector<Obstacle*>* ptr_obstacles, float I
 	return F;
 }
 
-CD::CDVector2 Boid::wallCollision(std::vector<Wall*> *_walls)
-{
-	CDVector2 frontMidDir=m_position+ m_direction+(m_direction.getnormalize()*m_myDesc.ratio);
-	CDVector2 frontLeftDir=m_position-(m_right*m_myDesc.ratio)+m_direction + (m_direction.getnormalize() * m_myDesc.ratio);
-	CDVector2 frontLeftPos=m_position-(m_right*m_myDesc.ratio);
-	CDVector2 frontRightDir = m_position + (m_right * m_myDesc.ratio) + m_direction + (m_direction.getnormalize() * m_myDesc.ratio);
-	CDVector2 frontRightPos = m_position + (m_right * m_myDesc.ratio);
-	for (size_t i = 0; i < _walls->size(); i++)
-	{
-		CD::CDVector2 wallPivot = _walls[0][i]->getPos1();
-		float compareFM, compareLM, compareRM = 0;
-		compareFM = wallPivot.dot(frontMidDir);
-		compareLM = wallPivot.dot(frontLeftDir);
-		compareRM = wallPivot.dot(frontRightDir);
-		if (compareFM<0&& compareLM<0&& compareRM<0)
-		{
-			continue;
-		}
-		CDVector2 wallVector = _walls[0][i]->getWallVector();
-		CDVector2 wallToPos = m_position - wallPivot;
-		CDVector2 wallToDir = frontMidDir - wallPivot;
-		float angle1, angle2,angleWall;
-		angleWall = _walls[0][i]->getAngle();
-		if (angleWall < 0)
-		{
-			angleWall = 360 + angleWall;
-		}
-		angle1 = calculateAngle(wallToPos);
-		angle1 *= 180.0f / 3.1415f;
-		if (angle1<0)
-		{
-			angle1 = 360 + angle1;
-		}
-		angle2 = calculateAngle(wallToDir);
-		angle2 *= 180.0f / 3.1415f;
-		if (angle2 < 0)
-		{
-			angle2 = 360 + angle2;
-		}
-		
-		if (!(angle1< angleWall&&angle2>angleWall)&& !(angle1> angleWall && angle2<angleWall))
-		{
-			continue;
-		}
-		bool isInRange = true;
-		if (angle1 < angle2)
-		{
-			float diference = angle2 - angle1;
-			if (diference > 180)
-			{
-				continue;
-				isInRange = false;
-			}
-		}
-		else if (angle2 < angle1)
-		{
-			float diference = angle1 - angle2;
-			if (diference > 180)
-			{
-				continue;
-				isInRange = false;
-			}
-		}
-		float proyection1 = wallToPos.length()/wallVector.length();
-		float proyection2 = wallToDir.length() / wallVector.length();
-		if (proyection1>1 &&proyection2>1 )
-		{
-			continue;
-		}
-		CDVector2 nearPoint = (wallVector * proyection1)+wallPivot;
-		CDVector2 DirToNearPoint = nearPoint - m_position;
-		float distanceToNearPoint = DirToNearPoint.length();
-		if (distanceToNearPoint <m_myDesc.ratio)
-		{
-			m_direction = { 0,0 };
-			CDVector2 newPos = m_position - nearPoint;
-			newPos.normalize();
-			newPos *= m_myDesc.ratio;
-			m_position = newPos + nearPoint;
-			continue;
-		}
-
-		float y = calculateAngle(DirToNearPoint.getnormalize());
-		y = sin(y);
-		y *= distanceToNearPoint;
-		distanceToNearPoint += y;
-		CDVector2 newNearPoint = nearPoint - wallPivot;
-		float newLenght = newNearPoint.length()+y;
-		proyection1 = newLenght / wallVector.length();
-		if (proyection1>1)
-		{
-			continue;
-		}
-		nearPoint = (wallVector * proyection1) + wallPivot;
-
-		m_direction = { 0,0 };
-		CDVector2 newPos = m_position-nearPoint;
-		newPos.normalize();
-		newPos *= m_myDesc.ratio;
-		m_position = newPos + nearPoint;
-	}
-	
-	return CD::CDVector2();
-}
-
 bool Boid::lookingForPlayer(Boid* objetive, float angle, float ratio)
 {
 	CDVector2 objetivePos = objetive->getPosition();
@@ -934,25 +829,9 @@ bool Boid::lookingForPlayer(Boid* objetive, float angle, float ratio)
 	Adir2 += aApertura;
 	if (AtoObjetive >= Adir1 && AtoObjetive <= Adir2)
 	{
-		std::cout << "wachando";
+		//std::cout << "wachando";
 		return true;
 	}
-	//if (m_directionView.x < 0)
-	//{
-	//	
-	//}
-	//else
-	//{
-	//	if (AtoObjetive <= Adir1 && AtoObjetive >= Adir2)
-	//	{
-	//		std::cout << "wachando";
-	//		return true;
-	//	}
-	//}
-	
-	//std::cout << Adir <<std::endl;
-	//CD::CDVector2 posF = { ratio * cosf(Fdir * degTorad),ratio * sinf(Fdir * degTorad) };
-	//posF += C;
 	return false;
 }
 
@@ -1040,23 +919,24 @@ void Boid::updateForLoking()
 	calculatePointsToDetecteCollision();
 }
 
-void Boid::applyDamageToPlayer(Boid* _player)
+void Boid::applyDamageToPlayer(Boid* _player, Boid* _bully)
 {
-	_player->takeDamageToPlayer();
+	_player->takeDamageToPlayer(_bully);
 }
 
-void Boid::takeDamageToPlayer()
+void Boid::takeDamageToPlayer(Boid* _bully)
 {
-	if (m_elapsedTime> m_timeToTakeDamage)
+	if (m_elapsedTime> m_timeToTakeDamage || _bully->getTypeBoid()==TYPEBOID::TANK)
 	{
 		m_timeToTakeDamage = m_constTimeToTakeDamage + m_elapsedTime;
 		m_life -= 1;
 		lifeBars[m_life].setFillColor(sf::Color::Red);
-		if (m_life <= 0)
+		if (m_life<=0)
 		{
-			m_isDead;
+			m_isDead = true;
 		}
 	}
+	
 	
 }
 
@@ -1356,7 +1236,7 @@ void Boid::updateLaserTorret(Boid*_player)
 	if (boidCollisionPoint.length()< _player->getRatio())
 	{
 
-		_player->takeDamageToPlayer();
+		_player->takeDamageToPlayer(m_myDesc.pPlayer);
 		return;
 	}
 	boidCollisionPoint.normalize();
@@ -1367,9 +1247,232 @@ void Boid::updateLaserTorret(Boid*_player)
 
 	if (length- m_ratioLaserTorret <= m_ratioLaserTorret)
 	{
-		_player->takeDamageToPlayer();
+		_player->takeDamageToPlayer(m_myDesc.pPlayer);
 
 	}
+}
+
+CD::CDVector2 Boid::wallCollision(std::vector<Wall*>* _walls)
+{
+	CDVector2 frontMidDir = m_position  + (m_direction.getnormalize() * m_myDesc.ratio);
+	CDVector2 frontLeftDir = m_position - (m_right * m_myDesc.ratio/2) + (m_direction.getnormalize() * m_myDesc.ratio);
+	CDVector2 frontLeftPos = m_position - (m_right * m_myDesc.ratio/2);
+	CDVector2 frontRightDir = m_position + (m_right * m_myDesc.ratio/2) + (m_direction.getnormalize() * m_myDesc.ratio);
+	CDVector2 frontRightPos = m_position + (m_right * m_myDesc.ratio/2);
+	for (size_t i = 0; i < _walls->size(); i++)
+	{
+		CDVector2 newPos;
+		
+		//newPos = calculateCollisionPoint(frontLeftPos, frontLeftPos, _walls[0][i]);
+		//if (newPos != m_vectorZero)
+		//{
+		//	m_position = newPos+ (m_right * m_myDesc.ratio);
+		//	return CD::CDVector2();
+		//}
+		//newPos = calculateCollisionPoint(frontRightPos, frontRightDir, _walls[0][i]);
+		//if (newPos != m_vectorZero)
+		//{
+		//	m_position = newPos + (m_right * m_myDesc.ratio);
+		//	return CD::CDVector2();
+		//}
+		newPos = calculateCollisionPoint(m_position, frontMidDir, _walls[0][i]);
+		if (newPos != m_vectorZero)
+		{
+			m_position = newPos;
+			return CD::CDVector2();
+		}
+	}
+
+}
+
+
+CDVector2 Boid::calculateCollisionPoint(
+	const CDVector2& _Mypos, const CDVector2& _obstacleToMyDir
+	, Wall* _wall)
+{
+	CD::CDVector2 wallPivot = _wall->getPos1();
+	float compareFM, compareLM, compareRM = 0;
+	CD::CDVector2 compared = _obstacleToMyDir - wallPivot;
+	compareFM = wallPivot.dot(_obstacleToMyDir);
+	if (compareFM < 0 )
+	{
+
+		return CDVector2();
+	}
+	CDVector2 wallVector = _wall->getWallVector();
+	CDVector2 wallToPos = _Mypos - wallPivot;
+	CDVector2 wallToDir = _obstacleToMyDir - wallPivot;
+	float angle1, angle2, angleWall;
+	angleWall = _wall->getAngle();
+	bool angleWallismasjor = false;
+	bool canBe = false;
+	if (angleWall < 0)
+	{
+		canBe = true;
+		angleWallismasjor = true;
+		angleWall = 360 + angleWall;
+	}
+	angle1 = calculateAngle(wallToPos);
+	angle1 *= 180.0f / 3.1415f;
+	bool angle1ismasjor = false;
+	bool angle2ismasjor = false;
+	if (angle1 < 0)
+	{
+		angle1ismasjor = true;
+		angle1 = 360 + angle1;
+	}
+	angle2 = calculateAngle(wallToDir);
+	angle2 *= 180.0f / 3.1415f;
+	if (angle2 < 0)
+	{
+		angle2ismasjor = true;
+		angle2 = 360 + angle2;
+	}
+
+	if (!(angle1< angleWall && angle2>angleWall) && !(angle1 > angleWall&& angle2 < angleWall))
+	{
+		if (angleWallismasjor && angle1 != angle2)
+		{
+			if (angle1 < angleWall && angle2 < angleWall)
+			{
+				if (angle1 > angle2&& angle2 < 90 && angle1>180)
+				{
+					angle1 = angle1;
+				}
+				else if (angle1 < angle2 && angle1 < 90 && angle2>180)
+				{
+					angle2 = angle2;
+				}
+				else
+				{
+					return CDVector2();
+				}
+				angle1 = angle1;
+			}
+			else
+			{
+				return CDVector2();
+			}
+		}
+		else if (angle2ismasjor || angle1ismasjor)
+		{
+			if (angle2ismasjor && angle1ismasjor)
+			{
+				return CDVector2();
+			}
+			else
+			{
+				if (angleWallismasjor)
+				{
+
+				}
+				else if (!(angle1 > angleWall&& angle2 > angleWall&& angleWall < 60))
+				{
+					return CDVector2();
+				}
+				else
+				{
+					if (angle1 < angle2)
+					{
+						float diference = angle2 - angle1;
+						if (diference < 180)
+						{
+							return CDVector2();
+						}
+					}
+					else if (angle2 < angle1)
+					{
+						float diference = angle1 - angle2;
+						if (diference < 180)
+						{
+							return CDVector2();
+						}
+					}
+					canBe = true;
+				}
+			}
+		}
+		else
+		{
+			return CDVector2();
+		}
+	}
+	else
+	{
+		if (angle1 < angle2)
+		{
+			float diference = angle2 - angle1;
+			if (diference > 180)
+			{
+				return CDVector2();
+			}
+		}
+		else if (angle2 < angle1)
+		{
+			float diference = angle1 - angle2;
+			if (diference > 180)
+			{
+				return CDVector2();
+			}
+		}
+	}
+	bool isInRange = true;
+	if (angle1 < angle2)
+	{
+		float diference = angle2 - angle1;
+		if (diference > 180 && !canBe)
+		{
+			return CDVector2();
+			isInRange = false;
+		}
+	}
+	else if (angle2 < angle1)
+	{
+		float diference = angle1 - angle2;
+		if (diference > 180 && !canBe)
+		{
+			return CDVector2();
+			isInRange = false;
+		}
+	}
+	float proyection1 = wallToPos.length() / wallVector.length();
+	float proyection2 = wallToDir.length() / wallVector.length();
+	if (proyection1 > 1 && proyection2 > 1)
+	{
+		return CDVector2();
+	}
+	CDVector2 nearPoint = (wallVector * proyection1) + wallPivot;
+	CDVector2 DirToNearPoint = nearPoint - _Mypos;
+	float distanceToNearPoint = DirToNearPoint.length();
+	if (distanceToNearPoint < m_myDesc.ratio)
+	{
+		m_direction = { 0,0 };
+		CDVector2 newPos = _Mypos - nearPoint;
+		newPos.normalize();
+		newPos *= m_myDesc.ratio;
+		newPos = newPos + nearPoint;
+		return newPos;
+	}
+
+	float y = calculateAngle(DirToNearPoint.getnormalize());
+	y = sin(y);
+	y *= distanceToNearPoint;
+	distanceToNearPoint += y;
+	CDVector2 newNearPoint = nearPoint - wallPivot;
+	float newLenght = newNearPoint.length() + y;
+	proyection1 = newLenght / wallVector.length();
+	if (proyection1 > 1)
+	{
+		return CDVector2();
+	}
+	nearPoint = (wallVector * proyection1) + wallPivot;
+
+	m_direction = { 0,0 };
+	CDVector2 newPos = _Mypos - nearPoint;
+	newPos.normalize();
+	newPos *= m_myDesc.ratio;
+	newPos = newPos + nearPoint;
+	return newPos;
 }
 
 float Boid::calculateProyectionOfVector(const CDVector2& _mainVector, const CDVector2& _VectorToProyect)

@@ -11,7 +11,7 @@ StateExploding::~StateExploding()
 
 void StateExploding::onEnter(Boid* _boid)
 {
-	_boid->applyDamageToPlayer(_boid->m_myDesc.pPlayer);
+	_boid->applyDamageToPlayer(_boid->m_myDesc.pPlayer,_boid);
 }
 
 ENUMSTATES StateExploding::onUpdate(Boid* _boid)

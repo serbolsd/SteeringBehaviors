@@ -22,7 +22,7 @@ void SimpleEditor::Init(const float& windlength, const float& windWidth,float *_
 
 	m_winPoint.init();
 	m_winPoint.setPosition(windlength / 2, windlength /4 );
-
+	m_winPoint.m_bIsActived = true;
 	playerDesc.globalTime = _deltaTime;
 	playerDesc.Direction = { 0 ,0 };
 	playerDesc.Position = { windlength/2,windlength/2 };
@@ -510,6 +510,7 @@ void SimpleEditor::initText()
 	m_text[7].setString("8-SUBTRACT RATIO DETECCTION OF CURRENT ENEMY");
 	m_text[8].setString("9-ADD RATIO DETECCTION OF CURRENT ENEMY");
 	m_text[9].setString("BACK-REMOVE LAST ACTION");
+	m_text[9].setString("...");
 	m_text[10].setString("ENTER-COMPLETE ACTION");
 	m_text[11].setString("CLICK TO PUT POSITION");
 	m_text[12].setString("S- SAVE LEVEL");
@@ -591,4 +592,6 @@ void SimpleEditor::saveLevel()
 	outfile << "WINPOINT" << std::endl;
 	outfile << "POS: " << m_winPoint.getPosition().x << " " << m_winPoint.getPosition().y << std::endl;
 	outfile.close();
+	onDelete();
+	Init(m_windlength,m_windWidth, m_pDeltaTime, m_pWind);
 }

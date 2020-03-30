@@ -20,9 +20,9 @@ private:
 	void checkBoids(std::vector<Boid*> _boid);
 	float m_elapseTime=0;
 	float m_timeActivate=4;
-	const float m_constTimeActivate=4;
-	float m_timeToActivate=0.2;
-	const float m_constTimeToActivate = 0.2;
+	const float m_constTimeActivate=3;
+	float m_timeToActivate=0.06;
+	const float m_constTimeToActivate = 0.1;
 	bool m_isActivated = false;
 	bool m_isGoingToActivated = false;
 	float m_ratio=5;

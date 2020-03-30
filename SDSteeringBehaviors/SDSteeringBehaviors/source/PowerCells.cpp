@@ -14,7 +14,7 @@ void PowerCells::init(const CDVector2& _position)
 	m_cell.setRadius(m_ratio);
 	m_cell.setOrigin(m_ratio, m_ratio);
 	m_cell.setPosition(m_position.x, m_position.y);
-	m_cell.setFillColor(sf::Color::Blue);
+	m_cell.setFillColor(sf::Color::Cyan);
 }
 
 void PowerCells::render(sf::RenderWindow& _wind)

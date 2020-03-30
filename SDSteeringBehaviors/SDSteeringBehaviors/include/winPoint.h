@@ -16,7 +16,7 @@ public:
 private:
 	CDVector2 m_position;
 	sf::CircleShape m_shape;
-	float m_ratio = 12;
+	float m_ratio = 15;
 	sf::Color m_colorDesactive = {0,100,100,100};
-	sf::Color m_colorActivated = {0,100,255,255};
+	sf::Color m_colorActivated = sf::Color::Cyan;
 };

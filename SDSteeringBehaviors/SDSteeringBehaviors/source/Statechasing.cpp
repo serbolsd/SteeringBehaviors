@@ -36,6 +36,7 @@ ENUMSTATES Statechasing::onUpdate(Boid* _boid)
 			_boid->m_myDesc.persu.timeProyection,
 			_boid->m_myDesc.persu.impetu);
 		_boid->updateForWalking();
+
 		break;
 	case TYPEBOID::SCIENTIFIC:
 		break;
